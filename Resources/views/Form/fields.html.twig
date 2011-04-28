@@ -1,0 +1,30 @@
+{% block field_row %}
+{% spaceless %}
+    <li>
+        {{ form_label(form, label) }}
+        {{ form_widget(form, _context) }}
+        {{ form_errors(form) }}
+    </li>
+{% endspaceless %}
+{% endblock field_row %}
+
+{% block field_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <span class="error_message">
+        {% for error in errors %}
+            {{ error.messageTemplate|trans(error.messageParameters, 'validators') }} 
+        {% endfor %}
+    </span>
+    {% endif %}
+{% endspaceless %}
+{% endblock field_errors %}
+
+{% block form_widget %}
+{% spaceless %}
+    <ul {{ block('attributes') }}>
+        {{ block('field_rows') }}
+        {{ form_rest(form) }}
+    </ul>
+{% endspaceless %}
+{% endblock form_widget %}

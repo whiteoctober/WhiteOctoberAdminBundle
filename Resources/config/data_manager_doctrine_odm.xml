@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- Field Guessers -->
+        <parameter key="white_october_admin.field_guesser.doctrine.odm.class">WhiteOctober\AdminBundle\DataManager\Doctrine\ODM\Guesser\DoctrineODMFieldGuesser</parameter>
+    </parameters>
+
+    <services>
+        <!-- Field Guessers -->
+        <service id="white_october_admin.field_gueser.doctrine.odm" class="%white_october_admin.field_guesser.doctrine.odm.class%">
+            <tag name="white_october_admin.field_guesser" alias="doctrine.odm" />
+            <argument type="service" id="doctrine.odm.mongodb.document_manager" />
+        </service>
+
+        <!-- Actions -->
+        <service id="white_october_admin.action.doctrine.odm.crud" class="WhiteOctober\AdminBundle\DataManager\Doctrine\ODM\Action\CRUDActionCollection" public="false">
+            <tag name="white_october_admin.action" alias="doctrine.odm.crud" />
+        </service>
+    </services>
+
+</container>

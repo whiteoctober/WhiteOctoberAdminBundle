@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- Admin Factory -->
+        <parameter key="white_october_admin.admin_factory.class">WhiteOctober\AdminBundle\Admin\AdminFactory</parameter>
+
+        <!-- Action Factory -->
+        <parameter key="white_october_admin.action_factory.class">WhiteOctober\AdminBundle\Action\ActionFactory</parameter>
+
+        <!-- Field Guessers -->
+        <parameter key="white_october_admin.field_guesser.validator.class">WhiteOctober\AdminBundle\Guesser\ValidatorFieldGuesser</parameter>
+
+        <!-- Routing Loader -->
+        <parameter key="routing.loader.white_october_admin.class">WhiteOctober\AdminBundle\Routing\AdminFactoryLoader</parameter>
+    </parameters>
+
+    <services>
+        <!-- Admin Factory -->
+        <service id="white_october_admin.admin_factory" class="%white_october_admin.admin_factory.class%">
+            <!-- adminIds -->
+            <argument type="collection" />
+            <!-- fieldGuesserIds -->
+            <argument type="collection" />
+            <!-- ContainerAware -->
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
+
+        <!-- Action Factory -->
+        <service id="white_october_admin.action_factory" class="%white_october_admin.action_factory.class%">
+        </service>
+
+        <!-- Field Guessers -->
+        <service id="white_october_admin.field_gueser.validator" class="%white_october_admin.field_guesser.validator.class%">
+            <tag name="white_october_admin.field_guesser" alias="validator" />
+            <argument type="service" id="validator.mapping.class_metadata_factory" />
+        </service>
+
+        <!-- Routing Loader -->
+        <service id="routing.loader.white_october_admin" class="%routing.loader.white_october_admin.class%">
+            <tag name="routing.loader" />
+            <argument type="service" id="white_october_admin.admin_factory" />
+        </service>
+
+        <service id="pagerfanta.view.white_october_admin" class="WhiteOctober\AdminBundle\Pagerfanta\AdminView" public="false">
+            <tag name="pagerfanta.view" alias="white_october_admin" />
+        </service>
+    </services>
+
+</container>

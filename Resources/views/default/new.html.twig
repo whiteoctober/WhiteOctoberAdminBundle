@@ -1,0 +1,20 @@
+{% extends _admin.baseTemplate %}
+{% form_theme form 'WhiteOctoberAdminBundle:Form:fields.html.twig' %}
+
+{% block secondarynav %}
+    <ul>
+        <li>
+            <a class="button_slidingdoors button_yellow" href="{{ _admin.path('list') }}"><span> &lt; Back to List</span></a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="panel">
+        <div class="panel_header">Add New {{ _admin.getDataClassName }}</div>
+        <form action="{{ _admin.path('create') }}" method="POST" name="adminform">
+            {% include 'WhiteOctoberAdminBundle:default:_form.html.twig' with { 'form': form } %}
+        </form>
+        <div class="clear"></div>
+    </div>
+{% endblock %}

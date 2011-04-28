@@ -1,0 +1,87 @@
+{% extends _admin.baseTemplate %}
+
+{% block secondarynav %}
+    {% if _action.hasOption('actions') %}
+        {% for action in _action.getOption('actions') %}
+            <a class="button_slidingdoors button_grey" href="{{ _admin.path(action.route) }}">
+                <span>
+                    {% if action.label|lower == 'new' %}
+                        <img class="button_icon" src="{{ asset('bundles/whiteoctoberadmin/images/buttons/icons/add.png') }}" alt="add icon"/>
+                    {% endif %}
+                    {{ action.label }}
+                </span>
+            </a>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="results_info">
+        <span class="results_number">Found <strong>{{ pagerfanta.getNbResults }}</strong> results</span>
+        <div class="clear"></div>
+        {% if pagerfanta.haveToPaginate %}
+            {{ pagerfanta(pagerfanta, pagerfantaView, pagerfantaOptions) }}
+        {% endif %}
+    </div>
+    <div class="clear">
+    </div>
+    <div class="panel">
+        <div class="panel_content panel_content_list">
+            <table>
+                <thead>
+                    <tr>
+                        {% for field in _action.fields %}
+                            <th class="{% if loop.first %}first{% endif %}">{{ field.label }}</th>
+                        {% endfor %}
+                        {% for action in _action.getOption('data_actions') %}
+                            <th class="th_action {% if loop.last %}last{% endif %}">{{ action.label }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="list_content">
+                    {% for data in pagerfanta.currentPageResults %}
+                        <tr>
+                            {% for field in _action.fields %}
+                                <td>{{ _action.renderField(field, data) }}</td>
+                            {% endfor %}
+                            {% for action in _action.getOption('data_actions') %}
+                                <td>
+                                    {% if action._method is not defined or 'GET' == action._method %}
+                                        <a href="{{ _admin.path(action.route, { 'id': data.id }) }}" class="icon {{ action.label|lower }}" title="{{ action.label }}"></a>
+                                    {% else %}
+                                        <form action="{{ _admin.path(action.route, { 'id': data.id }) }}" method="POST">
+                                            <input type="hidden" name="_method" value="{{ action._method }}" />
+                                            <input type="submit" value="{{ action.label }}">
+                                        </form>
+                                    {% endif %}
+                                    </li>
+
+                                    </ul>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel_footer">
+            {% if _action.hasOption('actions') %}
+                <ul>
+                    {% for action in _action.getOption('actions') %}
+                        <li>
+                            <a class="button_slidingdoors button_grey" href="{{ _admin.path(action.route) }}">
+                                <span>
+                                    {% if action.label|lower == 'new' %}
+                                        <img class="button_icon" src="{{ asset('bundles/whiteoctoberadmin/images/buttons/icons/add.png') }}" alt="add icon"/>
+                                    {% endif %}
+                                    {{ action.label }}
+                                </span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endblock %}

@@ -1,0 +1,1 @@
+DD_belatedPNG.fix('img, .button_slidingdoors, .button_slidingdoors span, .list_content, .icon, #content, #footer, .breadcrumb li a, #login_box, #login_box_middle, #login_box_bottom');
