@@ -25,7 +25,7 @@ class DeleteAction extends Action
             ->setDependences(array(
                 'mandango.list' => array(
                     'data_actions' => array(
-                        'delete'   => array('route' => 'delete', '_method' => 'DELETE', 'label' => 'Delete'),
+                        'delete'   => array('route' => 'delete', 'confirm' => 'Are you sure?', '_method' => 'DELETE', 'label' => 'Delete'),
                     ),
                 ),
             ))
