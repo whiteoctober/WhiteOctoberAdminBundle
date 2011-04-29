@@ -109,9 +109,9 @@ Example:
 
 namespace My\Bundle\Admin;
 
-use WhiteOctober\AdminBundle\DataManager\Doctrine\ORM\Admin\DoctrineORMAdmin as Admin;
+use WhiteOctober\AdminBundle\DataManager\Doctrine\ORM\Admin\DoctrineORMAdmin;
 
-class MyClassAdmin extends Admin
+class MyClassAdmin extends DoctrineORMAdmin
 {
     protected function configure()
     {
@@ -126,11 +126,18 @@ To finish, you have to define a comportment the `configure()` method.
 ``` php
 protected function configure()
 {
-    $this->setDataClass('My\Bundle\Entity\MyClass');
-
-    $this->addAction('doctrine.orm.crud');
-
-    $this->addFields(array('foo', 'bar'));
+    $this
+        ->setDataClass('MyBundle\Entity\Article')
+        ->addActions(array(
+            'doctrine.orm.crud',
+        ))
+        ->addFields(array(
+            'title',
+            'content',
+            'isActive',
+            // ...
+        ))
+    ;
 }
 ```
 
