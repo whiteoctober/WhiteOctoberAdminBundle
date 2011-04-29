@@ -6,7 +6,7 @@ $(document).ready(function() {
 	$(".panel_content").parent("#contacts, #secondarycontact, #gettingthere, #floorplans, #description, #suppliers, #notes, #healthandsafety, #licences, #facilities, #hiringandavailability").children(".panel_content").hide();
 
 	//LIST: TR CLICKABLE
-	$('td').not('.td_checkbox').click(function () { //All TDs clickable but the one which has the checkbox.
+	$('td').not('.td_checkbox').not('.td_data_action').click(function () { //All TDs clickable but the one which has the checkbox.
 		window.location = $(this).parent().find('a.edit').attr('href'); //Link goes to the same href as the "edit" button.
 	});  
 	
