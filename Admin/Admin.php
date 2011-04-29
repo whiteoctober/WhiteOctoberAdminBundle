@@ -277,7 +277,7 @@ abstract class Admin extends ContainerAware
 
     private function urlize($string, $sep = '-')
     {
-        $string = preg_replace('~[^\\pL\d]+~u', $sep, $string);
+        $string = preg_replace('/\\\/', $sep, $string);
         $string = strtolower($string);
 
         return $string;
