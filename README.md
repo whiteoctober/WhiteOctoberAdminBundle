@@ -88,7 +88,7 @@ Next, you have to declare your admin classes:
 white_october_admin:
     ...
     admins:
-        - class: My\Bundle\Admin\MyClassAdmin
+        - { class: My\Bundle\Admin\MyClassAdmin }
 ```
 
 
