@@ -45,6 +45,7 @@ class Configuration
                             ->end()
                         ->end()
                         ->booleanNode('mandango')->end()
+                        ->booleanNode('propel')->end()
                     ->end()
                 ->end()
             ->end()
