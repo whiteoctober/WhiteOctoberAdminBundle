@@ -13,7 +13,7 @@ namespace WhiteOctober\AdminBundle\DataManager\Propel\Guesser;
 
 use WhiteOctober\AdminBundle\Guesser\FieldGuesserInterface;
 use WhiteOctober\AdminBundle\Guesser\FieldOptionGuess;
-use Propel\Metadata;
+use Symfony\Component\Form\Guess\TypeGuess;
 
 /**
  * PropelFieldGuesser class
@@ -33,9 +33,35 @@ class PropelFieldGuesser implements FieldGuesserInterface
 
         $options = array();
 
-        // fields
-        if ($tableMap->hasColumn($fieldName)) {
-            switch (strtolower($tableMap->getColumn($property)->getType())) {
+        $singularFieldName = preg_replace('#(.+)s$#', '$1', $fieldName);
+
+        if ($tableMap->hasRelation($fieldName) || $tableMap->hasRelation($singularFieldName)) {
+            try {
+                $relationMap = $tableMap->getRelation($fieldName);
+            } catch(\PropelException $e) {
+                $relationMap = $tableMap->getRelation($singularFieldName);
+                $fieldName = $singularFieldName;
+            }
+
+            $multiple = $relationMap->getType() === \RelationMap::MANY_TO_MANY;
+            $table = $multiple ? $relationMap->getLocalTable() : $relationMap->getForeignTable();
+
+            $options[] = new FieldOptionGuess(
+                'form_type',
+                'model',
+                FieldOptionGuess::HIGH_CONFIDENCE
+            );
+            $options[] = new FieldOptionGuess(
+                'form_options',
+                array(
+                    'relation_map'  => $relationMap,
+                    'class'         => $table->getClassname(),
+                    'multiple'      => $multiple,
+                ),
+                FieldOptionGuess::HIGH_CONFIDENCE
+            );
+        } else if ($tableMap->hasColumn($fieldName)) {
+            switch (strtolower($tableMap->getColumn($fieldName)->getType())) {
                 case 'array':
                     break;
                 case 'boolean':
