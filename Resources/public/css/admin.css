@@ -1482,3 +1482,16 @@ ul.four_columns
 	display: inline;
 	width: 225px;
 }
+
+/**** Messages ***/
+.notice 
+{
+	border-radius: 10px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;	
+	background-color: green;
+	padding:10px;
+	color:#fff;
+	padding:10px;
+	margin:10px;
+}
