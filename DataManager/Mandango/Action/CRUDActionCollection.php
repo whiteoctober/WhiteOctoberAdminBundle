@@ -11,37 +11,17 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Mandango\Action;
 
-use WhiteOctober\AdminBundle\Action\ActionCollection;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\CRUDActionCollection as BaseCRUDActionCollection;
 
-class CRUDActionCollection extends ActionCollection
+class CRUDActionCollection extends BaseCRUDActionCollection
 {
     public function getName()
     {
         return 'mandango.crud';
     }
 
-    protected function getDefaultOptions()
+    protected function getNamespace()
     {
-        return array(
-            'create' => true,
-            'edit'   => true,
-            'delete' => true,
-        );
-    }
-
-    protected function configure()
-    {
-        $this->add(new ListAction());
-        if ($this->getOption('create')) {
-            $this->add(new NewAction());
-            $this->add(new CreateAction());
-        }
-        if ($this->getOption('edit')) {
-            $this->add(new EditAction());
-            $this->add(new UpdateAction());
-        }
-        if ($this->getOption('delete')) {
-            $this->add(new DeleteAction());
-        }
+        return __NAMESPACE__;
     }
 }
