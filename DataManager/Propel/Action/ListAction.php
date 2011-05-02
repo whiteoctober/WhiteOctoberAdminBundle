@@ -17,6 +17,11 @@ use Pagerfanta\Adapter\PropelAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 
+/**
+ * ListAction for Propel.
+ *
+ * @author William DURAND <william.durand1@gmail.com>
+ */
 class ListAction extends Action
 {
     protected function configure()
@@ -36,8 +41,9 @@ class ListAction extends Action
     public function executeController()
     {
         $dataClass = $this->getDataClass();
+        $queryClass = $dataClass.'Query';
 
-        $query = $dataClass::getRepository()->createQuery();
+        $query = $queryClass::create();
         $adapter = new PropelAdapter($query);
         $pagerfanta = new Pagerfanta($adapter);
         $pagerfanta->setMaxPerPage($this->getOption('maxPerPage'));

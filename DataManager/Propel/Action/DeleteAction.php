@@ -15,6 +15,11 @@ use WhiteOctober\AdminBundle\Action\Action;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+/**
+ * DeleteAction for Propel.
+ *
+ * @author William DURAND <william.durand1@gmail.com>
+ */
 class DeleteAction extends Action
 {
     protected function configure()
@@ -35,7 +40,9 @@ class DeleteAction extends Action
     public function executeController()
     {
         $dataClass = $this->getDataClass();
-        $data = $dataClass::getRepository()->findOneById($this->container->get('request')->attributes->get('id'));
+        $queryClass = $dataClass.'Query';
+
+        $data = $queryClass::create()->findPk($this->container->get('request')->attributes->get('id'));
         if (!$data) {
             throw new NotFoundHttpException();
         }

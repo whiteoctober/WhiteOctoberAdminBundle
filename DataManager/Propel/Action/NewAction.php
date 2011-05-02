@@ -14,6 +14,11 @@ namespace WhiteOctober\AdminBundle\DataManager\Propel\Action;
 use WhiteOctober\AdminBundle\Action\Action;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+/**
+ * NewAction for Propel.
+ *
+ * @author William DURAND <william.durand1@gmail.com>
+ */
 class NewAction extends Action
 {
     protected function configure()
