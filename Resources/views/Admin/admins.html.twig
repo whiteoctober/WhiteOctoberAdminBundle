@@ -1,6 +1,6 @@
 <ul>
     <li><a href="{{ url('wo_admin_index') }}" class="home {{ home_active }}">Home</a>
     {% for admin in admins %}
-        <li><a href="{{ admin.generateUrl(admin.accessRouteNameSuffix) }}" {% if _admin and _admin.getDataClass == admin.getDataClass %}class="active"{% endif %}>{{ admin.getDataClassName }}</a></li>
+        <li><a href="{{ admin.generateUrl(admin.accessRouteNameSuffix) }}" {% if _admin and _admin.getDataClass == admin.getDataClass %}class="active"{% endif %}>{{ admin.getName }}</a></li>
     {% endfor %}
 </ul>
