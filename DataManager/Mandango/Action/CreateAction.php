@@ -39,6 +39,8 @@ class CreateAction extends Action
         $form->bindRequest($this->container->get('request'));
         if ($form->isValid()) {
             $data->save();
+            
+            $this->get('session')->setFlash('notice','You\'re object have been saved!');
 
             return new RedirectResponse($this->generateUrl('list'));
         }

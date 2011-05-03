@@ -29,10 +29,17 @@
             {% endblock %}
         </div>
         <div class="clear"></div>
+        
         <div id="secondarynav">
             {% block secondarynav %}{% endblock %}
         </div>
         <div id="content">
+        	{% if app.session.flash('notice') %}
+	        	<div class="notice">
+		           {{ app.session.flash('notice') }}
+		        </div>
+	        {% endif %}
+       
             {% block content %}{% endblock %}
         </div>
 
