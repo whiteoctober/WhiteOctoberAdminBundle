@@ -35,6 +35,11 @@ class AdminView
         return $this->admin->generateUrl($name, $parameters, true);
     }
 
+    public function getName()
+    {
+        return $this->admin->getName();
+    }
+
     public function getDataClass()
     {
         return $this->admin->getDataClass();
