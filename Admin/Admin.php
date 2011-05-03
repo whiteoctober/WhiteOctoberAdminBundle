@@ -20,6 +20,7 @@ use WhiteOctober\AdminBundle\Field\FieldConfigurator;
 
 abstract class Admin extends ContainerAware
 {
+    private $name;
     private $dataClass;
     private $routePatternPrefix;
     private $routeNamePrefix;
@@ -47,6 +48,10 @@ abstract class Admin extends ContainerAware
         if (!$this->dataClass) {
             throw new \RuntimeException('The data class cannot be empty.');
         }
+
+        if (!$this->name) {
+            $this->name = $this->getDataClassName();
+        }
     }
 
     protected function preConfigure()
@@ -62,6 +67,18 @@ abstract class Admin extends ContainerAware
 
     public function configureFieldsByAction(Action $action, FieldConfigurator $fieldConfigurator)
     {
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function setDataClass($dataClass)
