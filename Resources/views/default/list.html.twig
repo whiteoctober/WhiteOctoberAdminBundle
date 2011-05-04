@@ -31,7 +31,17 @@
                 <thead>
                     <tr>
                         {% for field in _action.fields %}
-                            <th class="{% if loop.first %}first{% endif %}">{{ field.label }}</th>
+                            <th class="{% if loop.first %}first{% endif %}">
+                                {% if field.hasOption('sortable') and field.getOption('sortable') %}
+                                    {% if sort == field.name %}
+                                        <a href="{{ _admin.path('list', { 'sort': field.name, 'order': 'asc' == order ? 'desc' : 'asc' }) }}">{{ field.label }}</a>
+                                    {% else %}
+                                        <a href="{{ _admin.path('list', { 'sort': field.name }) }}">{{ field.label }}</a>
+                                    {% endif %}
+                                {% else %}
+                                    {{ field.label }}
+                                {% endif %}
+                            </th>
                         {% endfor %}
                         {% for action in _action.getOption('data_actions') %}
                             <th class="th_action {% if loop.last %}last{% endif %}">{{ action.label }}</th>

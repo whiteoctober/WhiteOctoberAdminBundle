@@ -13,6 +13,7 @@ namespace WhiteOctober\AdminBundle\Admin;
 
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use WhiteOctober\AdminBundle\Action\Action;
 use WhiteOctober\AdminBundle\Action\ActionCollection;
 use WhiteOctober\AdminBundle\Field\Field;
@@ -24,6 +25,7 @@ abstract class Admin extends ContainerAware
     private $dataClass;
     private $routePatternPrefix;
     private $routeNamePrefix;
+    private $parametersToPropagate;
     private $baseTemplate;
 
     private $rawFields;
@@ -34,9 +36,11 @@ abstract class Admin extends ContainerAware
 
     private $rawActions;
     private $actions;
+    private $actionsVars;
 
     public function __construct()
     {
+        $this->parametersToPropagate = array();
         $this->rawFields = array();
         $this->rawFieldGuessers = array();
         $this->rawActions = array();
@@ -128,6 +132,35 @@ abstract class Admin extends ContainerAware
         }
 
         return $this->routeNamePrefix;
+    }
+
+    public function addParameterToPropagate($parameter)
+    {
+        $this->parametersToPropagate[] = $parameter;
+
+        return $this;
+    }
+
+    public function addParametersToPropagate(array $parameters)
+    {
+        foreach ($parameters as $parameter) {
+            $this->addParameterToPropagate($parameter);
+        }
+
+        return $this;
+    }
+
+    public function setParametersToPropagate(array $parameters)
+    {
+        $this->parametersToPropagate = array();
+        $this->addParametersToPropagate($parameters);
+
+        return $this;
+    }
+
+    public function getParametersToPropagate()
+    {
+        return $this->parametersToPropagate;
     }
 
     public function setBaseTemplate($baseTemplate)
@@ -265,6 +298,11 @@ abstract class Admin extends ContainerAware
         return $this->actions[$fullName];
     }
 
+    public function getActionsVars()
+    {
+        return $this->actionsVars;
+    }
+
     public function getDataFieldValue($data, $fieldName)
     {
         if (method_exists($data, 'get')) {
@@ -289,6 +327,15 @@ abstract class Admin extends ContainerAware
 
     public function generateUrl($routeNameSuffix, array $parameters = array(), $absolute = false)
     {
+        if ($this->parametersToPropagate) {
+            $request = $this->container->get('request');
+            foreach ($this->parametersToPropagate as $parameter) {
+                if (!isset($parameters[$parameter]) && $request->query->has($parameter)) {
+                    $parameters[$parameter] = $request->query->get($parameter);
+                }
+            }
+        }
+
         return $this->container->get('router')->generate($this->getRouteNamePrefix().'_'.$routeNameSuffix, $parameters, $absolute);
     }
 
@@ -325,6 +372,8 @@ abstract class Admin extends ContainerAware
 
     private function initializeActions()
     {
+        $this->actionsVars = new ParameterBag();
+
         $actions = array();
         foreach ($this->cleanActions($this->rawActions) as $action) {
             if (isset($actions[$action->getFullName()])) {
@@ -338,6 +387,9 @@ abstract class Admin extends ContainerAware
                 }
                 $actions[$actionFullName]->mergeOptions($options);
             }
+
+            $action->configureActionsVars($this->actionsVars);
+
             $actions[$action->getFullName()] = $action;
         }
         $this->actions = $actions;

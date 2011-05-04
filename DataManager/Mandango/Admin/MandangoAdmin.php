@@ -19,6 +19,10 @@ abstract class MandangoAdmin extends Admin
     {
         parent::preConfigure();
 
-        $this->addFieldGuesser('mandango');
+        $this
+            ->addParameterToPropagate('hash')
+            ->addFieldGuesser('mandango')
+            ->addAction('mandango.crud')
+        ;
     }
 }

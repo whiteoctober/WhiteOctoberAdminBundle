@@ -12,7 +12,9 @@
 namespace WhiteOctober\AdminBundle\Action;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use WhiteOctober\AdminBundle\Admin\Admin;
+use WhiteOctober\AdminBundle\Field\FieldBag;
 use WhiteOctober\AdminBundle\Field\FieldConfigurator;
 use WhiteOctober\AdminBundle\Guesser\FieldGuessador;
 
@@ -56,6 +58,10 @@ abstract class Action extends ContainerAware
 
     abstract protected function configure();
 
+    public function configureActionsVars(ParameterBag $actionVars)
+    {
+    }
+
     public function setAdmin(Admin $admin)
     {
         $this->admin = $admin;
@@ -69,6 +75,11 @@ abstract class Action extends ContainerAware
     public function getDataClass()
     {
         return $this->admin->getDataClass();
+    }
+
+    public function getActionsVars()
+    {
+        return $this->admin->getActionsVars();
     }
 
     public function mergeOptions(array $options = array())
@@ -127,8 +138,6 @@ abstract class Action extends ContainerAware
 
         $this->namespace = $namespace;
         $this->name = $name;
-
-        return $this;
 
         return $this;
     }
@@ -255,7 +264,7 @@ abstract class Action extends ContainerAware
                 $field->appendOptions($guessOptions);
             }
 
-            $this->fields = $fields;
+            $this->fields = new FieldBag($fields);
         }
 
         return $this->fields;
