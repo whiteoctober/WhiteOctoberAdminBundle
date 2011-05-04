@@ -32,6 +32,13 @@ class ListAction extends BaseListAction
         $this->queryBuilder = $this->get('doctrine.odm.mongodb.document_manager')->createQueryBuilder($this->getDataClass());
     }
 
+    protected function applyFilter($filter)
+    {
+        foreach ($this->getFilterFields() as $field) {
+            $this->queryBuilder->field($field)->equals(new \MongoRegex(sprintf('/%s/i', $filter)));
+        }
+    }
+
     protected function applySort($sort, $order)
     {
         $this->queryBuilder->sort($sort, $order);

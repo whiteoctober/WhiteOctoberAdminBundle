@@ -16,6 +16,18 @@
 {% endblock %}
 
 {% block content %}
+    <div class="filter">
+        <form action="{{ _admin.path('list') }}" method="get">
+            <input type="text" name="{{ _action.option('filterParameter') }}" value="{{ app.request.query.get(_action.option('filterParameter')) }}" />
+            <input type="submit" value="Filter" />
+            {% for parameter in _admin.parametersToPropagate %}
+                {% if app.request.query.has(parameter) %}
+                    <input type="hidden" name="{{ parameter }}" value="{{ app.request.query.get(parameter) }}" />
+                {% endif %}
+            {% endfor %}
+            <a href="{{ _admin.path('list', { 'clearFilter': true }) }}">Clear</a>
+        </form>
+    </div>
     <div class="results_info">
         <span class="results_number">Found <strong>{{ pagerfanta.getNbResults }}</strong> results</span>
         <div class="clear"></div>
@@ -23,8 +35,7 @@
             {{ pagerfanta(pagerfanta, pagerfantaView, pagerfantaOptions) }}
         {% endif %}
     </div>
-    <div class="clear">
-    </div>
+    <div class="clear"></div>
     <div class="panel">
         <div class="panel_content panel_content_list">
             <table>

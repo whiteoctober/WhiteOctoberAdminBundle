@@ -33,6 +33,13 @@ class ListAction extends BaseListAction
         $this->query = $dataClass::getRepository()->createQuery();
     }
 
+    protected function applyFilter($filter)
+    {
+        foreach ($this->getFilterFields() as $field) {
+            $this->query->mergeCriteria(array($field => new \MongoRegex(sprintf('/%s/', $filter))));
+        }
+    }
+
     protected function applySort($sort, $order)
     {
         $this->query->sort(array($sort => 'asc' == $order ? \MongoCollection::ASCENDING : \MongoCollection::DESCENDING));

@@ -38,6 +38,15 @@ class ListAction extends BaseListAction
         $this->queryBuilder = $queryBuilder;
     }
 
+    protected function applyFilter($filter)
+    {
+        foreach ($this->getFilterFields() as $field) {
+            $this->queryBuilder->orWhere($this->queryBuilder->expr()->like('u.'.$field, ':filter'));
+        }
+
+        $this->queryBuilder->setParameter('filter', '%'.$filter.'%');
+    }
+
     protected function applySort($sort, $order)
     {
         $this->queryBuilder->add('orderBy', sprintf('u.%s %s', $sort, $order));

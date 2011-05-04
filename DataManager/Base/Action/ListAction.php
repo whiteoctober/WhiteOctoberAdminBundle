@@ -23,15 +23,18 @@ abstract class ListAction extends Action
     protected function configure()
     {
         $this
-            ->setRoute('list', '/', array(), array('_method' => 'GET'))
+            ->setRoute('list', '/')
             ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
             ->addOptions(array(
                 'sessionParameter'  => 'hash',
+                'filterParameter'   => 'q',
+                'filterDefault'     => null,
                 'sortParameter'     => 'sort',
                 'orderParameter'    => 'order',
                 'sortDefault'       => null,
                 'orderDefault'      => 'asc',
                 'maxPerPage'        => 10,
+                'headerTemplates'   => array(),
                 'pagerfantaView'    => 'white_october_admin',
                 'pagerfantaOptions' => array(),
             ))
@@ -52,6 +55,20 @@ abstract class ListAction extends Action
         $adminSession = $this->getActionsVars()->get('admin_session');
 
         $this->initQuery();
+
+        // clear filter
+        if ($request->query->get('clearFilter')) {
+            $adminSession->remove(array('filter', 'sort', 'order', 'page'));
+        }
+
+        // filter
+        $filter = $request->query->get($this->getOption('filterParameter'), $adminSession->get('filter', $this->getOption('filterDefault')));
+        if ($filter) {
+            $this->applyFilter($filter);
+
+            $adminSession->set('filter', $filter);
+            $adminSession->remove(array('sort', 'order', 'page'));
+        }
 
         // sort
         $sort = $request->query->get($this->getOption('sortParameter'), $adminSession->get('sort', $this->getOption('sortDefault')));
@@ -88,7 +105,21 @@ abstract class ListAction extends Action
         ));
     }
 
+    protected function getFilterFields()
+    {
+        $fields = array();
+        foreach ($this->getAdmin()->getFields() as $field) {
+            if ($field->hasOption('filtrable') && $field->getOption('filtrable')) {
+                $fields[] = $field->getName();
+            }
+        }
+
+        return $fields;
+    }
+
     abstract protected function initQuery();
+
+    abstract protected function applyFilter($filter);
 
     abstract protected function applySort($sort, $order);
 

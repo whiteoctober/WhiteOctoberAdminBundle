@@ -73,10 +73,16 @@ class AdminSession
         return array_key_exists($name, $data) ? $data[$name] : $default;
     }
 
-    public function remove($name)
+    public function remove($names)
     {
+        if (!is_array($names)) {
+            $names = array($names);
+        }
+
         $data = $this->getData();
-        unset($data[$name]);
+        foreach ($names as $name) {
+            unset($data[$name]);
+        }
         $this->saveData($data);
     }
 

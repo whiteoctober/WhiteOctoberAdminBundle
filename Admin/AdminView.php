@@ -49,4 +49,9 @@ class AdminView
     {
         return $this->admin->getDataClassName();
     }
+
+    public function getParametersToPropagate()
+    {
+        return $this->admin->getParametersToPropagate();
+    }
 }
