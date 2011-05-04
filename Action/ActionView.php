@@ -39,6 +39,11 @@ class ActionView
         return $this->action->getFields();
     }
 
+    public function getSummaryFields()
+    {
+        return $this->action->getSummaryFields();
+    }
+
     public function getDataFieldValue($data, $fieldName)
     {
         return $this->admin->getDataFieldValue($data, $fieldName);

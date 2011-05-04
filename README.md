@@ -138,6 +138,9 @@ protected function configure()
             'isActive',
             // ...
         ))
+        ->addSummaryFields(array(
+            'title',
+        ))
     ;
 }
 ```
@@ -168,3 +171,5 @@ and action is the lowered word before *Action*.
 ### Fields
 
 You should specify fields by using the `addFields()` method.
+
+You can specify which fields to show in the result list by using the `addSummaryFields()` method.
