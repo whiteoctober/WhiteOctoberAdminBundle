@@ -63,13 +63,13 @@ body
 {
 	width:1002px;
 	margin: 0 auto;
-	/*padding: 0 10px;*/	
+	/*padding: 0 10px;*/
 }
 
 fieldset, ul
 {
 	border: none;
-	margin: 0;	
+	margin: 0;
 	padding: 0;
 }
 
@@ -83,8 +83,8 @@ input, textarea
 	border: 1px solid #e0e0e0;
 	border-radius: 6px;
 	-moz-border-radius:6px;
-	-webkit-border-radius: 6px;	
-	padding: 0 5px;	
+	-webkit-border-radius: 6px;
+	padding: 0 5px;
 }
 
 a
@@ -100,10 +100,10 @@ a
 
 .line
 {
-	height:1px; 
-	background-color:#d4d4d4; 
-	width:926px; 
-	float:left; 
+	height:1px;
+	background-color:#d4d4d4;
+	width:926px;
+	float:left;
 	display: block;
 }
 
@@ -117,7 +117,7 @@ a.button_slidingdoors
 	font-weight: bold;
 	float: left;
 	display: inline;
-	font-size: 18px;	
+	font-size: 18px;
 	margin: 5px;
 }
 
@@ -127,8 +127,8 @@ a.button_slidingdoors span
 	float: left;
 	height: 32px;
 	padding: 8px 15px 0 15px;
-	margin-right: -9px;	
-	position:relative;	
+	margin-right: -9px;
+	position:relative;
 }
 
 a.button_slidingdoors span img
@@ -153,7 +153,7 @@ a.button_grey
 
 a.button_grey span
 {
-	background: url(../images/buttons/slidingdoors/grey_right.png) no-repeat top right;	
+	background: url(../images/buttons/slidingdoors/grey_right.png) no-repeat top right;
 }
 
 a.button_yellow
@@ -163,7 +163,7 @@ a.button_yellow
 
 a.button_yellow span
 {
-	background: url(../images/buttons/slidingdoors/yellow_right.png) no-repeat top right;	
+	background: url(../images/buttons/slidingdoors/yellow_right.png) no-repeat top right;
 	color: #fff;
 }
 
@@ -174,7 +174,7 @@ a.button_blue
 
 a.button_blue span
 {
-	background: url(../images/buttons/slidingdoors/blue_right.png) no-repeat top right;	
+	background: url(../images/buttons/slidingdoors/blue_right.png) no-repeat top right;
 	color: #fff;
 }
 
@@ -203,7 +203,7 @@ a.button_slidingdoors_small
 	font-weight: bold;
 	float: left;
 	display: inline;
-	font-size: 15px;	
+	font-size: 15px;
 	margin: 5px;
 }
 
@@ -213,8 +213,8 @@ a.button_slidingdoors_small span
 	float: right;
 	height: 28px;
 	padding: 2px 15px 0 15px;
-	margin-right: -9px;	
-	position:relative;	
+	margin-right: -9px;
+	position:relative;
 }
 
 a.button_slidingdoors_small span img
@@ -239,7 +239,7 @@ a.button_blue_s
 
 a.button_blue_s span
 {
-	background: url(../images/buttons/slidingdoors/blue_s_right.png) no-repeat top right;	
+	background: url(../images/buttons/slidingdoors/blue_s_right.png) no-repeat top right;
 	color: #fff;
 }
 
@@ -250,7 +250,7 @@ a.button_grey_s
 
 a.button_grey_s span
 {
-	background: url(../images/buttons/slidingdoors/grey_s_right.png) no-repeat top right;	
+	background: url(../images/buttons/slidingdoors/grey_s_right.png) no-repeat top right;
 	color: #16628D;
 }
 
@@ -261,7 +261,7 @@ a.button_yellow_s
 
 a.button_yellow_s span
 {
-	background: url(../images/buttons/slidingdoors/yellow_s_right.png) no-repeat top right;	
+	background: url(../images/buttons/slidingdoors/yellow_s_right.png) no-repeat top right;
 	color: #fff;
 }
 
@@ -276,7 +276,7 @@ img.button_icon
 
 ul.breadcrumb
 {
-	font-size: 12px;	
+	font-size: 12px;
 	list-style: none;
 	float: left;
 	display: inline;
@@ -298,7 +298,7 @@ ul.breadcrumb a
 	font-size: 12px;
 	padding-right: 12px;
 	background: url(../images/breadcrumb_background.png) right 4px no-repeat;
-	
+
 }
 
 ul.breadcrumb a:hover
@@ -324,7 +324,7 @@ ul.breadcrumb a:hover
 	margin-top: -15px;
 }
 
-.pagination li 
+.pagination li
 {
 	float: left;
 	display: inline;
@@ -369,7 +369,7 @@ ul.breadcrumb a:hover
 	margin-top: 10%;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;	
+	-webkit-border-radius: 15px;
 	background: url(../images/loginbox_top.png) 0 0 no-repeat;
 }
 
@@ -389,7 +389,7 @@ ul.breadcrumb a:hover
 {
 	background: url(../images/loginbox_middle.png) 0 0 repeat-y;
 	float: left;
-	display: block;	
+	display: block;
 	width: 516px;
 }
 
@@ -469,13 +469,13 @@ ul.login_box_fields
 	font-size: 12px;
 	border-radius: 0 0 10px 10px;
 	-moz-border-radius: 0 0 10px 10px;
-	-webkit-border-radius: 0 0 10px 10px;	
+	-webkit-border-radius: 0 0 10px 10px;
 	background-color: #ededed;
 	width: 479px;
 	float:left;
-	display: block;	
+	display: block;
 	padding-left: 15px;
-	width: 479px; 
+	width: 479px;
 	line-height: 30px;
 }
 
@@ -521,7 +521,7 @@ ul.login_box_fields
 {
 	float: left;
 	display: block;
-	width: 984px;	
+	width: 984px;
 	margin-left: 6px;
 }
 
@@ -549,10 +549,10 @@ ul.login_box_fields
 	padding: 0 15px 15px;
 	float: left;
 	display: block;
-	background: url(../images/content_background.png) 0 0 repeat-y;		
+	background: url(../images/content_background.png) 0 0 repeat-y;
 	width: 972px;
 	margin: 0;
-	
+
 }
 
 <!--[if IE 6]>
@@ -632,7 +632,7 @@ ul.login_box_fields
 #primarynav ul li a
 {
 	background-color: #b3aeae;
-	height: 28px;	
+	height: 28px;
 	color: #fff;
 	font-weight: bold;
 	font-size: 16px;
@@ -641,7 +641,7 @@ ul.login_box_fields
 	padding: 8px 15px;
 	border-radius: 8px 8px 0 0;
 	-moz-border-radius:8px 8px 0 0;
-	-webkit-border-radius:8px 8px 0 0;		
+	-webkit-border-radius:8px 8px 0 0;
 	text-decoration: none;
 }
 
@@ -669,7 +669,7 @@ ul.login_box_fields
 	font-size: 16px;
 	font-weight: bold;
 	float: left;
-	display: inline;	
+	display: inline;
 	margin-top: 5px;
 	margin-right: 5px;
 }
@@ -706,7 +706,7 @@ ul.login_box_fields
 	border-radius: 10px 10px 0 0;
 	-moz-border-radius:10px 10px 0 0;
 	-webkit-border-radius:10px 10px 0 0;
-	padding: 4px 0;		
+	padding: 4px 0;
 	display: block;
 	float: left;
 }
@@ -716,10 +716,10 @@ ul.login_box_fields
 	border: #e0e0e0 1px solid;
 	border-radius: 10px;
 	-moz-border-radius:10px;
-	-webkit-border-radius:10px;	
+	-webkit-border-radius:10px;
 	width: 926px;
 	margin: 15px 20px 0;
-	background-color: #F2F2F2;	
+	background-color: #F2F2F2;
 }
 .panel p
 {
@@ -729,7 +729,7 @@ ul.login_box_fields
 }
 .panel#userslist_view
 {
-	background-color: #fff !important;	
+	background-color: #fff !important;
 }
 
 .panel#userslist_view ul
@@ -760,9 +760,9 @@ ul.login_box_fields
 	border-top-left-radius: 10px;
 	-moz-border-radius-topright:10px;
 	-moz-border-radius-topleft:10px;
-	-webkit-border-top-right-radius:10px;	
+	-webkit-border-top-right-radius:10px;
 	-webkit-border-top-left-radius:10px;
-	height: 5px;	
+	height: 5px;
 	margin-bottom: 6px;
 	line-height: 10px;
 }
@@ -822,7 +822,7 @@ ul.login_box_fields
 {
 	height: 23px;
 	margin: 2px 0;
-	display: inline;	
+	display: inline;
 }
 
 
@@ -830,7 +830,7 @@ ul.login_box_fields
 {
 	height: 23px;
 	margin: 2px 0;
-	display: inline;	
+	display: inline;
 }
 
 .panel_content ul li input.text_small, #filter_fields li input.text_small
@@ -886,7 +886,7 @@ ul.login_box_fields
 	-webkit-border-radius: 5px;
 	float: left;
 	display: block;
-	margin: 15px 25px 0;	
+	margin: 15px 25px 0;
 	font-weight: bold;
 	font-size: 14px;
 	clear: both;
@@ -898,14 +898,14 @@ ul.login_box_fields
 {
 	background-color: #95ea84;
 	color: #336633;
-	border: 1px solid #99cc99;	
+	border: 1px solid #99cc99;
 }
 
 .error
 {
 	background-color: #efe8e8;
 	color: #d80000;
-	border: 1px solid #E0E0E0;	
+	border: 1px solid #E0E0E0;
 }
 
 .panel_content_list table
@@ -917,7 +917,7 @@ ul.login_box_fields
 	border-spacing: 0;
 	border-radius: 10px 10px 0 0;
 	-moz-border-radius:10px 10px 0 0;
-	-webkit-border-radius:10px 10px 0 0;	
+	-webkit-border-radius:10px 10px 0 0;
 	border-collapse: collapse;
 }
 
@@ -942,7 +942,7 @@ ul.login_box_fields
 {
 	padding: 5px 10px;
 	text-align: left;
-	border-bottom: 1px #d4d4d4 solid;	
+	border-bottom: 1px #d4d4d4 solid;
 	border-right: 1px #fff solid;
 }
 
@@ -957,7 +957,7 @@ ul.login_box_fields
 .panel_content_list td.last, .panel_content_list th.last
 {
 	border-right: 0 !important;
-	background-color: #faebc7;	
+	background-color: #faebc7;
 }
 .panel_content_list td.last, .panel_content_list th.first
 {
@@ -1013,7 +1013,7 @@ thead
 {
 	width: 25px;
 	text-align: center !important;
-	background: url(../images/thead.gif) top left no-repeat !important;	
+	background: url(../images/thead.gif) top left no-repeat !important;
 }
 
 th.last
@@ -1039,7 +1039,7 @@ th.last
 	border-top: 1px solid #e0e0e0;
 	border-radius: 0 0 10px 10px;
 	-moz-border-radius: 0 0 10px 10px;
-	-webkit-border-radius: 0 0 10px 10px;	
+	-webkit-border-radius: 0 0 10px 10px;
 	color: #666;
 	font-size: 12px;
 }
@@ -1152,7 +1152,7 @@ a.orderby
 
 #footer
 {
-	background: url(../images/footer_background.png) top left no-repeat;	
+	background: url(../images/footer_background.png) top left no-repeat;
 	float: left;
 	display: block;
 	height: 35px;
@@ -1188,7 +1188,7 @@ a.orderby
 	color: #6d6d6d;
 	font-size: 26px;
 	margin: 19px 0 0 15px;
-	
+
 }
 
 #locations_content_header ul
@@ -1248,8 +1248,8 @@ a.orderby
 	padding: 5px 10px 5px 15px;
 	border-radius: 0 0 8px 8px;
 	-moz-border-radius: 0 0 8px 8px;
-	-webkit-border-radius: 0 0 8px 8px;		
-	line-height: 29px;	
+	-webkit-border-radius: 0 0 8px 8px;
+	line-height: 29px;
 	margin-top: -6px;
 	margin-right: -15px;
 	float: right;
@@ -1301,8 +1301,8 @@ a.orderby
 	padding: 25px 15px 10px;
 	border-radius: 0 0 8px 8px;
 	-moz-border-radius: 0 0 8px 8px;
-	-webkit-border-radius: 0 0 8px 8px;	
-	margin-left: 3px;	
+	-webkit-border-radius: 0 0 8px 8px;
+	margin-left: 3px;
 	border-bottom: 1px solid #bfd4e1;
 	border-right: 1px solid #bfd4e1;
 	border-left: 1px solid #bfd4e1;
@@ -1345,12 +1345,12 @@ a.orderby
 }
 
 .subpanel
-{	
+{
 	border-radius: 10px;
 	-moz-border-radius:10px;
-	-webkit-border-radius:10px;	
+	-webkit-border-radius:10px;
 	width: 894px;
-	background-color: #f6f6f6;	
+	background-color: #f6f6f6;
 	float: left;
 	display: block;
 	margin: 5px 0;
@@ -1360,7 +1360,7 @@ a.orderby
 {
 	width: 440px !important;
 	display: inline;
-}	
+}
 
 .subpanel.twocolumns.right
 {
@@ -1388,7 +1388,7 @@ a.orderby
 	text-align: left;
 	float: left;
 	display: block;
-	border: 0;	
+	border: 0;
 	color: #16628D;
 }
 
@@ -1415,7 +1415,7 @@ a.orderby
 	display: inline;
 	text-align: right;
 	line-height: 28px;
-	font-size: 14px;	
+	font-size: 14px;
 	float: left;
 	display: inline;
 	margin-right: 8px;
@@ -1439,8 +1439,8 @@ a.orderby
 	height: 555px;
 	border-radius: 10px;
 	-moz-border-radius:10px;
-	-webkit-border-radius:10px;	
-	background-color: #f6f6f6;	
+	-webkit-border-radius:10px;
+	background-color: #f6f6f6;
 	margin: 10px;
 	padding: 10px;
 }
@@ -1449,7 +1449,7 @@ a.orderby
 {
 	text-decoration: none !important;
 	overflow: scroll;
-	height: 510px;	
+	height: 510px;
 }
 
 .photospanel ul li
@@ -1469,8 +1469,8 @@ a.orderby
 	display: inline;
 	border-radius: 10px;
 	-moz-border-radius:10px;
-	-webkit-border-radius:10px;	
-	background-color: #f6f6f6;	
+	-webkit-border-radius:10px;
+	background-color: #f6f6f6;
 	text-align: center;
 	padding: 10px;
 	margin-bottom: 10px;
@@ -1481,17 +1481,4 @@ ul.four_columns
 	float: left;
 	display: inline;
 	width: 225px;
-}
-
-/**** Messages ***/
-.notice 
-{
-	border-radius: 10px;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;	
-	background-color: green;
-	padding:10px;
-	color:#fff;
-	padding:10px;
-	margin:10px;
 }
