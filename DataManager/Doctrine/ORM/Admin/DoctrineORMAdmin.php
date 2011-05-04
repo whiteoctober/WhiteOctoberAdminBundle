@@ -19,6 +19,9 @@ abstract class DoctrineORMAdmin extends Admin
     {
         parent::preConfigure();
 
-        $this->addFieldGuesser('doctrine.orm');
+        $this
+            ->addAction('doctrine.orm.crud')
+            ->addFieldGuesser('doctrine.orm')
+        ;
     }
 }
