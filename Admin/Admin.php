@@ -111,7 +111,7 @@ abstract class Admin extends ContainerAware
 
     public function getRoutePatternPrefix()
     {
-        if (null === $this->routeNamePrefix) {
+        if (null === $this->routePatternPrefix) {
             $this->routePatternPrefix = '/'.$this->urlize(get_class($this));
         }
 
