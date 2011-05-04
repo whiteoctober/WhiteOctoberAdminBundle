@@ -26,11 +26,6 @@ class FieldConfigurator
         }
     }
 
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
     public function has($name)
     {
         return isset($this->fields[$name]);
@@ -43,6 +38,11 @@ class FieldConfigurator
         }
 
         return $this->fields[$name];
+    }
+
+    public function all()
+    {
+        return $this->fields;
     }
 
     public function disable($names)

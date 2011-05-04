@@ -255,7 +255,7 @@ abstract class Action extends ContainerAware
 
             $fieldConfigurator = new FieldConfigurator($fields);
             $this->admin->configureFieldsByAction($this, $fieldConfigurator);
-            $fields = $fieldConfigurator->getFields();
+            $fields = $fieldConfigurator->all();
 
             $dataClass = $this->getDataClass();
             $guessador = new FieldGuessador($this->getFieldGuessers());
