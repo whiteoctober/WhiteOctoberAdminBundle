@@ -11,53 +11,40 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Doctrine\ORM\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\ListAction as BaseListAction;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\Exception\NotValidCurrentPageException;
 
-class ListAction extends Action
+class ListAction extends BaseListAction
 {
+    private $queryBuilder;
+
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('doctrine.orm.list')
-            ->setRoute('list', '/', array(), array('_method' => 'GET'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
-            ->addOptions(array(
-                'maxPerPage'        => 10,
-                'pagerfantaView'    => 'white_october_admin',
-                'pagerfantaOptions' => array(),
-            ))
         ;
     }
 
-    public function executeController()
+    protected function initQuery()
     {
-        $dataClass = $this->getDataClass();
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        $queryBuilder = $em->createQueryBuilder();
+        $queryBuilder = $this->get('doctrine.orm.entity_manager')->createQueryBuilder();
         $queryBuilder
             ->select('u')
-            ->from($dataClass, 'u')
+            ->from($this->getDataClass(), 'u')
         ;
-        $adapter = new DoctrineORMAdapter($queryBuilder);
-        $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage($this->getOption('maxPerPage'));
-        if ($page = $this->get('request')->query->get('page')) {
-            try {
-                $pagerfanta->setCurrentPage($page);
-            } catch (NotValidCurrentPageException $e) {
-                throw new NotFoundHttpException();
-            }
-        }
 
-        return $this->render($this->getTemplate(), array(
-            'pagerfanta'        => $pagerfanta,
-            'pagerfantaView'    => $this->getOption('pagerfantaView'),
-            'pagerfantaOptions' => $this->getOption('pagerfantaOptions'),
-        ));
+        $this->queryBuilder = $queryBuilder;
+    }
+
+    protected function applySort($sort, $order)
+    {
+        $this->queryBuilder->add('orderBy', sprintf('u.%s %s', $sort, $order));
+    }
+
+    protected function createPagerfantaAdapter()
+    {
+        return new DoctrineORMAdapter($this->queryBuilder);
     }
 }

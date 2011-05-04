@@ -11,49 +11,34 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Doctrine\ODM\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\ListAction as BaseListAction;
 use Pagerfanta\Adapter\DoctrineODMMongoDBAdapter;
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\Exception\NotValidCurrentPageException;
 
-class ListAction extends Action
+class ListAction extends BaseListAction
 {
+    private $queryBuilder;
+
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('doctrine.odm.list')
-            ->setRoute('list', '/', array(), array('_method' => 'GET'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
-            ->addOptions(array(
-                'maxPerPage'        => 10,
-                'pagerfantaView'    => 'white_october_admin',
-                'pagerfantaOptions' => array(),
-            ))
         ;
     }
 
-    public function executeController()
+    protected function initQuery()
     {
-        $dataClass = $this->getDataClass();
-        $em = $this->get('doctrine.odm.mongodb.document_manager');
+        $this->queryBuilder = $this->get('doctrine.odm.mongodb.document_manager')->createQueryBuilder($this->getDataClass());
+    }
 
-        $queryBuilder = $em->createQueryBuilder($dataClass);
-        $adapter = new DoctrineODMMongoDBAdapter($queryBuilder);
-        $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage($this->getOption('maxPerPage'));
-        if ($page = $this->get('request')->query->get('page')) {
-            try {
-                $pagerfanta->setCurrentPage($page);
-            } catch (NotValidCurrentPageException $e) {
-                throw new NotFoundHttpException();
-            }
-        }
+    protected function applySort($sort, $order)
+    {
+        $this->queryBuilder->sort($sort, $order);
+    }
 
-        return $this->render($this->getTemplate(), array(
-            'pagerfanta'        => $pagerfanta,
-            'pagerfantaView'    => $this->getOption('pagerfantaView'),
-            'pagerfantaOptions' => $this->getOption('pagerfantaOptions'),
-        ));
+    protected function createPagerfantaAdapter()
+    {
+        return new DoctrineODMMongoDBAdapter($this->queryBuilder);
     }
 }
