@@ -28,6 +28,7 @@ abstract class Action extends ContainerAware
     private $routeRequirements;
     private $defaultTemplate;
     private $dependences;
+    private $summaryFields;
     private $fields;
 
     public function __construct(array $options = array())
@@ -235,6 +236,10 @@ abstract class Action extends ContainerAware
         return $this->dependences;
     }
 
+    public function getSummaryFields()
+    {
+        return $this->admin->getSummaryFields();
+    }
 
     public function getFields()
     {

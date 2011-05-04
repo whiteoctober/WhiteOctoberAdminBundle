@@ -30,7 +30,7 @@
             <table>
                 <thead>
                     <tr>
-                        {% for field in _action.fields %}
+                        {% for field in _action.summaryFields %}
                             <th class="{% if loop.first %}first{% endif %}">{{ field.label }}</th>
                         {% endfor %}
                         {% for action in _action.getOption('data_actions') %}
@@ -41,7 +41,7 @@
                 <tbody class="list_content">
                     {% for data in pagerfanta.currentPageResults %}
                         <tr>
-                            {% for field in _action.fields %}
+                            {% for field in _action.summaryFields %}
                                 <td>{{ _action.renderField(field, data) }}</td>
                             {% endfor %}
                             {% for action in _action.getOption('data_actions') %}

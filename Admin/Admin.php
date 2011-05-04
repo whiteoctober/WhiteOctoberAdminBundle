@@ -28,6 +28,7 @@ abstract class Admin extends ContainerAware
 
     private $rawFields;
     private $fields;
+    private $summaryFields;
 
     private $rawFieldGuessers;
     private $fieldGuessers;
@@ -40,6 +41,7 @@ abstract class Admin extends ContainerAware
         $this->rawFields = array();
         $this->rawFieldGuessers = array();
         $this->rawActions = array();
+        $this->summaryFields = array();
 
         $this->preConfigure();
         $this->configure();
@@ -191,6 +193,38 @@ abstract class Admin extends ContainerAware
         }
 
         return $this->fields[$name];
+    }
+
+    public function addSummaryField($name)
+    {
+        if (!in_array($name, $this->summaryFields)) {
+            $this->summaryFields[] = $name;
+        }
+
+        return $this;
+    }
+
+    public function addSummaryFields(array $summaryFields)
+    {
+        foreach ($summaryFields as $name) {
+            $this->addSummaryField($name);
+        }
+
+        return $this;
+    }
+
+    public function getSummaryFields()
+    {
+        if (count($this->summaryFields) === 0) {
+            return $this->getFields();
+        }
+
+        return array_intersect_key($this->getFields(), array_flip($this->summaryFields));
+    }
+
+    public function hasSummaryField($name)
+    {
+        return in_array($name, $this->summaryFields);
     }
 
     public function addFieldGuesser($fieldGuesser)
