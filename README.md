@@ -127,7 +127,7 @@ To finish, you have to define a comportment the `configure()` method.
 protected function configure()
 {
     $this
-        ->setNames('Articles')
+        ->setName('Articles')
         ->setDataClass('MyBundle\Entity\Article')
         ->addActions(array(
             'doctrine.orm.crud',
