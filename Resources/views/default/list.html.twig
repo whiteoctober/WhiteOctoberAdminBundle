@@ -45,7 +45,7 @@
                             <th class="{% if loop.first %}first{% endif %}">
                                 {% if field.hasOption('sortable') and field.getOption('sortable') %}
                                     {% if sort == field.name %}
-                                        <a href="{{ _admin.path('list', { 'sort': field.name, 'order': 'asc' == order ? 'desc' : 'asc' }) }}">{{ field.label }}</a>
+                                        <a href="{{ _admin.path('list', { 'sort': field.name, 'order': 'asc' == order ? 'desc' : 'asc' }) }}">{{ field.label }} <img src="{{ asset('bundles/whiteoctoberadmin/images/buttons/arrow'~('asc' == order ? 'up' : 'down')~'.gif') }}" /></a>
                                     {% else %}
                                         <a href="{{ _admin.path('list', { 'sort': field.name }) }}">{{ field.label }}</a>
                                     {% endif %}
