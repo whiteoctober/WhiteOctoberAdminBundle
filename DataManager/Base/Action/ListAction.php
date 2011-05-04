@@ -23,7 +23,7 @@ abstract class ListAction extends Action
     protected function configure()
     {
         $this
-            ->setRoute('list', '/')
+            ->setRoute('list', '/', array(), array('_method' => 'GET'))
             ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
             ->addOptions(array(
                 'sessionParameter'  => 'hash',
