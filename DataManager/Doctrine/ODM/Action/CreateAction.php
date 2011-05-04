@@ -42,8 +42,8 @@ class CreateAction extends Action
             $em->persist($data);
             $em->flush();
 
-            $this->get('session')->setFlash('notice','You\'re object have been saved!');
-            
+            $this->get('session')->setFlash('notice','Your object has been saved!');
+
             return new RedirectResponse($this->generateUrl('list'));
         }
 

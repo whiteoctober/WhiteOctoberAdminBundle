@@ -44,8 +44,8 @@ class UpdateAction extends Action
         if ($form->isValid()) {
             $data->save();
 
-            $this->get('session')->setFlash('notice','You\'re object have been saved!');
-            
+            $this->get('session')->setFlash('notice','Your object has been saved!');
+
             return new RedirectResponse($this->generateUrl('list'));
         }
 
