@@ -67,9 +67,9 @@
                             {% endfor %}
                             {% for action in _action.getOption('data_actions') %}
                                 <td class="td_data_action">
-                                    {% if action._method is not defined or 'GET' == action._method %}
+                                    {% if 'GET' == action._method %}
                                         <a href="{{ _admin.path(action.route, { 'id': data.id }) }}" class="icon {{ action.label|lower }}" title="{{ action.label }}"></a>
-                                    {% else %}
+                                    {% elseif 'DELETE' == action._method %}
                                         <form action="{{ _admin.path(action.route, { 'id': data.id }) }}" method="POST">
                                             <input type="hidden" name="_method" value="{{ action._method }}" />
                                             <input type="submit" value="{{ action.label }}"
@@ -77,7 +77,7 @@
                                         	onclick="return confirm('{{ action.confirm }}');"
                                         	{% endif %}
                                             >
-                                        </form>
+                                        </form>                                     
                                     {% endif %}
                                     </li>
 

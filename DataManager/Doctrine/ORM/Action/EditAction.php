@@ -26,7 +26,7 @@ class EditAction extends Action
             ->setDependences(array(
                 'doctrine.orm.list' => array(
                     'data_actions' => array(
-                        'edit'   => array('route' => 'edit', 'label' => 'Edit'),
+                        'edit'   => array('route' => 'edit', '_method' => 'GET','label' => 'Edit'),
                     ),
                 ),
             ))
