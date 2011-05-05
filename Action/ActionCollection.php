@@ -11,6 +11,8 @@
 
 namespace WhiteOctober\AdminBundle\Action;
 
+use Doctrine\Common\Util\Inflector;
+
 abstract class ActionCollection
 {
     private $actions;
@@ -31,6 +33,18 @@ abstract class ActionCollection
                 $this->actions[$name]->mergeOptions($options);
             }
         }
+    }
+    
+    abstract protected function getNamespace();
+    
+    protected function getActionFor($actionName = 'list', $createInstance = true)
+    {
+        $action = $this->getNamespace().'\\'.ucfirst(Inflector::camelize($actionName)).'Action';
+        
+        if(!$createInstance)
+            return $action;
+            
+        return new $action();
     }
 
     protected function getDefaultOptions()
