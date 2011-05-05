@@ -68,7 +68,7 @@ class FieldConfigurator
                 throw new \InvalidArgumentException(sprintf('The field "%s" does not exist.', $name));
             }
 
-            $fields = $this->fields[$fieldName];
+            $fields[$fieldName] = $this->fields[$fieldName];
         }
 
         $this->fields = $fields;
