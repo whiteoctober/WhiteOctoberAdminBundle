@@ -60,15 +60,15 @@ class FieldConfigurator
         }
     }
 
-    public function disableAllExcept(array $fieldNames)
+    public function disableAllExcept(array $names)
     {
         $fields = array();
-        foreach ($fieldNames as $fieldName) {
-            if (!$this->has($fieldName)) {
+        foreach ($names as $name) {
+            if (!$this->has($name)) {
                 throw new \InvalidArgumentException(sprintf('The field "%s" does not exist.', $name));
             }
 
-            $fields[$fieldName] = $this->fields[$fieldName];
+            $fields[$name] = $this->fields[$name];
         }
 
         $this->fields = $fields;
