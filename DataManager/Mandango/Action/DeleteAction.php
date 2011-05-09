@@ -11,37 +11,16 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Mandango\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\DeleteAction as BaseDeleteAction;
 
-class DeleteAction extends Action
+class DeleteAction extends BaseDeleteAction
 {
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('mandango.delete')
-            ->setRoute('delete', '/{id}', array(), array('_method' => 'DELETE'))
-            ->setDependences(array(
-                'mandango.list' => array(
-                    'data_actions' => array(
-                        'delete'   => array('route' => 'delete', 'confirm' => 'Are you sure?', '_method' => 'DELETE', 'label' => 'Delete'),
-                    ),
-                ),
-            ))
         ;
-    }
-
-    public function executeController()
-    {
-        $dataClass = $this->getDataClass();
-        $data = $dataClass::getRepository()->findOneById($this->container->get('request')->attributes->get('id'));
-        if (!$data) {
-            throw new NotFoundHttpException();
-        }
-
-        $data->delete();
-
-        return new RedirectResponse($this->generateUrl('list'));
     }
 }

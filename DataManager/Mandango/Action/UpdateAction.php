@@ -11,42 +11,16 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Mandango\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\UpdateAction as BaseUpdateAction;
 
-class UpdateAction extends Action
+class UpdateAction extends BaseUpdateAction
 {
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('mandango.update')
-            ->setRoute('update', '/{id}', array(), array('_method' => 'PUT'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/edit.html.twig')
-            ->setDependences(array(
-                'mandango.edit' => array(),
-            ))
         ;
-    }
-
-    public function executeController()
-    {
-        $dataClass = $this->getDataClass();
-        $data = $dataClass::getRepository()->findOneById($this->container->get('request')->attributes->get('id'));
-        if (!$data) {
-            throw new NotFoundHttpException();
-        }
-
-        $form = $this->buildFormFromFields();
-        $form->setData($data);
-
-        $form->bindRequest($this->container->get('request'));
-        if ($form->isValid()) {
-            $data->save();
-
-            return new RedirectResponse($this->generateUrl('list'));
-        }
-
-        return $this->render($this->getTemplate(), array('data' => $data, 'form' => $form->createView()));
     }
 }

@@ -381,11 +381,27 @@ abstract class Admin extends ContainerAware
             }
             $action->setAdmin($this);
             $action->setContainer($this->container);
-            foreach ($action->getDependences() as $actionFullName => $options) {
-                if (!isset($actions[$actionFullName])) {
-                    throw new \RuntimeException(sprintf('The action "%s" does not exist.', $actionFullName));
+            foreach ($action->getDependences() as $actionName => $options) {
+                $dependenceAction = null;
+                // by full name
+                if (isset($actions[$actionName])) {
+                    $dependenceAction = $actions[$actionName];
                 }
-                $actions[$actionFullName]->mergeOptions($options);
+                // by name
+                if (null === $dependenceAction) {
+                    foreach ($actions as $possibleAction) {
+                        if ($possibleAction->getName() == $actionName) {
+                            $dependenceAction = $possibleAction;
+                            break;
+                        }
+                    }
+                }
+                // action does not exist
+                if (null === $dependenceAction) {
+                    throw new \RuntimeException(sprintf('The action "%s" does not exist.', $actionName));
+                }
+
+                $dependenceAction->mergeOptions($options);
             }
 
             $action->configureActionsVars($this->actionsVars);

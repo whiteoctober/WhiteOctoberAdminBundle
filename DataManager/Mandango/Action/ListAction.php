@@ -12,6 +12,7 @@
 namespace WhiteOctober\AdminBundle\DataManager\Mandango\Action;
 
 use WhiteOctober\AdminBundle\DataManager\Base\Action\ListAction as BaseListAction;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Pagerfanta\Adapter\MandangoAdapter;
 
 class ListAction extends BaseListAction
@@ -25,6 +26,26 @@ class ListAction extends BaseListAction
         $this
             ->setName('mandango.list')
         ;
+    }
+
+    public function configureActionsVars(ParameterBag $actionsVars)
+    {
+        parent::configureActionsVars($actionsVars);
+
+        $dataClass = $this->getDataClass();
+
+        $actionsVars->set('createData', function () use ($dataClass) {
+            return new $dataClass();
+        });
+        $actionsVars->set('findDataById', function ($id) use ($dataClass) {
+            return $dataClass::getRepository()->findOneById($id);
+        });
+        $actionsVars->set('saveData', function ($data) {
+            $data->save();
+        });
+        $actionsVars->set('deleteData', function ($data) {
+            $data->delete();
+        });
     }
 
     protected function initQuery()

@@ -11,35 +11,16 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Doctrine\ORM\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\NewAction as BaseNewAction;
 
-class NewAction extends Action
+class NewAction extends BaseNewAction
 {
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('doctrine.orm.new')
-            ->setRoute('new', '/new', array(), array('_method' => 'GET'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/new.html.twig')
-            ->setDependences(array(
-                'doctrine.orm.list' => array(
-                    'actions' => array(
-                        'new' => array('route' => 'new', 'label' => 'New'),
-                    ),
-                ),
-            ))
         ;
-    }
-
-    public function executeController()
-    {
-        $dataClass = $this->getDataClass();
-        $data = new $dataClass();
-
-        $form = $this->buildFormFromFields();
-        $form->setData($data);
-
-        return $this->render($this->getTemplate(), array('form' => $form->createView()));
     }
 }

@@ -11,39 +11,16 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Doctrine\ORM\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\DeleteAction as BaseDeleteAction;
 
-class DeleteAction extends Action
+class DeleteAction extends BaseDeleteAction
 {
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('doctrine.orm.delete')
-            ->setRoute('delete', '/{id}', array(), array('_method' => 'DELETE'))
-            ->setDependences(array(
-                'doctrine.orm.list' => array(
-                    'data_actions' => array(
-                        'delete'   => array('route' => 'delete', 'confirm' => 'Are you sure?', '_method' => 'DELETE', 'label' => 'Delete'),
-                    ),
-                ),
-            ))
         ;
-    }
-
-    public function executeController()
-    {
-        $dataClass = $this->getDataClass();
-        $em = $this->get('doctrine.orm.entity_manager');
-        $data = $em->getRepository($dataClass)->find($this->container->get('request')->attributes->get('id'));
-        if (!$data) {
-            throw new NotFoundHttpException();
-        }
-
-        $em->remove($data);
-        $em->flush();
-
-        return new RedirectResponse($this->generateUrl('list'));
     }
 }
