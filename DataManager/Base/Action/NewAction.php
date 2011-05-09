@@ -36,7 +36,7 @@ abstract class NewAction extends Action
         $createData = $this->getActionsVars()->get('createData');
         $data = $createData();
 
-        $form = $this->buildFormFromFields();
+        $form = $this->buildFormFromFields($this->getFields());
         $form->setData($data);
 
         return $this->render($this->getTemplate(), array('form' => $form->createView()));

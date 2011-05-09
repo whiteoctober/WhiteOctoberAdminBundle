@@ -32,7 +32,7 @@ abstract class CreateAction extends Action
         $createData = $this->getActionsVars()->get('createData');
         $data = $createData();
 
-        $form = $this->buildFormFromFields();
+        $form = $this->buildFormFromFields($this->getFields());
         $form->setData($data);
 
         $form->bindRequest($this->container->get('request'));
