@@ -18,7 +18,7 @@
 {% block content %}
     <div class="filter">
         <form action="{{ _admin.path('list') }}" method="get">
-            <input type="text" name="{{ _action.option('filterParameter') }}" value="{{ app.request.query.get(_action.option('filterParameter')) }}" />
+            <input type="text" name="{{ _action.option('simpleFilterParameter') }}" value="{{ app.request.query.get(_action.option('simpleFilterParameter')) }}" />
             <input type="submit" value="Filter" />
             {% for parameter in _admin.parametersToPropagate %}
                 {% if app.request.query.has(parameter) %}

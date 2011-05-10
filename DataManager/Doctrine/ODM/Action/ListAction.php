@@ -56,9 +56,9 @@ class ListAction extends BaseListAction
         $this->queryBuilder = $this->get('doctrine.odm.mongodb.document_manager')->createQueryBuilder($this->getDataClass());
     }
 
-    protected function applyFilter($filter)
+    protected function applySimpleFilter($filter)
     {
-        foreach ($this->getFilterFields() as $field) {
+        foreach ($this->getSimpleFilterFields() as $field) {
             $this->queryBuilder->field($field)->equals(new \MongoRegex(sprintf('/%s/i', $filter)));
         }
     }

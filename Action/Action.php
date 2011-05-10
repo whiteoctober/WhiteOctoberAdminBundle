@@ -303,7 +303,7 @@ abstract class Action extends ContainerAware
         return $this->admin->generateUrl($routeNameSuffix, $parameters, $absolute);
     }
 
-    protected function createFormFromFields(array $fields)
+    protected function createFormFromFields(FieldBag $fields)
     {
         $formFactory = $this->container->get('form.factory');
         $formBuilder = $formFactory->createBuilder('form', null, array(

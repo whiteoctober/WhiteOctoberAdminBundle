@@ -62,9 +62,9 @@ class ListAction extends BaseListAction
         $this->queryBuilder = $queryBuilder;
     }
 
-    protected function applyFilter($filter)
+    protected function applySimpleFilter($filter)
     {
-        foreach ($this->getFilterFields() as $field) {
+        foreach ($this->getSimpleFilterFields() as $field) {
             $this->queryBuilder->orWhere($this->queryBuilder->expr()->like('u.'.$field, ':filter'));
         }
 

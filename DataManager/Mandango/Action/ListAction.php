@@ -54,9 +54,9 @@ class ListAction extends BaseListAction
         $this->query = $dataClass::getRepository()->createQuery();
     }
 
-    protected function applyFilter($filter)
+    protected function applySimpleFilter($filter)
     {
-        foreach ($this->getFilterFields() as $field) {
+        foreach ($this->getSimpleFilterFields() as $field) {
             $this->query->mergeCriteria(array($field => new \MongoRegex(sprintf('/%s/', $filter))));
         }
     }

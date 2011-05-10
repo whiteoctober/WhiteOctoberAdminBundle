@@ -26,17 +26,17 @@ abstract class ListAction extends Action
             ->setRoute('list', '/', array(), array('_method' => 'GET'))
             ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
             ->addOptions(array(
-                'sessionParameter'  => 'hash',
-                'filterParameter'   => 'q',
-                'filterDefault'     => null,
-                'sortParameter'     => 'sort',
-                'orderParameter'    => 'order',
-                'sortDefault'       => null,
-                'orderDefault'      => 'asc',
-                'maxPerPage'        => 10,
-                'headerTemplates'   => array(),
-                'pagerfantaView'    => 'white_october_admin',
-                'pagerfantaOptions' => array(),
+                'sessionParameter'      => 'hash',
+                'simpleFilterParameter' => 'q',
+                'simpleFilterDefault'   => null,
+                'sortParameter'         => 'sort',
+                'orderParameter'        => 'order',
+                'sortDefault'           => null,
+                'orderDefault'          => 'asc',
+                'maxPerPage'            => 10,
+                'headerTemplates'       => array(),
+                'pagerfantaView'        => 'white_october_admin',
+                'pagerfantaOptions'     => array(),
             ))
         ;
     }
@@ -61,12 +61,15 @@ abstract class ListAction extends Action
             $adminSession->remove(array('filter', 'sort', 'order', 'page'));
         }
 
-        // filter
-        $filter = $request->query->get($this->getOption('filterParameter'), $adminSession->get('filter', $this->getOption('filterDefault')));
-        if ($filter) {
-            $this->applyFilter($filter);
+        // simple filter
+        $simpleFilter = $request->query->get(
+            $this->getOption('simpleFilterParameter'),
+            $adminSession->get('simpleFilter', $this->getOption('simpleFilterDefault'))
+        );
+        if ($simpleFilter) {
+            $this->applySimpleFilter($simpleFilter);
 
-            $adminSession->set('filter', $filter);
+            $adminSession->set('simpleFilter', $simpleFilter);
             $adminSession->remove(array('sort', 'order', 'page'));
         }
 
@@ -105,11 +108,11 @@ abstract class ListAction extends Action
         ));
     }
 
-    protected function getFilterFields()
+    protected function getSimpleFilterFields()
     {
         $fields = array();
         foreach ($this->getAdmin()->getFields() as $field) {
-            if ($field->hasOption('filtrable') && $field->getOption('filtrable')) {
+            if ($field->hasOption('simpleFilter') && $field->getOption('simpleFilter')) {
                 $fields[] = $field->getName();
             }
         }
@@ -119,7 +122,7 @@ abstract class ListAction extends Action
 
     abstract protected function initQuery();
 
-    abstract protected function applyFilter($filter);
+    abstract protected function applySimpleFilter($filter);
 
     abstract protected function applySort($sort, $order);
 
