@@ -62,10 +62,10 @@ class ActionView
                 switch ($type) {
                     case 'text':
                     case 'integer':
-                        $template = 'WhiteOctoberAdminBundle:Field:raw.html.twig';
+                        $template = 'WhiteOctoberAdminBundle:fields:raw.html.twig';
                         break;
                     case 'date':
-                        $template = 'WhiteOctoberAdminBundle:Field:date.html.twig';
+                        $template = 'WhiteOctoberAdminBundle:fields:date.html.twig';
                         break;
                 }
             }
