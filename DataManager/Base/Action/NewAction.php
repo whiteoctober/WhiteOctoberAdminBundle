@@ -33,8 +33,8 @@ abstract class NewAction extends Action
 
     public function executeController()
     {
-        $createData = $this->getActionsVars()->get('createData');
-        $data = $createData();
+        $createDataClosure = $this->getActionsVars()->get('createDataClosure');
+        $data = $createDataClosure();
 
         $form = $this->createFormFromFields($this->getFields());
         $form->setData($data);

@@ -29,16 +29,16 @@ abstract class CreateAction extends Action
 
     public function executeController()
     {
-        $createData = $this->getActionsVars()->get('createData');
-        $data = $createData();
+        $createDataClosure = $this->getActionsVars()->get('createDataClosure');
+        $data = $createDataClosure();
 
         $form = $this->createFormFromFields($this->getFields());
         $form->setData($data);
 
         $form->bindRequest($this->container->get('request'));
         if ($form->isValid()) {
-            $saveData = $this->getActionsVars()->get('saveData');
-            $saveData($data);
+            $saveDataClosure = $this->getActionsVars()->get('saveDataClosure');
+            $saveDataClosure($data);
 
             return new RedirectResponse($this->generateUrl('list'));
         }

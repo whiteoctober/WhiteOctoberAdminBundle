@@ -34,8 +34,8 @@ abstract class EditAction extends Action
 
     public function executeController()
     {
-        $findDataById = $this->getActionsVars()->get('findDataById');
-        $data = $findDataById($this->container->get('request')->attributes->get('id'));
+        $findDataByIdClosure = $this->getActionsVars()->get('findDataByIdClosure');
+        $data = $findDataByIdClosure($this->container->get('request')->attributes->get('id'));
         if (!$data) {
             throw new NotFoundHttpException();
         }

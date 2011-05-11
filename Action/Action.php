@@ -47,7 +47,7 @@ abstract class Action extends ContainerAware
         if (!$this->routeNameSuffix) {
             throw new \RuntimeException('An action must have route name suffix.');
         }
-        if (!$this->routePatternSuffix) {
+        if (null === $this->routePatternSuffix) {
             throw new \RuntimeException('An action must have route name suffix.');
         }
 
@@ -87,6 +87,20 @@ abstract class Action extends ContainerAware
         $this->options = array_merge_recursive($this->options, $options);
     }
 
+    public function mergeOption($name, array $value)
+    {
+        if (!$this->hasOption($name)) {
+            throw new \InvalidArgumentException(sprintf('The option "%s" does not exist.', $name));
+        }
+
+        $currentValue = $this->options[$name];
+        if (!is_array($currentValue)) {
+            throw new \RuntimeException('The current value must to be an array to merge.');
+        }
+
+        $this->options[$name] = array_merge_recursive($currentValue, $value);
+    }
+
     protected function setOptions(array $options)
     {
         $this->options = $options;
@@ -95,6 +109,8 @@ abstract class Action extends ContainerAware
     protected function addOption($name, $defaultValue)
     {
         $this->options[$name] = $defaultValue;
+
+        return $this;
     }
 
     protected function addOptions(array $options)
@@ -102,6 +118,17 @@ abstract class Action extends ContainerAware
         foreach ($options as $name => $defaultValue) {
             $this->addOption($name, $defaultValue);
         }
+
+        return $this;
+    }
+
+    public function setOption($name, $value)
+    {
+        if (!$this->hasOption($name)) {
+            throw new \InvalidArgumentException(sprintf('The option "%s" does not exist.', $name));
+        }
+
+        $this->options[$name] = $value;
     }
 
     public function getOptions()

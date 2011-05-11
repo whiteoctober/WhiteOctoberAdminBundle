@@ -24,10 +24,13 @@ abstract class ListAction extends Action
     protected function configure()
     {
         $this
-            ->setRoute('list', '/', array(), array('_method' => 'GET'))
+            ->setRoute('list', '', array(), array('_method' => 'GET'))
             ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
             ->addOptions(array(
                 'sessionParameter'        => 'hash',
+                'filterQueryCallbacks'    => array(),
+                'findDataByIdCallbacks'   => array(),
+                'createDataCallbacks'     => array(),
                 'simpleFilterParameter'   => 'q',
                 'simpleFilterDefault'     => null,
                 'advancedFilterParameter' => 'advancedFilter',
@@ -49,6 +52,40 @@ abstract class ListAction extends Action
             $adminSession = new AdminSession($this->container->get('request'), $this->container->get('session'), $this->getOption('sessionParameter'));
             $actionsVars->set('admin_session', $adminSession);
         }
+
+        $filterQueryClosure = $this->getFilterQueryClosure();
+        $filterQueryCallbacks = $this->getOption('filterQueryCallbacks');
+        $actionsVars->set('filterQueryClosure', function () use ($filterQueryClosure, $filterQueryCallbacks) {
+            $args = func_get_args();
+            $args[] = $filterQueryCallbacks;
+            return call_user_func_array($filterQueryClosure, $args);
+        });
+
+        $createDataClosure = $this->getCreateDataClosure();
+        $createDataCallbacks = $this->getOption('createDataCallbacks');
+        $actionsVars->set('createDataClosure', function () use ($createDataClosure, $createDataCallbacks) {
+            $args = func_get_args();
+            $args[] = $createDataCallbacks;
+            return call_user_func_array($createDataClosure, $args);
+        });
+
+        $findDataByIdClosure = $this->getFindDataByIdClosure();
+        $findDataByIdCallbacks = $this->getOption('findDataByIdCallbacks');
+        $actionsVars->set('findDataByIdClosure', function () use ($findDataByIdClosure, $findDataByIdCallbacks) {
+            $args = func_get_args();
+            $args[] = $findDataByIdCallbacks;
+            return call_user_func_array($findDataByIdClosure, $args);
+        });
+
+        $saveDataClosure = $this->getSaveDataClosure();
+        $actionsVars->set('saveDataClosure', function () use ($saveDataClosure) {
+            return call_user_func_array($saveDataClosure, func_get_args());
+        });
+
+        $deleteDataClosure = $this->getSaveDataClosure();
+        $actionsVars->set('deleteDataClosure', function () use ($deleteDataClosure) {
+            return call_user_func_array($deleteDataClosure, func_get_args());
+        });
     }
 
     public function executeController()
@@ -56,7 +93,10 @@ abstract class ListAction extends Action
         $request = $this->get('request');
         $adminSession = $this->getActionsVars()->get('admin_session');
 
-        $this->initQuery();
+        $query = $this->createQuery();
+
+        $filterQueryClosure = $this->getActionsVars()->get('filterQueryClosure');
+        $filterQueryClosure($query);
 
         // clear filter
         if ($request->query->get('clearFilter')) {
@@ -72,7 +112,7 @@ abstract class ListAction extends Action
                 $adminSession->get('simpleFilter', $this->getOption('simpleFilterDefault'))
             );
             if ($simpleFilter) {
-                $this->applySimpleFilter($simpleFilter);
+                $this->applySimpleFilter($query, $simpleFilter);
 
                 $adminSession->set('simpleFilter', $simpleFilter);
                 $adminSession->remove(array('sort', 'order', 'page'));
@@ -95,7 +135,7 @@ abstract class ListAction extends Action
             if ($request->query->has($this->getOption('advancedFilterParameter'))) {
                 $advancedFilterForm->bindRequest($request);
                 if ($advancedFilterForm->isValid()) {
-                    $this->applyAdvancedFilter($advancedFilters, $advancedFilterForm->getData());
+                    $this->applyAdvancedFilter($query, $advancedFilters, $advancedFilterForm->getData());
                 }
             }
         }
@@ -105,7 +145,7 @@ abstract class ListAction extends Action
         $order = $request->query->get($this->getOption('orderParameter'), $adminSession->get('order', $this->getOption('orderDefault')));
         if ($sort && $order) {
             if ($this->getFields()->has($sort) && $this->getFields()->get($sort)->getOption('sortable')) {
-                $this->applySort($sort, $order);
+                $this->applySort($query, $sort, $order);
 
                 $adminSession->set('sort', $sort);
                 $adminSession->set('order', $order);
@@ -113,7 +153,7 @@ abstract class ListAction extends Action
         }
 
         // pagerfanta
-        $pagerfantaAdapter = $this->createPagerfantaAdapter();
+        $pagerfantaAdapter = $this->createPagerfantaAdapter($query);
         $pagerfanta = new Pagerfanta($pagerfantaAdapter);
         $pagerfanta->setMaxPerPage($this->getOption('maxPerPage'));
         if ($page = $request->query->get('page', $this->getActionsVars()->get('admin_session')->get('page'))) {
@@ -151,15 +191,31 @@ abstract class ListAction extends Action
         return $fields;
     }
 
-    abstract protected function initQuery();
+    /*
+     * General Closures.
+     */
+    abstract protected function getFilterQueryClosure();
 
-    abstract protected function applySimpleFilter($filter);
+    abstract protected function getCreateDataClosure();
 
-    abstract protected function applyAdvancedFilter(array $filters, array $data);
+    abstract protected function getFindDataByIdClosure();
 
-    abstract protected function applySort($sort, $order);
+    abstract protected function getSaveDataClosure();
 
-    abstract protected function createPagerfantaAdapter();
+    abstract protected function getDeleteDataClosure();
+
+    /*
+     * List.
+     */
+    abstract protected function createQuery();
+
+    abstract protected function applySimpleFilter($query, $filter);
+
+    abstract protected function applyAdvancedFilter($query, array $filters, array $data);
+
+    abstract protected function applySort($query, $sort, $order);
+
+    abstract protected function createPagerfantaAdapter($query);
 
     private function getAdvancedFilters()
     {

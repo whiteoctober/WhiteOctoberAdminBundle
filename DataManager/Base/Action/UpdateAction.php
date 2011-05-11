@@ -30,8 +30,8 @@ abstract class UpdateAction extends Action
 
     public function executeController()
     {
-        $findDataById = $this->getActionsVars()->get('findDataById');
-        $data = $findDataById($this->container->get('request')->attributes->get('id'));
+        $findDataByIdClosure = $this->getActionsVars()->get('findDataById');
+        $data = $findDataByIdClosure($this->container->get('request')->attributes->get('id'));
         if (!$data) {
             throw new NotFoundHttpException();
         }
@@ -41,8 +41,8 @@ abstract class UpdateAction extends Action
 
         $form->bindRequest($this->container->get('request'));
         if ($form->isValid()) {
-            $saveData = $this->getActionsVars()->get('saveData');
-            $saveData($data);
+            $saveDataClosure = $this->getActionsVars()->get('saveData');
+            $saveDataClosure($data);
 
             return new RedirectResponse($this->generateUrl('list'));
         }

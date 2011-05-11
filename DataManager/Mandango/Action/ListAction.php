@@ -12,13 +12,13 @@
 namespace WhiteOctober\AdminBundle\DataManager\Mandango\Action;
 
 use WhiteOctober\AdminBundle\DataManager\Base\Action\ListAction as BaseListAction;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Pagerfanta\Adapter\MandangoAdapter;
+use Mandango\Query;
 
 class ListAction extends BaseListAction
 {
-    private $query;
-
     protected function configure()
     {
         parent::configure();
@@ -27,45 +27,89 @@ class ListAction extends BaseListAction
             ->setName('mandango.list')
         ;
     }
-
-    public function configureActionsVars(ParameterBag $actionsVars)
+    
+    /*
+     * General Closures.
+     */
+    protected function getFilterQueryClosure()
     {
-        parent::configureActionsVars($actionsVars);
+        $container = $this->container;
 
+        return function (Query $query, array $filterQueryCallbacks) use ($container) {
+            foreach ($filterQueryCallbacks as $callback) {
+                call_user_func($callback, $query, $container);
+            }
+        };
+    }
+
+    protected function getCreateDataClosure()
+    {
+        $container = $this->container;
         $dataClass = $this->getDataClass();
 
-        $actionsVars->set('createData', function () use ($dataClass) {
-            return new $dataClass();
-        });
-        $actionsVars->set('findDataById', function ($id) use ($dataClass) {
-            return $dataClass::getRepository()->findOneById($id);
-        });
-        $actionsVars->set('saveData', function ($data) {
+        return function (array $createDataCallbacks) use ($dataClass, $container) {
+            $data = new $dataClass();
+            foreach ($createDataCallbacks as $callback) {
+                call_user_func($callback, $data, $container);
+            }
+
+            return $data;
+        };
+    }
+
+    protected function getFindDataByIdClosure()
+    {
+        $container = $this->container;
+        $dataClass = $this->getDataClass();
+
+        return function ($id, array $findDataByIdCallbacks) use ($dataClass, $container) {
+            $data = $dataClass::getRepository()->findOneById($id);
+            foreach ($findDataByIdCallbacks as $callback) {
+                if ($data) {
+                    $data = call_user_func($callback, $data, $container);
+                }
+            }
+
+            return $data;
+        };
+    }
+
+    protected function getSaveDataClosure()
+    {
+        return function ($data) {
             $data->save();
-        });
-        $actionsVars->set('deleteData', function ($data) {
-            $data->delete();
-        });
+        };
     }
 
-    protected function initQuery()
+    protected function getDeleteDataClosure()
+    {
+        return function ($data) {
+            $data->delete();
+        };
+    }
+    
+    /*
+     * List
+     */
+    protected function createQuery()
     {
         $dataClass = $this->getDataClass();
-        $this->query = $dataClass::getRepository()->createQuery();
+
+        return $dataClass::getRepository()->createQuery();
     }
 
-    protected function applySimpleFilter($filter)
+    protected function applySimpleFilter($query, $filter)
     {
         foreach ($this->getSimpleFilterFields() as $field) {
-            $this->query->mergeCriteria(array($field => new \MongoRegex(sprintf('/%s/', $filter))));
+            $query->mergeCriteria(array($field => new \MongoRegex(sprintf('/%s/', $filter))));
         }
     }
 
-    protected function applyAdvancedFilter(array $filters, array $data)
+    protected function applyAdvancedFilter($query, array $filters, array $data)
     {
         foreach ($filters as $fieldName => $filter) {
             if (isset($data[$fieldName]) && null !== $data[$fieldName]) {
-                $filter->filter($fieldName, $data[$fieldName], $this->query);
+                $filter->filter($fieldName, $data[$fieldName], $query);
             }
         }
     }
@@ -80,13 +124,13 @@ class ListAction extends BaseListAction
         }
     }
 
-    protected function applySort($sort, $order)
+    protected function applySort($query, $sort, $order)
     {
-        $this->query->sort(array($sort => 'asc' == $order ? \MongoCollection::ASCENDING : \MongoCollection::DESCENDING));
+        $query->sort(array($sort => 'asc' == $order ? \MongoCollection::ASCENDING : \MongoCollection::DESCENDING));
     }
 
-    protected function createPagerfantaAdapter()
+    protected function createPagerfantaAdapter($query)
     {
-        return new MandangoAdapter($this->query);
+        return new MandangoAdapter($query);
     }
 }

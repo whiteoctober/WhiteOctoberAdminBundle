@@ -14,11 +14,10 @@ namespace WhiteOctober\AdminBundle\DataManager\Doctrine\ORM\Action;
 use WhiteOctober\AdminBundle\DataManager\Base\Action\ListAction as BaseListAction;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Doctrine\ORM\QueryBuilder;
 
 class ListAction extends BaseListAction
 {
-    private $queryBuilder;
-
     protected function configure()
     {
         parent::configure();
@@ -28,30 +27,77 @@ class ListAction extends BaseListAction
         ;
     }
 
-    public function configureActionsVars(ParameterBag $actionsVars)
+    /*
+     * General Closures.
+     */
+    protected function getFilterQueryClosure()
     {
-        parent::configureActionsVars($actionsVars);
+        $container = $this->container;
 
+        return function (QueryBuilder $query, array $filterQueryCallbacks) use ($container) {
+            foreach ($filterQueryCallbacks as $callback) {
+                call_user_func($callback, $query, $container);
+            }
+        };
+    }
+
+    protected function getCreateDataClosure()
+    {
+        $container = $this->container;
+        $dataClass = $this->getDataClass();
+
+        return function (array $createDataCallbacks) use ($dataClass, $container) {
+            $data = new $dataClass();
+            foreach ($createDataCallbacks as $callback) {
+                call_user_func($callback, $data, $container);
+            }
+
+            return $data;
+        };
+    }
+
+    protected function getFindDataByIdClosure()
+    {
+        $container = $this->container;
         $dataClass = $this->getDataClass();
         $em = $this->get('doctrine.orm.entity_manager');
 
-        $actionsVars->set('createData', function () use ($dataClass) {
-            return new $dataClass();
-        });
-        $actionsVars->set('findDataById', function ($id) use ($em, $dataClass) {
-            return $em->getRepository($dataClass)->find($id);
-        });
-        $actionsVars->set('saveData', function ($data) use ($em) {
-            $em->persist($data);
-            $em->flush();
-        });
-        $actionsVars->set('deleteData', function ($data) use ($em) {
-            $em->remove($data);
-            $em->flush();
-        });
+        return function ($id, array $findDataByIdCallbacks) use ($em, $dataClass, $container) {
+            $data = $em->getRepository($dataClass)->find($id);
+            foreach ($findDataByIdCallbacks as $callback) {
+                if ($data) {
+                    $data = call_user_func($callback, $data, $em, $container);
+                }
+            }
+
+            return $data;
+        };
     }
 
-    protected function initQuery()
+    protected function getSaveDataClosure()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        return function ($data) use ($em) {
+            $em->persist($data);
+            $em->flush();
+        };
+    }
+
+    protected function getDeleteDataClosure()
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        return function ($data) use ($em) {
+            $em->remove($data);
+            $em->flush();
+        };
+    }
+
+    /*
+     * List
+     */
+    protected function createQuery()
     {
         $queryBuilder = $this->get('doctrine.orm.entity_manager')->createQueryBuilder();
         $queryBuilder
@@ -59,29 +105,29 @@ class ListAction extends BaseListAction
             ->from($this->getDataClass(), 'u')
         ;
 
-        $this->queryBuilder = $queryBuilder;
+        return $queryBuilder;
     }
 
-    protected function applySimpleFilter($filter)
+    protected function applySimpleFilter($query, $filter)
     {
         foreach ($this->getSimpleFilterFields() as $field) {
             $this->queryBuilder->orWhere($this->queryBuilder->expr()->like('u.'.$field, ':filter'));
         }
 
-        $this->queryBuilder->setParameter('filter', '%'.$filter.'%');
+        $query->setParameter('filter', '%'.$filter.'%');
     }
 
-    protected function applyAdvancedFilter(array $filters, array $data)
+    protected function applyAdvancedFilter($query, array $filters, array $data)
     {
     }
 
-    protected function applySort($sort, $order)
+    protected function applySort($query, $sort, $order)
     {
-        $this->queryBuilder->add('orderBy', sprintf('u.%s %s', $sort, $order));
+        $query->add('orderBy', sprintf('u.%s %s', $sort, $order));
     }
 
-    protected function createPagerfantaAdapter()
+    protected function createPagerfantaAdapter($query)
     {
-        return new DoctrineORMAdapter($this->queryBuilder);
+        return new DoctrineORMAdapter($query);
     }
 }

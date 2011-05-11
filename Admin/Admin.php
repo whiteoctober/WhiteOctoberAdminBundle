@@ -35,8 +35,13 @@ abstract class Admin extends ContainerAware
     private $fieldGuessers;
 
     private $rawActions;
+    private $actionParsers;
     private $actions;
+    private $setActionOptions;
+    private $mergeActionOptions;
     private $actionsVars;
+
+    private $controllerPreExecutes;
 
     public function __construct()
     {
@@ -44,6 +49,10 @@ abstract class Admin extends ContainerAware
         $this->rawFields = array();
         $this->rawFieldGuessers = array();
         $this->rawActions = array();
+        $this->actionParsers = array();
+        $this->setActionOptions = array();
+        $this->mergeActionOptions = array();
+        $this->controllerPreExecutes = array();
 
         $this->preConfigure();
         $this->configure();
@@ -271,6 +280,18 @@ abstract class Admin extends ContainerAware
         return $this;
     }
 
+    public function addActionParser(\Closure $parser)
+    {
+        $this->actionParsers[] = $parser;
+
+        return $this;
+    }
+
+    public function getActionParsers()
+    {
+        return $this->actionParsers;
+    }
+
     public function getActions()
     {
         if (null === $this->actions) {
@@ -303,6 +324,32 @@ abstract class Admin extends ContainerAware
         return $this->actionsVars;
     }
 
+    public function setActionOption($action, $optionName, $optionValue)
+    {
+        $this->setActionOptions[$action][$optionName] = $optionValue;
+
+        return $this;
+    }
+
+    public function mergeActionOption($action, $optionName, $optionValue)
+    {
+        $this->mergeActionOptions[$action][$optionName][] = $optionValue;
+
+        return $this;
+    }
+
+    public function addControllerPreExecute(\Closure $controllerPreExecute)
+    {
+        $this->controllerPreExecutes[] = $controllerPreExecute;
+
+        return $this;
+    }
+
+    public function getControllerPreExecutes()
+    {
+        return $this->controllerPreExecutes;
+    }
+
     public function getDataFieldValue($data, $fieldName)
     {
         if (method_exists($data, 'get')) {
@@ -312,7 +359,7 @@ abstract class Admin extends ContainerAware
         return $data->{'get'.Container::camelize($fieldName)}();
     }
 
-    public function getAccessRouteNameSuffix()
+    public function generateAccessUrl()
     {
         $action = null;
         foreach ($this->getActions() as $action) {
@@ -322,7 +369,7 @@ abstract class Admin extends ContainerAware
             throw new \RuntimeException(sprintf('There is no access route.'));
         }
 
-        return $action->getRouteNameSuffix();
+        return $this->generateUrl($action->getRouteNameSuffix());
     }
 
     public function generateUrl($routeNameSuffix, array $parameters = array(), $absolute = false)
@@ -330,8 +377,8 @@ abstract class Admin extends ContainerAware
         if ($this->parametersToPropagate) {
             $request = $this->container->get('request');
             foreach ($this->parametersToPropagate as $parameter) {
-                if (!isset($parameters[$parameter]) && $request->query->has($parameter)) {
-                    $parameters[$parameter] = $request->query->get($parameter);
+                if (!isset($parameters[$parameter]) && $value = $request->get($parameter)) {
+                    $parameters[$parameter] = $value;
                 }
             }
         }
@@ -382,32 +429,39 @@ abstract class Admin extends ContainerAware
             $action->setAdmin($this);
             $action->setContainer($this->container);
             foreach ($action->getDependences() as $actionName => $options) {
-                $dependenceAction = null;
-                // by full name
-                if (isset($actions[$actionName])) {
-                    $dependenceAction = $actions[$actionName];
-                }
-                // by name
-                if (null === $dependenceAction) {
-                    foreach ($actions as $possibleAction) {
-                        if ($possibleAction->getName() == $actionName) {
-                            $dependenceAction = $possibleAction;
-                            break;
-                        }
-                    }
-                }
-                // action does not exist
-                if (null === $dependenceAction) {
-                    throw new \RuntimeException(sprintf('The action "%s" does not exist.', $actionName));
-                }
-
+                $dependenceAction = $this->findAction($actions, $actionName);
                 $dependenceAction->mergeOptions($options);
             }
 
-            $action->configureActionsVars($this->actionsVars);
-
             $actions[$action->getFullName()] = $action;
         }
+
+        foreach ($this->actionParsers as $parser) {
+            $parser($actions);
+        }
+
+        foreach ($this->setActionOptions as $actionName => $options) {
+            $action = $this->findAction($actions, $actionName);
+
+            foreach ($options as $name => $value) {
+                $action->setOption($name, $value);
+            }
+        }
+
+        foreach ($this->mergeActionOptions as $actionName => $options) {
+            $action = $this->findAction($actions, $actionName);
+
+            foreach ($options as $name => $merges) {
+                foreach ($merges as $merge) {
+                    $action->mergeOption($name, $merge);
+                }
+            }
+        }
+
+        foreach ($actions as $action) {
+            $action->configureActionsVars($this->actionsVars);
+        }
+
         $this->actions = $actions;
         $this->rawActions = null;
     }
@@ -442,5 +496,21 @@ abstract class Admin extends ContainerAware
     public function createView()
     {
         return new AdminView($this);
+    }
+
+    private function findAction(array $actions, $actionName)
+    {
+        // by full name
+        if (isset($actions[$actionName])) {
+            return $actions[$actionName];
+        }
+        // by name
+        foreach ($actions as $action) {
+            if ($action->getName() == $actionName) {
+                return $action;
+            }
+        }
+        // action does not exist
+        throw new \RuntimeException(sprintf('The action "%s" does not exist.', $actionName));
     }
 }

@@ -34,6 +34,10 @@ class AdminController extends Controller
         $actionFullName = $this->get('request')->get('_white_october_admin.action');
 
         $admin = $this->container->get($adminId);
+        foreach ($admin->getControllerPreExecutes() as $controllerPreExecute) {
+            $controllerPreExecute($this->container);
+        }
+
         $action = $admin->getAction($actionFullName);
 
         return $action->executeController();

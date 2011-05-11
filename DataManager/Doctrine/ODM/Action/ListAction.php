@@ -14,11 +14,10 @@ namespace WhiteOctober\AdminBundle\DataManager\Doctrine\ODM\Action;
 use WhiteOctober\AdminBundle\DataManager\Base\Action\ListAction as BaseListAction;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Pagerfanta\Adapter\DoctrineODMMongoDBAdapter;
+use Doctrine\ODM\MongoDB\Query\Builder;
 
 class ListAction extends BaseListAction
 {
-    private $queryBuilder;
-
     protected function configure()
     {
         parent::configure();
@@ -28,52 +27,99 @@ class ListAction extends BaseListAction
         ;
     }
 
-    public function configureActionsVars(ParameterBag $actionsVars)
+    /*
+     * General Closures.
+     */
+    protected function getFilterQueryClosure()
     {
-        parent::configureActionsVars($actionsVars);
+        $container = $this->container;
 
+        return function (Builder $query, array $filterQueryCallbacks) use ($container) {
+            foreach ($filterQueryCallbacks as $callback) {
+                call_user_func($callback, $query, $container);
+            }
+        };
+    }
+
+    protected function getCreateDataClosure()
+    {
+        $container = $this->container;
+        $dataClass = $this->getDataClass();
+
+        return function (array $createDataCallbacks) use ($dataClass, $container) {
+            $data = new $dataClass();
+            foreach ($createDataCallbacks as $callback) {
+                call_user_func($callback, $data, $container);
+            }
+
+            return $data;
+        };
+    }
+
+    protected function getFindDataByIdClosure()
+    {
+        $container = $this->container;
         $dataClass = $this->getDataClass();
         $dm = $this->get('doctrine.odm.mongodb.document_manager');
 
-        $actionsVars->set('createData', function () use ($dataClass) {
-            return new $dataClass();
-        });
-        $actionsVars->set('findDataById', function ($id) use ($dm, $dataClass) {
-            return $dm->getRepository($dataClass)->find($id);
-        });
-        $actionsVars->set('saveData', function ($data) use ($dm) {
+        return function ($id, array $findDataByIdCallbacks) use ($dm, $dataClass, $container) {
+            $data = $dm->getRepository($dataClass)->find($id);
+            foreach ($findDataByIdCallbacks as $callback) {
+                if ($data) {
+                    $data = call_user_func($callback, $data, $dm, $container);
+                }
+            }
+
+            return $data;
+        };
+    }
+
+    protected function getSaveDataClosure()
+    {
+        $dm = $this->get('doctrine.odm.mongodb.document_manager');
+
+        return function ($data) use ($dm) {
             $dm->persist($data);
             $dm->flush();
-        });
-        $actionsVars->set('deleteData', function ($data) use ($dm) {
+        };
+    }
+
+    protected function getDeleteDataClosure()
+    {
+        $dm = $this->get('doctrine.odm.mongodb.document_manager');
+
+        return function ($data) use ($dm) {
             $dm->remove($data);
             $dm->flush();
-        });
+        };
     }
 
-    protected function initQuery()
+    /*
+     * List.
+     */
+    protected function createQuery()
     {
-        $this->queryBuilder = $this->get('doctrine.odm.mongodb.document_manager')->createQueryBuilder($this->getDataClass());
+        return $this->get('doctrine.odm.mongodb.document_manager')->createQueryBuilder($this->getDataClass());
     }
 
-    protected function applySimpleFilter($filter)
+    protected function applySimpleFilter($query, $filter)
     {
         foreach ($this->getSimpleFilterFields() as $field) {
-            $this->queryBuilder->field($field)->equals(new \MongoRegex(sprintf('/%s/i', $filter)));
+            $queryBuilder->field($field)->equals(new \MongoRegex(sprintf('/%s/i', $filter)));
         }
     }
 
-    protected function applyAdvancedFilter(array $filters, array $data)
+    protected function applyAdvancedFilter($query, array $filters, array $data)
     {
     }
 
-    protected function applySort($sort, $order)
+    protected function applySort($query, $sort, $order)
     {
-        $this->queryBuilder->sort($sort, $order);
+        $queryBuilder->sort($sort, $order);
     }
 
-    protected function createPagerfantaAdapter()
+    protected function createPagerfantaAdapter($query)
     {
-        return new DoctrineODMMongoDBAdapter($this->queryBuilder);
+        return new DoctrineODMMongoDBAdapter($query);
     }
 }

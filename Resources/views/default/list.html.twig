@@ -44,9 +44,11 @@
             </form>
         </div>
     {% endif %}
-    <div class="adminClear">
-         <a href="{{ _admin.path('list', { 'clearFilter': true }) }}">Clear</a>
-    </div>
+    {% if simpleFilterEnabled or advancedFilterEnabled %}
+        <div class="adminClear">
+             <a href="{{ _admin.path('list', { 'clearFilter': true }) }}">Clear</a>
+        </div>
+    {% endif %}
     <div class="results_info">
         <span class="results_number">Found <strong>{{ pagerfanta.getNbResults }}</strong> results</span>
         <div class="clear"></div>
