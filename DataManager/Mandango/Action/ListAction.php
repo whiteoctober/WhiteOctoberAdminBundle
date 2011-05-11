@@ -61,6 +61,25 @@ class ListAction extends BaseListAction
         }
     }
 
+    protected function applyAdvancedFilter(array $filters, array $data)
+    {
+        foreach ($filters as $fieldName => $filter) {
+            if (isset($data[$fieldName]) && null !== $data[$fieldName]) {
+                $filter->filter($fieldName, $data[$fieldName], $this->query);
+            }
+        }
+    }
+
+    protected function transformAdvancedFilterType($type)
+    {
+        if ('boolean' == $type) {
+            return new \WhiteOctober\AdminBundle\DataManager\Mandango\Filter\BooleanFilter();
+        }
+        if ('string' == $type) {
+            return new \WhiteOctober\AdminBundle\DataManager\Mandango\Filter\StringFilter();
+        }
+    }
+
     protected function applySort($sort, $order)
     {
         $this->query->sort(array($sort => 'asc' == $order ? \MongoCollection::ASCENDING : \MongoCollection::DESCENDING));

@@ -71,6 +71,10 @@ class ListAction extends BaseListAction
         $this->queryBuilder->setParameter('filter', '%'.$filter.'%');
     }
 
+    protected function applyAdvancedFilter(array $filters, array $data)
+    {
+    }
+
     protected function applySort($sort, $order)
     {
         $this->queryBuilder->add('orderBy', sprintf('u.%s %s', $sort, $order));

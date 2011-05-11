@@ -63,6 +63,10 @@ class ListAction extends BaseListAction
         }
     }
 
+    protected function applyAdvancedFilter(array $filters, array $data)
+    {
+    }
+
     protected function applySort($sort, $order)
     {
         $this->queryBuilder->sort($sort, $order);

@@ -16,17 +16,36 @@
 {% endblock %}
 
 {% block content %}
-    <div class="filter">
-        <form action="{{ _admin.path('list') }}" method="get">
-            <input type="text" name="{{ _action.option('simpleFilterParameter') }}" value="{{ app.request.query.get(_action.option('simpleFilterParameter')) }}" />
-            <input type="submit" value="Filter" />
-            {% for parameter in _admin.parametersToPropagate %}
-                {% if app.request.query.has(parameter) %}
-                    <input type="hidden" name="{{ parameter }}" value="{{ app.request.query.get(parameter) }}" />
-                {% endif %}
-            {% endfor %}
-            <a href="{{ _admin.path('list', { 'clearFilter': true }) }}">Clear</a>
-        </form>
+    {% if simpleFilterEnabled %}
+        <div class="simpleFilter">
+            <form action="{{ _admin.path('list') }}" method="GET">
+                <input type="text" name="{{ _action.option('simpleFilterParameter') }}" value="{{ simpleFilter }}" />
+                <input type="submit" value="Filter" />
+                {% for parameter in _admin.parametersToPropagate %}
+                    {% if app.request.query.has(parameter) %}
+                        <input type="hidden" name="{{ parameter }}" value="{{ app.request.query.get(parameter) }}" />
+                    {% endif %}
+                {% endfor %}
+            </form>
+        </div>
+    {% endif %}
+    {% if advancedFilterEnabled %}
+        <div class="advancedFilter">
+            <form  action="{{ _admin.path('list') }}" method="GET">
+                {{ form_errors(advancedFilterForm) }}
+                {{ form_widget(advancedFilterForm) }}
+                {{ form_rest(advancedFilterForm) }}
+                {% for parameter in _admin.parametersToPropagate %}
+                    {% if app.request.query.has(parameter) %}
+                        <input type="hidden" name="{{ parameter }}" value="{{ app.request.query.get(parameter) }}" />
+                    {% endif %}
+                {% endfor %}
+                <input type="submit" value="Filter" />
+            </form>
+        </div>
+    {% endif %}
+    <div class="adminClear">
+         <a href="{{ _admin.path('list', { 'clearFilter': true }) }}">Clear</a>
     </div>
     <div class="results_info">
         <span class="results_number">Found <strong>{{ pagerfanta.getNbResults }}</strong> results</span>

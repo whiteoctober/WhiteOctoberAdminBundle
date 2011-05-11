@@ -62,6 +62,11 @@ class ValidatorFieldGuesser implements FieldGuesserInterface
                             'checkbox',
                             FieldOptionGuess::MEDIUM_CONFIDENCE
                         );
+                        $options[] = new FieldOptionGuess(
+                            'filterType',
+                            'boolean',
+                            FieldOptionGuess::HIGH_CONFIDENCE
+                        );
                         break;
                     case 'double':
                     case 'float':
@@ -101,6 +106,11 @@ class ValidatorFieldGuesser implements FieldGuesserInterface
                         $options[] = new FieldOptionGuess(
                             'form_type',
                             'text',
+                            FieldOptionGuess::LOW_CONFIDENCE
+                        );
+                        $options[] = new FieldOptionGuess(
+                            'filterType',
+                            'string',
                             FieldOptionGuess::LOW_CONFIDENCE
                         );
                         break;

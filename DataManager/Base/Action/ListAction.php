@@ -13,6 +13,7 @@ namespace WhiteOctober\AdminBundle\DataManager\Base\Action;
 
 use WhiteOctober\AdminBundle\Action\Action;
 use WhiteOctober\AdminBundle\Admin\AdminSession;
+use WhiteOctober\AdminBundle\Filter\FilterInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Pagerfanta\Exception\NotValidCurrentPageException;
@@ -26,17 +27,18 @@ abstract class ListAction extends Action
             ->setRoute('list', '/', array(), array('_method' => 'GET'))
             ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
             ->addOptions(array(
-                'sessionParameter'      => 'hash',
-                'simpleFilterParameter' => 'q',
-                'simpleFilterDefault'   => null,
-                'sortParameter'         => 'sort',
-                'orderParameter'        => 'order',
-                'sortDefault'           => null,
-                'orderDefault'          => 'asc',
-                'maxPerPage'            => 10,
-                'headerTemplates'       => array(),
-                'pagerfantaView'        => 'white_october_admin',
-                'pagerfantaOptions'     => array(),
+                'sessionParameter'        => 'hash',
+                'simpleFilterParameter'   => 'q',
+                'simpleFilterDefault'     => null,
+                'advancedFilterParameter' => 'advancedFilter',
+                'sortParameter'           => 'sort',
+                'orderParameter'          => 'order',
+                'sortDefault'             => null,
+                'orderDefault'            => 'asc',
+                'maxPerPage'              => 10,
+                'headerTemplates'         => array(),
+                'pagerfantaView'          => 'white_october_admin',
+                'pagerfantaOptions'       => array(),
             ))
         ;
     }
@@ -58,19 +60,44 @@ abstract class ListAction extends Action
 
         // clear filter
         if ($request->query->get('clearFilter')) {
-            $adminSession->remove(array('filter', 'sort', 'order', 'page'));
+            $adminSession->remove(array('simpleFilter', 'sort', 'order', 'page'));
         }
 
         // simple filter
-        $simpleFilter = $request->query->get(
-            $this->getOption('simpleFilterParameter'),
-            $adminSession->get('simpleFilter', $this->getOption('simpleFilterDefault'))
-        );
-        if ($simpleFilter) {
-            $this->applySimpleFilter($simpleFilter);
+        $simpleFilterEnabled = (Boolean) count($this->getSimpleFilterFields());
+        $simpleFilter = null;
+        if ($simpleFilterEnabled) {
+            $simpleFilter = $request->query->get(
+                $this->getOption('simpleFilterParameter'),
+                $adminSession->get('simpleFilter', $this->getOption('simpleFilterDefault'))
+            );
+            if ($simpleFilter) {
+                $this->applySimpleFilter($simpleFilter);
 
-            $adminSession->set('simpleFilter', $simpleFilter);
-            $adminSession->remove(array('sort', 'order', 'page'));
+                $adminSession->set('simpleFilter', $simpleFilter);
+                $adminSession->remove(array('sort', 'order', 'page'));
+            }
+        }
+
+        // advanced filter
+        $advancedFilters = $this->getAdvancedFilters();
+        $advancedFilterEnabled = (Boolean) count($advancedFilters);
+        $advancedFilterForm = null;
+        if ($advancedFilters) {
+            $formBuilder = $this->get('form.factory')->createNamedBuilder('form', $this->getOption('advancedFilterParameter'));
+            foreach ($advancedFilters as $fieldName => $advancedFilter) {
+                $filterFormBuilder = $this->get('form.factory')->createNamedBuilder('form', $fieldName);
+                $advancedFilter->buildForm($filterFormBuilder);
+                $formBuilder->add($filterFormBuilder);
+            }
+            $advancedFilterForm = $formBuilder->getForm();
+
+            if ($request->query->has($this->getOption('advancedFilterParameter'))) {
+                $advancedFilterForm->bindRequest($request);
+                if ($advancedFilterForm->isValid()) {
+                    $this->applyAdvancedFilter($advancedFilters, $advancedFilterForm->getData());
+                }
+            }
         }
 
         // sort
@@ -100,6 +127,10 @@ abstract class ListAction extends Action
         }
 
         return $this->render($this->getTemplate(), array(
+            'simpleFilterEnabled' => $simpleFilterEnabled,
+            'simpleFilter'        => $simpleFilter,
+            'advancedFilterEnabled' => $advancedFilterEnabled,
+            'advancedFilterForm'    => $advancedFilterForm ? $advancedFilterForm->createView() : null,
             'sort'  => $sort,
             'order' => $order,
             'pagerfanta'        => $pagerfanta,
@@ -124,7 +155,34 @@ abstract class ListAction extends Action
 
     abstract protected function applySimpleFilter($filter);
 
+    abstract protected function applyAdvancedFilter(array $filters, array $data);
+
     abstract protected function applySort($sort, $order);
 
     abstract protected function createPagerfantaAdapter();
+
+    private function getAdvancedFilters()
+    {
+        $filters = array();
+        foreach ($this->getFields() as $field) {
+            if ($field->hasOption('advancedFilter') && $filter = $field->getOption('advancedFilter')) {
+                if (!$filter instanceof FilterInterface) {
+                    if ($field->hasOption('filterType')) {
+                        $filter = $this->transformAdvancedFilterType($field->getOption('filterType'));
+                    }
+
+                    if (!$filter instanceof FilterInterface) {
+                        throw new \RuntimeException('The advanced filters must be instances of FilterInterface.');
+                    }
+                }
+                $filters[$field->getName()] = $filter;
+            }
+        }
+
+        return $filters;
+    }
+
+    protected function transformAdvancedFilterType($type)
+    {
+    }
 }
