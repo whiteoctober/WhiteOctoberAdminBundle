@@ -25,7 +25,7 @@ abstract class EditAction extends Action
             ->setDependences(array(
                 'list' => array(
                     'dataActions' => array(
-                        'edit'   => array('route' => 'edit', 'label' => 'Edit'),
+                        'edit'   => array('routeName' => '@edit', 'label' => 'Edit'),
                     ),
                 ),
             ))

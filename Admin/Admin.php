@@ -352,11 +352,7 @@ abstract class Admin extends ContainerAware
 
     public function getDataFieldValue($data, $fieldName)
     {
-        if (method_exists($data, 'get')) {
-            return $data->get($fieldName);
-        }
-
-        return $data->{'get'.Container::camelize($fieldName)}();
+        return $data->{'get'.ucfirst($fieldName)}();
     }
 
     public function generateAccessUrl()
@@ -495,7 +491,10 @@ abstract class Admin extends ContainerAware
 
     public function createView()
     {
-        return new AdminView($this);
+        $view = new AdminView($this);
+        $view->setContainer($this->container);
+
+        return $view;
     }
 
     private function findAction(array $actions, $actionName)
