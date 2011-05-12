@@ -84,7 +84,17 @@ abstract class Action extends ContainerAware
 
     public function mergeOptions(array $options = array())
     {
-        $this->options = array_merge_recursive($this->options, $options);
+        foreach ($options as $name => $option) {
+            if (!isset($this->options[$name])) {
+                throw new \InvalidArgumentException(sprintf('The option "%s" does not exist.', $name));
+            }
+
+            if (is_array($this->options[$name])) {
+                $this->mergeOption($name, $option);
+            } else {
+                $this->setOption($name, $option);
+            }
+        }
     }
 
     public function mergeOption($name, array $value)

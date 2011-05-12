@@ -40,6 +40,8 @@ abstract class ListAction extends Action
                 'orderDefault'            => 'asc',
                 'maxPerPage'              => 10,
                 'headerTemplates'         => array(),
+                'actions'                 => array(),
+                'dataActions'             => array(),
                 'pagerfantaView'          => 'white_october_admin',
                 'pagerfantaOptions'       => array(),
             ))

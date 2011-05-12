@@ -75,7 +75,7 @@
                                 {% endif %}
                             </th>
                         {% endfor %}
-                        {% for action in _action.getOption('data_actions') %}
+                        {% for action in _action.getOption('dataActions') %}
                             <th class="th_action {% if loop.last %}last{% endif %}">{{ action.label }}</th>
                         {% endfor %}
                     </tr>
@@ -86,7 +86,7 @@
                             {% for field in _action.fields %}
                                 <td>{{ _action.renderField(field, data) }}</td>
                             {% endfor %}
-                            {% for action in _action.getOption('data_actions') %}
+                            {% for action in _action.getOption('dataActions') %}
                                 <td class="td_data_action">
                                     {% if action._method is not defined or 'GET' == action._method %}
                                         <a href="{{ _admin.path(action.route, { 'id': data.id }) }}" class="icon {{ action.label|lower }}" title="{{ action.label }}"></a>

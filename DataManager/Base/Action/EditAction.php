@@ -24,7 +24,7 @@ abstract class EditAction extends Action
             ->setDefaultTemplate('WhiteOctoberAdminBundle::default/edit.html.twig')
             ->setDependences(array(
                 'list' => array(
-                    'data_actions' => array(
+                    'dataActions' => array(
                         'edit'   => array('route' => 'edit', 'label' => 'Edit'),
                     ),
                 ),

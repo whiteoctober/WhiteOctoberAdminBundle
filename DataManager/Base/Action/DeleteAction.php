@@ -23,7 +23,7 @@ abstract class DeleteAction extends Action
             ->setRoute('delete', '/{id}', array(), array('_method' => 'DELETE'))
             ->setDependences(array(
                 'list' => array(
-                    'data_actions' => array(
+                    'dataActions' => array(
                         'delete' => array('route' => 'delete', 'confirm' => 'Are you sure?', '_method' => 'DELETE', 'label' => 'Delete'),
                     ),
                 ),
