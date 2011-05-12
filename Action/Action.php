@@ -34,10 +34,11 @@ abstract class Action extends ContainerAware
 
     public function __construct(array $options = array())
     {
-        $this->options = array();
         $this->routeDefaults = array();
         $this->routeRequirements = array();
         $this->dependences = array();
+
+        $this->addOption('template', null);
 
         $this->configure();
 
@@ -309,7 +310,7 @@ abstract class Action extends ContainerAware
 
     public function getTemplate()
     {
-        return $this->hasOption('template') ? $this->getOption('template') : $this->getDefaultTemplate();
+        return ($this->hasOption('template') && null !== $this->getOption('template')) ? $this->getOption('template') : $this->getDefaultTemplate();
     }
 
     public function getDataValue($data, $fieldName)
