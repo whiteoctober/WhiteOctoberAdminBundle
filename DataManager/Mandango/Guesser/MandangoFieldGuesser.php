@@ -13,27 +13,27 @@ namespace WhiteOctober\AdminBundle\DataManager\Mandango\Guesser;
 
 use WhiteOctober\AdminBundle\Guesser\FieldGuesserInterface;
 use WhiteOctober\AdminBundle\Guesser\FieldOptionGuess;
-use Mandango\Metadata;
+use Mandango\MetadataFactory;
 
 class MandangoFieldGuesser implements FieldGuesserInterface
 {
-    private $metadata;
+    private $metadataFactory;
 
-    public function __construct($metadata)
+    public function __construct(MetadataFactory $metadataFactory)
     {
-        $this->metadata = $metadata;
+        $this->metadataFactory = $metadataFactory;
     }
 
     public function guessOptions($class, $fieldName)
     {
         // the class is not a mandango document
-        if (!$this->metadata->hasClass($class)) {
+        if (!$this->metadataFactory->hasClass($class)) {
             return array();
         }
 
         $options = array();
 
-        $metadata = $class::getMetadata($class);
+        $metadata = $this->metadataFactory->getClass($class);
         // fields
         if (isset($metadata['fields'][$fieldName])) {
             switch ($metadata['fields'][$fieldName]['type']) {

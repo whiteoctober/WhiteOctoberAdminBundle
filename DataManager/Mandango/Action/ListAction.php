@@ -27,7 +27,7 @@ class ListAction extends BaseListAction
             ->setName('mandango.list')
         ;
     }
-    
+
     /*
      * General Closures.
      */
@@ -48,7 +48,7 @@ class ListAction extends BaseListAction
         $dataClass = $this->getDataClass();
 
         return function (array $createDataCallbacks) use ($dataClass, $container) {
-            $data = new $dataClass();
+            $data = $container->get('mandango')->create($dataClass);
             foreach ($createDataCallbacks as $callback) {
                 call_user_func($callback, $data, $container);
             }
@@ -63,7 +63,7 @@ class ListAction extends BaseListAction
         $dataClass = $this->getDataClass();
 
         return function ($id, array $findDataByIdCallbacks) use ($dataClass, $container) {
-            $data = $dataClass::getRepository()->findOneById($id);
+            $data = $container->get('mandango')->getRepository($dataClass)->findOneById($id);
             foreach ($findDataByIdCallbacks as $callback) {
                 if ($data) {
                     $data = call_user_func($callback, $data, $container);
@@ -87,15 +87,13 @@ class ListAction extends BaseListAction
             $data->delete();
         };
     }
-    
+
     /*
      * List
      */
     protected function createQuery()
     {
-        $dataClass = $this->getDataClass();
-
-        return $dataClass::getRepository()->createQuery();
+        return $this->container->get('mandango')->getRepository($this->getDataClass())->createQuery();
     }
 
     protected function applySimpleFilter($query, $filter)

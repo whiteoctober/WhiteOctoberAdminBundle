@@ -13,7 +13,7 @@
         <!-- Field Guessers -->
         <service id="white_october_admin.field_gueser.mandango" class="%white_october_admin.field_guesser.mandango.class%">
             <tag name="white_october_admin.field_guesser" alias="mandango" />
-            <argument type="service" id="mandango.metadata" />
+            <argument type="service" id="mandango.metadata_factory" />
         </service>
 
         <!-- Actions -->
