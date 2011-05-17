@@ -39,7 +39,7 @@ abstract class DeleteAction extends Action
             throw new NotFoundHttpException();
         }
 
-        $deleteDataClosure = $this->getActionsVars()->get('deleteData');
+        $deleteDataClosure = $this->getActionsVars()->get('deleteDataClosure');
         $deleteDataClosure($data);
 
         return new RedirectResponse($this->generateUrl('list'));
