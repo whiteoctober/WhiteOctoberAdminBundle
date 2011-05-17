@@ -11,7 +11,7 @@
 
     <services>
         <!-- Field Guessers -->
-        <service id="white_october_admin.field_gueser.propel" class="%white_october_admin.field_guesser.propel.class%">
+        <service id="white_october_admin.field_guesser.propel" class="%white_october_admin.field_guesser.propel.class%">
             <tag name="white_october_admin.field_guesser" alias="propel" />
         </service>
 
