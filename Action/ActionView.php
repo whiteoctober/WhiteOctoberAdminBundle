@@ -53,24 +53,5 @@ class ActionView
         }
 
         return $value;
-
-        $template = $field->getTemplate();
-        if (!$template) {
-            $template = 'WhiteOctoberAdminBundle:Field:raw.html.twig';
-
-            if ($type = $field->getType()) {
-                switch ($type) {
-                    case 'text':
-                    case 'integer':
-                        $template = 'WhiteOctoberAdminBundle:Field:raw.html.twig';
-                        break;
-                    case 'date':
-                        $template = 'WhiteOctoberAdminBundle:Field:date.html.twig';
-                        break;
-                }
-            }
-        }
-
-        return $this->action->renderView($template, array('_field' => $field, 'value' => $value));
     }
 }
