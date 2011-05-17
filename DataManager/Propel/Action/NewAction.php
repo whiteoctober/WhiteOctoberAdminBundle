@@ -11,40 +11,21 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Propel\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\NewAction as BaseNewAction;
 
 /**
  * NewAction for Propel.
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
-class NewAction extends Action
+class NewAction extends BaseNewAction
 {
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('propel.new')
-            ->setRoute('new', '/new', array(), array('_method' => 'GET'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/new.html.twig')
-            ->setDependences(array(
-                'propel.list' => array(
-                    'actions' => array(
-                        'new' => array('route' => 'new', 'label' => 'New'),
-                    ),
-                ),
-            ))
         ;
-    }
-
-    public function executeController()
-    {
-        $dataClass = $this->getDataClass();
-        $data = new $dataClass();
-
-        $form = $this->buildFormFromFields();
-        $form->setData($data);
-
-        return $this->render($this->getTemplate(), array('form' => $form->createView()));
     }
 }

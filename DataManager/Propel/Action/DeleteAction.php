@@ -11,44 +11,21 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Propel\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\DeleteAction as BaseDeleteAction;
 
 /**
  * DeleteAction for Propel.
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
-class DeleteAction extends Action
+class DeleteAction extends BaseDeleteAction
 {
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('propel.delete')
-            ->setRoute('delete', '/{id}', array(), array('_method' => 'DELETE'))
-            ->setDependences(array(
-                'propel.list' => array(
-                    'data_actions' => array(
-                        'delete'   => array('route' => 'delete', 'confirm' => 'Are you sure?', '_method' => 'DELETE', 'label' => 'Delete'),
-                    ),
-                ),
-            ))
         ;
-    }
-
-    public function executeController()
-    {
-        $dataClass = $this->getDataClass();
-        $queryClass = $dataClass.'Query';
-
-        $data = $queryClass::create()->findPk($this->container->get('request')->attributes->get('id'));
-        if (!$data) {
-            throw new NotFoundHttpException();
-        }
-
-        $data->delete();
-
-        return new RedirectResponse($this->generateUrl('list'));
     }
 }

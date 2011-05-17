@@ -1,5 +1,6 @@
 <?php
 
+
 /*
  * This file is part of the WhiteOctoberAdminBundle package.
  *
@@ -24,6 +25,10 @@ abstract class PropelAdmin extends Admin
     {
         parent::preConfigure();
 
-        $this->addFieldGuesser('propel');
+        $this
+            ->addParameterToPropagate('hash')
+            ->addFieldGuesser('propel')
+            ->addAction('propel.crud');
+
     }
 }

@@ -11,54 +11,126 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Propel\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\ListAction as BaseListAction;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Pagerfanta\Adapter\PropelAdapter;
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\Exception\NotValidCurrentPageException;
 
 /**
  * ListAction for Propel.
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
-class ListAction extends Action
+class ListAction extends BaseListAction
 {
     protected function configure()
     {
+        parent::configure();
+
         $this
             ->setName('propel.list')
-            ->setRoute('list', '/', array(), array('_method' => 'GET'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
-            ->addOptions(array(
-                'maxPerPage'        => 10,
-                'pagerfantaView'    => 'white_october_admin',
-                'pagerfantaOptions' => array(),
-            ))
         ;
     }
 
-    public function executeController()
+    /*
+     * General Closures.
+     */
+    protected function getFilterQueryClosure()
+    {
+        $container = $this->container;
+
+        return function (\ModelCriteria $query, array $filterQueryCallbacks) use ($container) {
+            foreach ($filterQueryCallbacks as $callback) {
+                call_user_func($callback, $query, $container);
+            }
+        };
+    }
+
+    protected function getCreateDataClosure()
+    {
+        $dataClass = $this->getDataClass();
+        $container = $this->container;
+
+        return function (array $createDataCallbacks) use ($dataClass, $container) {
+            $data = new $dataClass;
+             foreach ($createDataCallbacks as $callback) {
+                call_user_func($callback, $data, $container);
+            }
+
+            return $data;
+        };
+    }
+
+    protected function getFindDataByIdClosure()
     {
         $dataClass = $this->getDataClass();
         $queryClass = $dataClass.'Query';
 
-        $query = $queryClass::create();
-        $adapter = new PropelAdapter($query);
-        $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage($this->getOption('maxPerPage'));
-        if ($page = $this->get('request')->query->get('page')) {
-            try {
-                $pagerfanta->setCurrentPage($page);
-            } catch (NotValidCurrentPageException $e) {
-                throw new NotFoundHttpException();
+        $container = $this->container;
+
+        return function ($id, array $findDataByIdCallbacks) use ($queryClass, $container) {
+            $data = $queryClass::create()->findPk($id);
+            foreach ($findDataByIdCallbacks as $callback) {
+                if ($data) {
+                    $data = call_user_func($callback, $data, $container);
+                }
+            }
+
+            return $data;
+        };
+    }
+
+    protected function getSaveDataClosure()
+    {
+        return function ($data) {
+            $data->save();
+        };
+    }
+
+    protected function getDeleteDataClosure()
+    {
+        return function ($data) {
+            $data->delete();
+        };
+    }
+
+    /**
+     * List
+     */
+    protected function createQuery()
+    {
+        $dataClass = $this->getDataClass();
+        $queryClass = $dataClass.'Query';
+
+        return $queryClass::create();
+    }
+
+    protected function applySimpleFilter($query, $filter)
+    {
+        throw new \RuntimeException('Not yet implemented !');
+    }
+
+    protected function applyAdvancedFilter($query, array $filters, array $data)
+    {
+        foreach ($filters as $fieldName => $filter) {
+            if (isset($data[$fieldName]) && null !== $data[$fieldName]) {
+                $filter->filter($fieldName, $data[$fieldName], $query);
             }
         }
+    }
 
-        return $this->render($this->getTemplate(), array(
-            'pagerfanta'        => $pagerfanta,
-            'pagerfantaView'    => $this->getOption('pagerfantaView'),
-            'pagerfantaOptions' => $this->getOption('pagerfantaOptions'),
-        ));
+    protected function transformAdvancedFilterType($type)
+    {
+        throw new \RuntimeException('Not yet implemented !');
+    }
+
+    protected function applySort($query, $sort, $order)
+    {
+        $query->orderBy($sort, $order);
+    }
+
+    protected function createPagerfantaAdapter($query)
+    {
+        return new PropelAdapter($query);
     }
 }

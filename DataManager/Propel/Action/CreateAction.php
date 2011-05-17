@@ -11,38 +11,14 @@
 
 namespace WhiteOctober\AdminBundle\DataManager\Propel\Action;
 
-use WhiteOctober\AdminBundle\Action\Action;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use WhiteOctober\AdminBundle\DataManager\Base\Action\CreateAction as BaseCreateAction;
 
-class CreateAction extends Action
+class CreateAction extends BaseCreateAction
 {
     protected function configure()
     {
-        $this
-            ->setName('propel.create')
-            ->setRoute('create', '/', array(), array('_method' => 'POST'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/new.html.twig')
-            ->setDependences(array(
-                'propel.new' => array(),
-            ))
-        ;
-    }
+        parent::configure();
 
-    public function executeController()
-    {
-        $dataClass = $this->getDataClass();
-        $data = new $dataClass();
-
-        $form = $this->buildFormFromFields();
-        $form->setData($data);
-
-        $form->bindRequest($this->container->get('request'));
-        if ($form->isValid()) {
-            $data->save();
-
-            return new RedirectResponse($this->generateUrl('list'));
-        }
-
-        return $this->render($this->getTemplate(), array('form' => $form->createView()));
+        $this->setName('propel.create');
     }
 }
