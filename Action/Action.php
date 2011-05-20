@@ -13,32 +13,45 @@ namespace WhiteOctober\AdminBundle\Action;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use WhiteOctober\AdminBundle\Admin\Admin;
+use WhiteOctober\AdminBundle\Admin\AdminInterface;
 use WhiteOctober\AdminBundle\Field\FieldBag;
 use WhiteOctober\AdminBundle\Field\FieldConfigurator;
 use WhiteOctober\AdminBundle\Guesser\FieldGuessador;
 
-abstract class Action extends ContainerAware
+/**
+ * Action.
+ *
+ * @author Pablo Díez <pablodip@gmail.com>
+ */
+abstract class Action extends ContainerAware implements ActionInterface
 {
     private $admin;
-    private $options;
+
     private $name;
     private $namespace;
+
     private $routeNameSuffix;
     private $routePatternSuffix;
     private $routeDefaults;
     private $routeRequirements;
-    private $defaultTemplate;
+
     private $dependences;
+    private $options;
+
+    private $defaultTemplate;
     private $fields;
 
+    /**
+     * Constructor.
+     *
+     * @param array $options An array of options (optional).
+     */
     public function __construct(array $options = array())
     {
         $this->routeDefaults = array();
         $this->routeRequirements = array();
         $this->dependences = array();
-
-        $this->addOption('template', null);
+        $this->options = array();
 
         $this->configure();
 
@@ -51,28 +64,44 @@ abstract class Action extends ContainerAware
         if (null === $this->routePatternSuffix) {
             throw new \RuntimeException('An action must have route name suffix.');
         }
-
-        if ($diff = array_diff(array_keys($options), array_keys($this->options))) {
-            throw new \InvalidArgumentException(sprintf('The action "%s" does not support the following options "".', get_class($this), implode(', ', $diff)));
-        }
     }
 
+    /**
+     * Configures the action.
+     *
+     * You must put in this method at least the name, route name suffix and route pattern suffix.
+     */
     abstract protected function configure();
 
     public function configureActionsVars(ParameterBag $actionVars)
     {
     }
 
-    public function setAdmin(Admin $admin)
+    /**
+     * INTERNAL. Sets the admin.
+     *
+     * @param AdminInterface $admin The admin.
+     */
+    public function setAdmin(AdminInterface $admin)
     {
         $this->admin = $admin;
     }
 
+    /**
+     * Returns the admin.
+     *
+     * @return AdminInterface The admin.
+     */
     public function getAdmin()
     {
         return $this->admin;
     }
 
+    /**
+     * Returns the data class of the admin.
+     *
+     * @return string The data class.
+     */
     public function getDataClass()
     {
         return $this->admin->getDataClass();
@@ -81,6 +110,182 @@ abstract class Action extends ContainerAware
     public function getActionsVars()
     {
         return $this->admin->getActionsVars();
+    }
+
+    /**
+     * Sets the name.
+     *
+     * Sets the name and namespace separating them by the last dot.
+     *
+     * @param string $name The name.
+     *
+     * @return Action The action (fluent interface).
+     *
+     * @throws \InvalidArgumentException If the name is empty.
+     */
+    public function setName($name)
+    {
+        if (false !== $pos = strrpos($name, '.')) {
+            $namespace = substr($name, 0, $pos);
+            $name = substr($name, $pos + 1);
+        } else {
+            $namespace = null;
+        }
+
+        if (!$name) {
+            throw new \InvalidArgumentException('An action must have a name.');
+        }
+
+        $this->namespace = $namespace;
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Returns the namespace.
+     *
+     * @return string The namespace.
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
+     * Returns the name.
+     *
+     * @return string The name.
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Returns the full name (namespace + name).
+     *
+     * @return string The full name.
+     */
+    public function getFullName()
+    {
+        return $this->getNamespace() ? $this->getNamespace().'.'.$this->getName() : $this->getName();
+    }
+
+    /**
+     * Sets the route name suffix.
+     *
+     * @param string $routeNameSuffix The route name suffix.
+     *
+     * @return Action The action (fluent interface).
+     */
+    public function setRouteNameSuffix($routeNameSuffix)
+    {
+        $this->routeNameSuffix = $routeNameSuffix;
+
+        return $this;
+    }
+
+    /**
+     * Returns the route name suffix.
+     *
+     * @return string The route name suffix.
+     */
+    public function getRouteNameSuffix()
+    {
+        return $this->routeNameSuffix;
+    }
+
+    /**
+     * Sets the route pattern suffix.
+     *
+     * @param string $routePatternSuffix The route pattern suffix.
+     *
+     * @return Action The action (fluent interface).
+     */
+    public function setRoutePatternSuffix($routePatternSuffix)
+    {
+        $this->routePatternSuffix = $routePatternSuffix;
+
+        return $this;
+    }
+
+    /**
+     * Returns the route pattern suffix.
+     *
+     * @return string The route pattern suffix.
+     */
+    public function getRoutePatternSuffix()
+    {
+        return $this->routePatternSuffix;
+    }
+
+    /**
+     * Sets the route defaults.
+     *
+     * @param array $routeDefaults The route defaults.
+     *
+     * @return Action The action (fluent interface).
+     */
+    public function setRouteDefaults(array $routeDefaults)
+    {
+        $this->routeDefaults = $routeDefaults;
+
+        return $this;
+    }
+
+    /**
+     * Returns the route defaults.
+     *
+     * @return array The route defaults.
+     */
+    public function getRouteDefaults()
+    {
+        return $this->routeDefaults;
+    }
+
+    /**
+     * Sets the route requirements.
+     *
+     * @param array $routeRequirements The route requirements.
+     *
+     * @return Action The action (fluent interface).
+     */
+    public function setRouteRequirements(array $routeRequirements)
+    {
+        $this->routeRequirements = $routeRequirements;
+
+        return $this;
+    }
+
+    /**
+     * Returns the route requirements.
+     *
+     * @return array The route requirements.
+     */
+    public function getRouteRequirements()
+    {
+        return $this->routeRequirements;
+    }
+
+    /**
+     * Set the route (less verbose than to use all the methods).
+     *
+     * @param string $routeNameSuffix    The route name suffix.
+     * @param string $routePatternSuffix The route pattern suffix.
+     * @param array  $routeDefaults      The route defaults (optional).
+     * @param array  $routeRequirements  The route requirements (optional).
+     *
+     * @return Action The action (fluent interface).
+     */
+    public function setRoute($routeNameSuffix, $routePatternSuffix, array $routeDefaults = array(), array $routeRequirements = array())
+    {
+        $this->setRouteNameSuffix($routeNameSuffix);
+        $this->setRoutePatternSuffix($routePatternSuffix);
+        $this->setRouteDefaults($routeDefaults);
+        $this->setRouteRequirements($routeRequirements);
+
+        return $this;
     }
 
     public function mergeOptions(array $options = array())
@@ -161,98 +366,6 @@ abstract class Action extends ContainerAware
         return $this->options[$name];
     }
 
-    public function setName($name)
-    {
-        if (false !== $pos = strrpos($name, '.')) {
-            $namespace = substr($name, 0, $pos);
-            $name = substr($name, $pos + 1);
-        } else {
-            $namespace = $this->namespace;
-        }
-
-        if (!$name) {
-            throw new \InvalidArgumentException('An action must have a name.');
-        }
-
-        $this->namespace = $namespace;
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getNamespace()
-    {
-        return $this->namespace;
-    }
-
-    public function getFullName()
-    {
-        return $this->getNamespace() ? $this->getNamespace().'.'.$this->getName() : $this->getName();
-    }
-
-    public function setRouteNameSuffix($routeNameSuffix)
-    {
-        $this->routeNameSuffix = $routeNameSuffix;
-
-        return $this;
-    }
-
-    public function getRouteNameSuffix()
-    {
-        return $this->routeNameSuffix;
-    }
-
-    public function setRoutePatternSuffix($routePatternSuffix)
-    {
-        $this->routePatternSuffix = $routePatternSuffix;
-
-        return $this;
-    }
-
-    public function getRoutePatternSuffix()
-    {
-        return $this->routePatternSuffix;
-    }
-
-    public function setRouteDefaults(array $routeDefaults)
-    {
-        $this->routeDefaults = $routeDefaults;
-
-        return $this;
-    }
-
-    public function getRouteDefaults()
-    {
-        return $this->routeDefaults;
-    }
-
-    public function setRouteRequirements(array $routeRequirements)
-    {
-        $this->routeRequirements = $routeRequirements;
-
-        return $this;
-    }
-
-    public function getRouteRequirements()
-    {
-        return $this->routeRequirements;
-    }
-
-    public function setRoute($routeNameSuffix, $routePatternSuffix, array $routeDefaults = array(), array $routeRequirements = array())
-    {
-        $this->routeNameSuffix = $routeNameSuffix;
-        $this->routePatternSuffix = $routePatternSuffix;
-        $this->routeDefaults = $routeDefaults;
-        $this->routeRequirements = $routeRequirements;
-
-        return $this;
-    }
-
     public function setDefaultTemplate($defaultTemplate)
     {
         $this->defaultTemplate = $defaultTemplate;
@@ -281,7 +394,6 @@ abstract class Action extends ContainerAware
     {
         return $this->dependences;
     }
-
 
     public function getFields()
     {
@@ -317,8 +429,6 @@ abstract class Action extends ContainerAware
     {
         return $data->get($fieldName);
     }
-
-    abstract public function executeController();
 
     public function renderView($template, array $parameters = array())
     {

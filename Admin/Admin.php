@@ -19,7 +19,7 @@ use WhiteOctober\AdminBundle\Action\ActionCollection;
 use WhiteOctober\AdminBundle\Field\Field;
 use WhiteOctober\AdminBundle\Field\FieldConfigurator;
 
-abstract class Admin extends ContainerAware
+abstract class Admin extends ContainerAware implements AdminInterface
 {
     private $name;
     private $dataClass;
