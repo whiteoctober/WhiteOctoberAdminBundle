@@ -14,8 +14,16 @@ namespace WhiteOctober\AdminBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
+/**
+ * Adds tagged white_october_admin.field_guesser services to the admin factory.
+ *
+ * @author Pablo Díez <pablodip@gmail.com>
+ */
 class AddFieldGuessersPass implements CompilerPassInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('white_october_admin.admin_factory')) {

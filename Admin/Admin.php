@@ -468,7 +468,16 @@ abstract class Admin extends ContainerAware implements AdminInterface
         foreach ($inputActions as $action) {
             // in the container
             if (is_string($action)) {
-                $action = clone $this->container->get('white_october_admin.action_factory')->get($action);
+
+                // action
+                if ($this->container->get('white_october_admin.action_factory')->has($action)) {
+                    $action = clone $this->container->get('white_october_admin.action_factory')->get($action);
+                } else {
+                    // collection
+                    if ($this->container->get('white_october_admin.action_collection_factory')->has($action)) {
+                        $action = clone $this->container->get('white_october_admin.action_collection_factory')->get($action);
+                    }
+                }
             }
 
             // normal action

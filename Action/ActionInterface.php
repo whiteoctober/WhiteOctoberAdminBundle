@@ -14,4 +14,6 @@ namespace WhiteOctober\AdminBundle\Action;
 interface ActionInterface
 {
     function executeController();
+
+    function getFullName();
 }

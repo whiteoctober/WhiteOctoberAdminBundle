@@ -17,8 +17,8 @@
         </service>
 
         <!-- Actions -->
-        <service id="white_october_admin.action.doctrine.orm.crud" class="WhiteOctober\AdminBundle\DataManager\Doctrine\ORM\Action\CRUDActionCollection" public="false">
-            <tag name="white_october_admin.action" alias="doctrine.orm.crud" />
+        <service id="white_october_admin.action_collection.doctrine.orm.crud" class="WhiteOctober\AdminBundle\DataManager\Doctrine\ORM\Action\CRUDActionCollection" public="false">
+            <tag name="white_october_admin.action_collection" />
         </service>
     </services>
 

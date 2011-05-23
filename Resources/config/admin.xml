@@ -11,6 +11,9 @@
         <!-- Action Factory -->
         <parameter key="white_october_admin.action_factory.class">WhiteOctober\AdminBundle\Action\ActionFactory</parameter>
 
+        <!-- Action Collection Factory -->
+        <parameter key="white_october_admin.action_collection_factory.class">WhiteOctober\AdminBundle\Action\ActionCollectionFactory</parameter>
+
         <!-- Field Guessers -->
         <parameter key="white_october_admin.field_guesser.validator.class">WhiteOctober\AdminBundle\Guesser\ValidatorFieldGuesser</parameter>
 
@@ -33,6 +36,10 @@
 
         <!-- Action Factory -->
         <service id="white_october_admin.action_factory" class="%white_october_admin.action_factory.class%">
+        </service>
+
+        <!-- Action Collection Factory -->
+        <service id="white_october_admin.action_collection_factory" class="%white_october_admin.action_collection_factory.class%">
         </service>
 
         <!-- Field Guessers -->

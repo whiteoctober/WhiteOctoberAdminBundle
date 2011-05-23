@@ -13,15 +13,23 @@ namespace WhiteOctober\AdminBundle\Action;
 
 use WhiteOctober\AdminBundle\Field\Field;
 
+/**
+ * ActionView.
+ *
+ * @author Pablo Díez <pablodip@gmail.com>
+ */
 class ActionView
 {
     private $action;
-    private $admin;
 
-    public function __construct(Action $action)
+    /**
+     * Constructor.
+     *
+     * @param ActionInterface $action An action.
+     */
+    public function __construct(ActionInterface $action)
     {
         $this->action = $action;
-        $this->admin = $action->getAdmin();
     }
 
     public function hasOption($name)
@@ -41,7 +49,7 @@ class ActionView
 
     public function getDataFieldValue($data, $fieldName)
     {
-        return $this->admin->getDataFieldValue($data, $fieldName);
+        return $this->action->getAdmin()->getDataFieldValue($data, $fieldName);
     }
 
     public function renderField(Field $field, $data)

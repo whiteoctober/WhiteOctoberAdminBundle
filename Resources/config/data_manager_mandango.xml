@@ -17,8 +17,8 @@
         </service>
 
         <!-- Actions -->
-        <service id="white_october_admin.action.mandango.crud" class="WhiteOctober\AdminBundle\DataManager\Mandango\Action\CRUDActionCollection" public="false">
-            <tag name="white_october_admin.action" alias="mandango.crud" />
+        <service id="white_october_admin.action_collection.mandango.crud" class="WhiteOctober\AdminBundle\DataManager\Mandango\Action\CRUDActionCollection" public="false">
+            <tag name="white_october_admin.action_collection" />
         </service>
     </services>
 

@@ -19,6 +19,11 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
+/**
+ * WhiteOctoberAdminExtension.
+ *
+ * @author Pablo Díez <pablodip@gmail.com>
+ */
 class WhiteOctoberAdminExtension extends Extension
 {
     /**

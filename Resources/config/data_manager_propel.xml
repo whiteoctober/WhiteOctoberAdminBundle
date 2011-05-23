@@ -16,8 +16,8 @@
         </service>
 
         <!-- Actions -->
-        <service id="white_october_admin.action.propel.crud" class="WhiteOctober\AdminBundle\DataManager\Propel\Action\CRUDActionCollection" public="false">
-            <tag name="white_october_admin.action" alias="propel.crud" />
+        <service id="white_october_admin.action_collection.propel.crud" class="WhiteOctober\AdminBundle\DataManager\Propel\Action\CRUDActionCollection" public="false">
+            <tag name="white_october_admin.action_collection" />
         </service>
     </services>
 
