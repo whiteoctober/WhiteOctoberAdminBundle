@@ -104,6 +104,6 @@ class ListAction extends BaseListAction
 
     protected function createPagerfantaAdapter($query)
     {
-        return new DoctrineORMAdapter($query);
+        return new DoctrineORMAdapter($query->getQuery());
     }
 }
