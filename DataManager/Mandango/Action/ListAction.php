@@ -25,67 +25,41 @@ class ListAction extends BaseListAction
 
         $this
             ->setName('mandango.list')
-        ;
-    }
 
-    /*
-     * General Closures.
-     */
-    protected function getFilterQueryClosure()
-    {
-        $container = $this->container;
-
-        return function (Query $query, array $filterQueryCallbacks) use ($container) {
-            foreach ($filterQueryCallbacks as $callback) {
-                call_user_func($callback, $query, $container);
-            }
-        };
-    }
-
-    protected function getCreateDataClosure()
-    {
-        $container = $this->container;
-        $dataClass = $this->getDataClass();
-
-        return function (array $createDataCallbacks) use ($dataClass, $container) {
-            $data = $container->get('mandango')->create($dataClass);
-            foreach ($createDataCallbacks as $callback) {
-                call_user_func($callback, $data, $container);
-            }
-
-            return $data;
-        };
-    }
-
-    protected function getFindDataByIdClosure()
-    {
-        $container = $this->container;
-        $dataClass = $this->getDataClass();
-
-        return function ($id, array $findDataByIdCallbacks) use ($dataClass, $container) {
-            $data = $container->get('mandango')->getRepository($dataClass)->findOneById($id);
-            foreach ($findDataByIdCallbacks as $callback) {
-                if ($data) {
-                    $data = call_user_func($callback, $data, $container);
+            ->setOption('filterQueryClosure', function (Query $query, array $filterQueryCallbacks, $action, $container) {
+                foreach ($filterQueryCallbacks as $callback) {
+                    call_user_func($callback, $query, $container);
                 }
-            }
+            })
 
-            return $data;
-        };
-    }
+            ->setOption('createDataClosure', function (array $createDataCallbacks, $action, $container) {
+                $data = $container->get('mandango')->create($action->getDataClass());
+                foreach ($createDataCallbacks as $callback) {
+                    call_user_func($callback, $data, $container);
+                }
 
-    protected function getSaveDataClosure()
-    {
-        return function ($data) {
-            $data->save();
-        };
-    }
+                return $data;
+            })
 
-    protected function getDeleteDataClosure()
-    {
-        return function ($data) {
-            $data->delete();
-        };
+            ->setOption('findDataByIdClosure', function ($id, array $findDataByIdCallbacks, $action, $container) {
+                $data = $container->get('mandango')->getRepository($action->getDataClass())->findOneById($id);
+                foreach ($findDataByIdCallbacks as $callback) {
+                    if ($data) {
+                        $data = call_user_func($callback, $data, $container);
+                    }
+                }
+
+                return $data;
+            })
+
+            ->setOption('saveDataClosure', function ($data, $action, $container) {
+                $data->save();
+            })
+
+            ->setOption('deleteDataClosure', function ($data, $action, $container) {
+                $data->delete();
+            })
+        ;
     }
 
     /*

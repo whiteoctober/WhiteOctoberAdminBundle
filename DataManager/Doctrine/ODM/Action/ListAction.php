@@ -22,76 +22,55 @@ class ListAction extends BaseListAction
     {
         parent::configure();
 
+        $action = $this;
+
         $this
             ->setName('doctrine.odm.list')
-        ;
-    }
 
-    /*
-     * General Closures.
-     */
-    protected function getFilterQueryClosure()
-    {
-        $container = $this->container;
-
-        return function (Builder $query, array $filterQueryCallbacks) use ($container) {
-            foreach ($filterQueryCallbacks as $callback) {
-                call_user_func($callback, $query, $container);
-            }
-        };
-    }
-
-    protected function getCreateDataClosure()
-    {
-        $container = $this->container;
-        $dataClass = $this->getDataClass();
-
-        return function (array $createDataCallbacks) use ($dataClass, $container) {
-            $data = new $dataClass();
-            foreach ($createDataCallbacks as $callback) {
-                call_user_func($callback, $data, $container);
-            }
-
-            return $data;
-        };
-    }
-
-    protected function getFindDataByIdClosure()
-    {
-        $container = $this->container;
-        $dataClass = $this->getDataClass();
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
-
-        return function ($id, array $findDataByIdCallbacks) use ($dm, $dataClass, $container) {
-            $data = $dm->getRepository($dataClass)->find($id);
-            foreach ($findDataByIdCallbacks as $callback) {
-                if ($data) {
-                    $data = call_user_func($callback, $data, $dm, $container);
+            ->setOption('filterQueryClosure', function (Builder $query, array $filterQueryCallbacks, $action, $container) {
+                foreach ($filterQueryCallbacks as $callback) {
+                    call_user_func($callback, $query, $container);
                 }
-            }
+            })
 
-            return $data;
-        };
-    }
+            ->setOption('createDataClosure', function (array $createDataCallbacks, $action, $container) {
+                $dataClass = $action->getDataClass();
 
-    protected function getSaveDataClosure()
-    {
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
+                $data = new $dataClass();
+                foreach ($createDataCallbacks as $callback) {
+                    call_user_func($callback, $data, $container);
+                }
 
-        return function ($data) use ($dm) {
-            $dm->persist($data);
-            $dm->flush();
-        };
-    }
+                return $data;
+            })
 
-    protected function getDeleteDataClosure()
-    {
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
+            ->setOption('findDataByIdClosure', function ($id, array $findDataByIdCallbacks, $action, $container) {
+                $dm = $container->get('doctrine.odm.mongodb.document_manager');
 
-        return function ($data) use ($dm) {
-            $dm->remove($data);
-            $dm->flush();
-        };
+                $data = $dm->getRepository($action->getDataClass())->find($id);
+                foreach ($findDataByIdCallbacks as $callback) {
+                    if ($data) {
+                        $data = call_user_func($callback, $data, $dm, $container);
+                    }
+                }
+
+                return $data;
+            })
+
+            ->setOption('saveDataClosure', function ($data, $action, $container) {
+                $dm = $container->get('doctrine.odm.mongodb.document_manager');
+
+                $dm->persist($data);
+                $dm->flush();
+            })
+
+            ->setOption('deleteDataClosure', function ($data, $action, $container) {
+                $dm = $container->get('doctrine.odm.mongodb.document_manager');
+
+                $dm->remove($data);
+                $dm->flush();
+            })
+        ;
     }
 
     /*

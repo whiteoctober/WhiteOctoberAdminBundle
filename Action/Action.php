@@ -345,6 +345,8 @@ abstract class Action extends ContainerAware implements ActionInterface
         }
 
         $this->options[$name] = $value;
+
+        return $this;
     }
 
     public function getOptions()

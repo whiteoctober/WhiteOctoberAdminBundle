@@ -24,74 +24,50 @@ class ListAction extends BaseListAction
 
         $this
             ->setName('doctrine.orm.list')
-        ;
-    }
 
-    /*
-     * General Closures.
-     */
-    protected function getFilterQueryClosure()
-    {
-        $container = $this->container;
-
-        return function (QueryBuilder $query, array $filterQueryCallbacks) use ($container) {
-            foreach ($filterQueryCallbacks as $callback) {
-                call_user_func($callback, $query, $container);
-            }
-        };
-    }
-
-    protected function getCreateDataClosure()
-    {
-        $container = $this->container;
-        $dataClass = $this->getDataClass();
-
-        return function (array $createDataCallbacks) use ($dataClass, $container) {
-            $data = new $dataClass();
-            foreach ($createDataCallbacks as $callback) {
-                call_user_func($callback, $data, $container);
-            }
-
-            return $data;
-        };
-    }
-
-    protected function getFindDataByIdClosure()
-    {
-        $container = $this->container;
-        $dataClass = $this->getDataClass();
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        return function ($id, array $findDataByIdCallbacks) use ($em, $dataClass, $container) {
-            $data = $em->getRepository($dataClass)->find($id);
-            foreach ($findDataByIdCallbacks as $callback) {
-                if ($data) {
-                    $data = call_user_func($callback, $data, $em, $container);
+            ->setOption('filterQueryClosure', function (QueryBuilder $query, array $filterQueryCallbacks, $action, $container) {
+                foreach ($filterQueryCallbacks as $callback) {
+                    call_user_func($callback, $query, $container);
                 }
-            }
+            })
 
-            return $data;
-        };
-    }
+            ->setOption('createDataClosure', function (array $createDataCallbacks, $action, $container) {
+                $dataClass = $action->getDataClass();
 
-    protected function getSaveDataClosure()
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
+                $data = new $dataClass();
+                foreach ($createDataCallbacks as $callback) {
+                    call_user_func($callback, $data, $container);
+                }
 
-        return function ($data) use ($em) {
-            $em->persist($data);
-            $em->flush();
-        };
-    }
+                return $data;
+            })
 
-    protected function getDeleteDataClosure()
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
+            ->setOption('findDataByIdClosure', function ($id, array $findDataByIdCallbacks, $action, $container) {
+                $em = $container->get('doctrine.orm.entity_manager');
+                $data = $em->getRepository($action->getDataClass())->find($id);
+                foreach ($findDataByIdCallbacks as $callback) {
+                    if ($data) {
+                        $data = call_user_func($callback, $data, $em, $container);
+                    }
+                }
 
-        return function ($data) use ($em) {
-            $em->remove($data);
-            $em->flush();
-        };
+                return $data;
+            })
+
+            ->setOption('saveDataClosure', function ($data, $action, $container) {
+                $em = $container->get('doctrine.orm.entity_manager');
+
+                $em->persist($data);
+                $em->flush();
+            })
+
+            ->setOption('deleteDataClosure', function ($data, $action, $container) {
+                $em = $container->get('doctrine.orm.entity_manager');
+
+                $em->remove($data);
+                $em->flush();
+            })
+        ;
     }
 
     /*

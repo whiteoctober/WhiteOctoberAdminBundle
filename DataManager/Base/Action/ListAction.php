@@ -28,9 +28,14 @@ abstract class ListAction extends Action
             ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
             ->addOptions(array(
                 'sessionParameter'        => 'hash',
+                'filterQueryClosure'      => null,
                 'filterQueryCallbacks'    => array(),
+                'findDataByIdClosure'     => null,
                 'findDataByIdCallbacks'   => array(),
+                'createDataClosure'       => null,
                 'createDataCallbacks'     => array(),
+                'saveDataClosure'         => null,
+                'deleteDataClosure'       => null,
                 'simpleFilterParameter'   => 'q',
                 'simpleFilterDefault'     => null,
                 'advancedFilterParameter' => 'advancedFilter',
@@ -55,38 +60,73 @@ abstract class ListAction extends Action
             $actionsVars->set('admin_session', $adminSession);
         }
 
-        $filterQueryClosure = $this->getFilterQueryClosure();
+        $action = $this;
+        $container = $this->container;
+
+        $filterQueryClosure = $this->getOption('filterQueryClosure');
+        if (!$filterQueryClosure instanceof \Closure) {
+            throw new \RuntimeException('The filterQueryClosure is not a closure.');
+        }
         $filterQueryCallbacks = $this->getOption('filterQueryCallbacks');
-        $actionsVars->set('filterQueryClosure', function () use ($filterQueryClosure, $filterQueryCallbacks) {
+        $actionsVars->set('filterQueryClosure', function () use ($filterQueryClosure, $filterQueryCallbacks, $action, $container) {
             $args = func_get_args();
             $args[] = $filterQueryCallbacks;
+            $args[] = $action;
+            $args[] = $container;
+
             return call_user_func_array($filterQueryClosure, $args);
         });
 
-        $createDataClosure = $this->getCreateDataClosure();
+        $createDataClosure = $this->getOption('createDataClosure');
+        if (!$createDataClosure instanceof \Closure) {
+            throw new \RuntimeException('The createDataClosure option is not a closure.');
+        }
         $createDataCallbacks = $this->getOption('createDataCallbacks');
-        $actionsVars->set('createDataClosure', function () use ($createDataClosure, $createDataCallbacks) {
+        $actionsVars->set('createDataClosure', function () use ($createDataClosure, $createDataCallbacks, $action, $container) {
             $args = func_get_args();
             $args[] = $createDataCallbacks;
+            $args[] = $action;
+            $args[] = $container;
+
             return call_user_func_array($createDataClosure, $args);
         });
 
-        $findDataByIdClosure = $this->getFindDataByIdClosure();
+        $findDataByIdClosure = $this->getOption('findDataByIdClosure');
+        if (!$findDataByIdClosure instanceof \Closure) {
+            throw new \RuntimeException('The findDataByIdClosure is not a closure.');
+        }
         $findDataByIdCallbacks = $this->getOption('findDataByIdCallbacks');
-        $actionsVars->set('findDataByIdClosure', function () use ($findDataByIdClosure, $findDataByIdCallbacks) {
+        $actionsVars->set('findDataByIdClosure', function () use ($findDataByIdClosure, $findDataByIdCallbacks, $action, $container) {
             $args = func_get_args();
             $args[] = $findDataByIdCallbacks;
+            $args[] = $action;
+            $args[] = $container;
+
             return call_user_func_array($findDataByIdClosure, $args);
         });
 
-        $saveDataClosure = $this->getSaveDataClosure();
-        $actionsVars->set('saveDataClosure', function () use ($saveDataClosure) {
-            return call_user_func_array($saveDataClosure, func_get_args());
+        $saveDataClosure = $this->getOption('saveDataClosure');
+        if (!$saveDataClosure instanceof \Closure) {
+            throw new \RuntimeException('The saveDataClosure is not a closure.');
+        }
+        $actionsVars->set('saveDataClosure', function () use ($saveDataClosure, $action, $container) {
+            $args = func_get_args();
+            $args[] = $action;
+            $args[] = $container;
+
+            return call_user_func_array($saveDataClosure, $args);
         });
 
-        $deleteDataClosure = $this->getSaveDataClosure();
-        $actionsVars->set('deleteDataClosure', function () use ($deleteDataClosure) {
-            return call_user_func_array($deleteDataClosure, func_get_args());
+        $deleteDataClosure = $this->getOption('deleteDataClosure');
+        if (!$deleteDataClosure instanceof \Closure) {
+            throw new \RuntimeException('The deleteDataClosure is not a closure');
+        }
+        $actionsVars->set('deleteDataClosure', function () use ($deleteDataClosure, $action, $container) {
+            $args = func_get_args();
+            $args[] = $action;
+            $args[] = $container;
+
+            return call_user_func_array($deleteDataClosure, $args);
         });
     }
 
@@ -192,19 +232,6 @@ abstract class ListAction extends Action
 
         return $fields;
     }
-
-    /*
-     * General Closures.
-     */
-    abstract protected function getFilterQueryClosure();
-
-    abstract protected function getCreateDataClosure();
-
-    abstract protected function getFindDataByIdClosure();
-
-    abstract protected function getSaveDataClosure();
-
-    abstract protected function getDeleteDataClosure();
 
     /*
      * List.
