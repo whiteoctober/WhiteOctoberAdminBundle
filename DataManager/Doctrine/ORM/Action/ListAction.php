@@ -14,7 +14,7 @@ namespace WhiteOctober\AdminBundle\DataManager\Doctrine\ORM\Action;
 use WhiteOctober\AdminBundle\DataManager\Base\Action\ListAction as BaseListAction;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 
 class ListAction extends BaseListAction
 {
@@ -34,7 +34,7 @@ class ListAction extends BaseListAction
     {
         $container = $this->container;
 
-        return function (QueryBuilder $query, array $filterQueryCallbacks) use ($container) {
+        return function (Query $query, array $filterQueryCallbacks) use ($container) {
             foreach ($filterQueryCallbacks as $callback) {
                 call_user_func($callback, $query, $container);
             }
@@ -105,7 +105,7 @@ class ListAction extends BaseListAction
             ->from($this->getDataClass(), 'u')
         ;
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery();
     }
 
     protected function applySimpleFilter($query, $filter)
