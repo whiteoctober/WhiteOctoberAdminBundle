@@ -20,9 +20,11 @@ abstract class CreateAction extends Action
     {
         $this
             ->setRoute('create', '/', array(), array('_method' => 'POST'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/new.html.twig')
             ->setDependences(array(
                 'new' => array(),
+            ))
+            ->addOptions(array(
+                'template' => 'WhiteOctoberAdminBundle::default/new.html.twig',
             ))
         ;
     }
@@ -43,6 +45,6 @@ abstract class CreateAction extends Action
             return new RedirectResponse($this->generateUrl('list'));
         }
 
-        return $this->render($this->getTemplate(), array('form' => $form->createView()));
+        return $this->render($this->getOption('template'), array('form' => $form->createView()));
     }
 }

@@ -21,9 +21,11 @@ abstract class UpdateAction extends Action
     {
         $this
             ->setRoute('update', '/{id}', array(), array('_method' => 'PUT'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/edit.html.twig')
             ->setDependences(array(
                 'edit' => array(),
+            ))
+            ->addOptions(array(
+                'template' => 'WhiteOctoberAdminBundle::default/edit.html.twig',
             ))
         ;
     }
@@ -47,6 +49,6 @@ abstract class UpdateAction extends Action
             return new RedirectResponse($this->generateUrl('list'));
         }
 
-        return $this->render($this->getTemplate(), array('data' => $data, 'form' => $form->createView()));
+        return $this->render($this->getOption('template'), array('data' => $data, 'form' => $form->createView()));
     }
 }

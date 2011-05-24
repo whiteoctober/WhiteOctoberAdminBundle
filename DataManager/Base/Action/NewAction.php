@@ -20,13 +20,15 @@ abstract class NewAction extends Action
     {
         $this
             ->setRoute('new', '/new', array(), array('_method' => 'GET'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/new.html.twig')
             ->setDependences(array(
                 'list' => array(
                     'actions' => array(
                         'new' => array('route' => 'new', 'label' => 'New'),
                     ),
                 ),
+            ))
+            ->addOptions(array(
+                'template' => 'WhiteOctoberAdminBundle::default/new.html.twig',
             ))
         ;
     }
@@ -39,6 +41,6 @@ abstract class NewAction extends Action
         $form = $this->createFormFromFields($this->getFields());
         $form->setData($data);
 
-        return $this->render($this->getTemplate(), array('form' => $form->createView()));
+        return $this->render($this->getOption('template'), array('form' => $form->createView()));
     }
 }

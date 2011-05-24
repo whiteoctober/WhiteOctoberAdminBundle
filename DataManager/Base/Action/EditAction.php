@@ -21,13 +21,15 @@ abstract class EditAction extends Action
     {
         $this
             ->setRoute('edit', '/{id}', array(), array('_method' => 'GET'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/edit.html.twig')
             ->setDependences(array(
                 'list' => array(
                     'dataActions' => array(
                         'edit'   => array('routeName' => '@edit', 'label' => 'Edit'),
                     ),
                 ),
+            ))
+            ->addOptions(array(
+                'template' => 'WhiteOctoberAdminBundle::default/edit.html.twig',
             ))
         ;
     }
@@ -43,6 +45,6 @@ abstract class EditAction extends Action
         $form = $this->createFormFromFields($this->getFields());
         $form->setData($data);
 
-        return $this->render($this->getTemplate(), array('data' => $data, 'form' => $form->createView()));
+        return $this->render($this->getOption('template'), array('data' => $data, 'form' => $form->createView()));
     }
 }

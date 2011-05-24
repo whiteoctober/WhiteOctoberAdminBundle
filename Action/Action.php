@@ -368,18 +368,6 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this->options[$name];
     }
 
-    public function setDefaultTemplate($defaultTemplate)
-    {
-        $this->defaultTemplate = $defaultTemplate;
-
-        return $this;
-    }
-
-    public function getDefaultTemplate()
-    {
-        return $this->defaultTemplate;
-    }
-
     public function getFieldGuessers()
     {
         return $this->admin->getFieldGuessers();
@@ -420,11 +408,6 @@ abstract class Action extends ContainerAware implements ActionInterface
         }
 
         return $this->fields;
-    }
-
-    public function getTemplate()
-    {
-        return ($this->hasOption('template') && null !== $this->getOption('template')) ? $this->getOption('template') : $this->getDefaultTemplate();
     }
 
     public function getDataValue($data, $fieldName)

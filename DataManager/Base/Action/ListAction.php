@@ -25,7 +25,6 @@ abstract class ListAction extends Action
     {
         $this
             ->setRoute('list', '', array(), array('_method' => 'GET'))
-            ->setDefaultTemplate('WhiteOctoberAdminBundle::default/list.html.twig')
             ->addOptions(array(
                 'sessionParameter'        => 'hash',
                 'filterQueryClosure'      => null,
@@ -49,6 +48,7 @@ abstract class ListAction extends Action
                 'dataActions'             => array(),
                 'pagerfantaView'          => 'white_october_admin',
                 'pagerfantaOptions'       => array(),
+                'template'                => 'WhiteOctoberAdminBundle::default/list.html.twig',
             ))
         ;
     }
@@ -208,7 +208,7 @@ abstract class ListAction extends Action
             }
         }
 
-        return $this->render($this->getTemplate(), array(
+        return $this->render($this->getOption('template'), array(
             'simpleFilterEnabled' => $simpleFilterEnabled,
             'simpleFilter'        => $simpleFilter,
             'advancedFilterEnabled' => $advancedFilterEnabled,
