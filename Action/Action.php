@@ -460,6 +460,7 @@ abstract class Action extends ContainerAware implements ActionInterface
         foreach ($fields as $field) {
             $type = $field->hasOption('form_type') ? $field->getOption('form_type') : null;
             $options = $field->hasOption('form_options') ? $field->getOption('form_options') : array();
+            $options['label'] = $field->getLabel();
             $formBuilder->add($field->getName(), $type, $options);
         }
         $form = $formBuilder->getForm();
