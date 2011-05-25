@@ -37,8 +37,8 @@ abstract class Admin extends ContainerAware implements AdminInterface
     private $rawActions;
     private $actionParsers;
     private $actions;
-    private $setActionOptions;
-    private $mergeActionOptions;
+    private $actionOptionsSets;
+    private $actionOptionsProcessors;
     private $actionsVars;
 
     private $controllerPreExecutes;
@@ -50,8 +50,8 @@ abstract class Admin extends ContainerAware implements AdminInterface
         $this->rawFieldGuessers = array();
         $this->rawActions = array();
         $this->actionParsers = array();
-        $this->setActionOptions = array();
-        $this->mergeActionOptions = array();
+        $this->actionOptionsSets = array();
+        $this->actionOptionsProcessors = array();
         $this->controllerPreExecutes = array();
 
         $this->preConfigure();
@@ -324,18 +324,16 @@ abstract class Admin extends ContainerAware implements AdminInterface
         return $this->actionsVars;
     }
 
-    public function setActionOption($action, $optionName, $optionValue)
+    public function setActionOption($actionName, $optionName, $optionValue)
     {
-        $this->setActionOptions[$action][$optionName] = $optionValue;
+        $this->actionOptionsSets[$actionName][$optionName] = $optionValue;
 
         return $this;
     }
 
-    public function mergeActionOption($action, $optionName, $optionValue)
+    public function addActionOptionProcessor($actionName, $optionName, \Closure $processor)
     {
-        $this->mergeActionOptions[$action][$optionName][] = $optionValue;
-
-        return $this;
+        $this->actionOptionsProcessors[$actionName][$optionName][] = $processor;
     }
 
     public function addControllerPreExecute(\Closure $controllerPreExecute)
@@ -432,11 +430,13 @@ abstract class Admin extends ContainerAware implements AdminInterface
             $actions[$action->getFullName()] = $action;
         }
 
+        // action parsers
         foreach ($this->actionParsers as $parser) {
             $parser($actions);
         }
 
-        foreach ($this->setActionOptions as $actionName => $options) {
+        // action options sets
+        foreach ($this->actionOptionsSets as $actionName => $options) {
             $action = $this->findAction($actions, $actionName);
 
             foreach ($options as $name => $value) {
@@ -444,16 +444,20 @@ abstract class Admin extends ContainerAware implements AdminInterface
             }
         }
 
-        foreach ($this->mergeActionOptions as $actionName => $options) {
+        // action options processors
+        foreach ($this->actionOptionsProcessors as $actionName => $options) {
             $action = $this->findAction($actions, $actionName);
 
-            foreach ($options as $name => $merges) {
-                foreach ($merges as $merge) {
-                    $action->mergeOption($name, $merge);
+            foreach ($options as $name => $processors) {
+                $value = $action->getOption($name);
+                foreach ($processors as $processor) {
+                    $value = $processor($value);
                 }
+                $action->setOption($name, $value);
             }
         }
 
+        // action vars
         foreach ($actions as $action) {
             $action->configureActionsVars($this->actionsVars);
         }

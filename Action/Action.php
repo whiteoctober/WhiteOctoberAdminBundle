@@ -364,11 +364,6 @@ abstract class Action extends ContainerAware implements ActionInterface
         $this->options = array_merge_recursive($this->options, $options);
     }
 
-    public function getFieldGuessers()
-    {
-        return $this->admin->getFieldGuessers();
-    }
-
     /**
      * Sets the action dependences.
      *
@@ -396,7 +391,9 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this->actionDependences;
     }
 
-
+    /**
+     * {@inheritdoc}
+     */
     public function getFields()
     {
         if (null === $this->fields) {
@@ -410,7 +407,7 @@ abstract class Action extends ContainerAware implements ActionInterface
             $fields = $fieldConfigurator->all();
 
             $dataClass = $this->getDataClass();
-            $guessador = new FieldGuessador($this->getFieldGuessers());
+            $guessador = new FieldGuessador($this->admin->getFieldGuessers());
             foreach ($fields as $field) {
                 $guessOptions = $guessador->guessOptions($dataClass, $field->getName());
                 $field->setOptions(array_merge($guessOptions, $field->getOptions()));
