@@ -1,1 +1,1 @@
-{{ value|date("m/d/Y") }}
+{{ value | date(_field.hasOption('dateFormat') ? _field.getOption('dateFormat') : 'F j, Y H:i') }}
