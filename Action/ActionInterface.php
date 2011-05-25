@@ -63,6 +63,40 @@ interface ActionInterface
     function getRouteRequirements();
 
     /**
+     * Returns where an option exists or not.
+     *
+     * @param string $name The name.
+     *
+     * @return Boolean Where the option exists or not.
+     */
+    function hasOption($name);
+
+    /**
+     * Returns an option value.
+     *
+     * @param string $name The name.
+     *
+     * @return mixed The value.
+     *
+     * @throws \InvalidArgumentException If the option does not exist.
+     */
+    function getOption($name);
+
+    /**
+     * Returns the options.
+     *
+     * @return array The options.
+     */
+    function getOptions();
+
+    /**
+     * Returns the fields of the action.
+     *
+     * @return FieldBag The fields of the action.
+     */
+    function getFields();
+
+    /**
      * Executes the controller.
      *
      * @return Response A response object.

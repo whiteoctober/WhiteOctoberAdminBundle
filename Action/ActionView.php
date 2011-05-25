@@ -32,34 +32,25 @@ class ActionView
         $this->action = $action;
     }
 
-    public function hasOption($name)
-    {
-        return $this->action->hasOption($name);
-    }
-
+    /**
+     * Returns an action option.
+     *
+     * @param string $name The name.
+     *
+     * @return mixed The option.
+     */
     public function getOption($name)
     {
         return $this->action->getOption($name);
     }
 
+    /**
+     * Returns the action fields.
+     *
+     * @return FieldBag The fields.
+     */
     public function getFields()
     {
         return $this->action->getFields();
-    }
-
-    public function getDataFieldValue($data, $fieldName)
-    {
-        return $this->action->getAdmin()->getDataFieldValue($data, $fieldName);
-    }
-
-    public function renderField(Field $field, $data)
-    {
-        $value = $this->getDataFieldValue($data, $field->getName());
-
-        if ($field->hasOption('template')) {
-            return $this->action->renderView($field->getOption('template'), array('_field' => $field, 'value' => $value));
-        }
-
-        return $value;
     }
 }

@@ -274,11 +274,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns where an option exists or not.
-     *
-     * @param string $name The name.
-     *
-     * @return Boolean Where the option exists or not.
+     * {@inheritdoc}
      */
     public function hasOption($name)
     {
@@ -286,13 +282,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns an option value.
-     *
-     * @param string $name The name.
-     *
-     * @return mixed The value.
-     *
-     * @throws \InvalidArgumentException If the option does not exist.
+     * {@inheritdoc}
      */
     public function getOption($name)
     {
@@ -304,9 +294,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns the options.
-     *
-     * @return array The options.
+     * {@inheritdoc}
      */
     public function getOptions()
     {
@@ -373,7 +361,7 @@ abstract class Action extends ContainerAware implements ActionInterface
 
     public function mergeOptions(array $options)
     {
-        $this->options = array_merge($this->options, $options);
+        $this->options = array_merge_recursive($this->options, $options);
     }
 
     public function getFieldGuessers()
@@ -408,11 +396,7 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this->actionDependences;
     }
 
-    /**
-     * Returns the fields of the action.
-     *
-     * @return FieldBag The fields of the action.
-     */
+
     public function getFields()
     {
         if (null === $this->fields) {
@@ -429,7 +413,7 @@ abstract class Action extends ContainerAware implements ActionInterface
             $guessador = new FieldGuessador($this->getFieldGuessers());
             foreach ($fields as $field) {
                 $guessOptions = $guessador->guessOptions($dataClass, $field->getName());
-                $field->appendOptions($guessOptions);
+                $field->setOptions(array_merge($guessOptions, $field->getOptions()));
             }
 
             $this->fields = new FieldBag($fields);

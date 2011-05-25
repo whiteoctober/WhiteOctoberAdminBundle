@@ -12,6 +12,7 @@
 namespace WhiteOctober\AdminBundle\Admin;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
+use WhiteOctober\AdminBundle\Field\Field;
 
 class AdminView extends ContainerAware
 {
@@ -70,5 +71,21 @@ class AdminView extends ContainerAware
         }
 
         return $this->container->get('router')->generate($routeName, $routeParameters);
+    }
+
+    public function getDataFieldValue($data, $fieldName)
+    {
+        return $this->admin->getDataFieldValue($data, $fieldName);
+    }
+
+    public function renderField(Field $field, $data)
+    {
+        $value = $this->getDataFieldValue($data, $field->getName());
+
+        if ($field->hasOption('template')) {
+            return $this->container->get('templating')->render($field->getOption('template'), array('_field' => $field, 'value' => $value));
+        }
+
+        return $value;
     }
 }

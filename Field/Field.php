@@ -11,11 +11,24 @@
 
 namespace WhiteOctober\AdminBundle\Field;
 
+/**
+ * Field.
+ *
+ * @author Pablo Díez <pablodip@gmail.com>
+ */
 class Field
 {
     private $name;
     private $options;
 
+    /**
+     * Constructor.
+     *
+     * @param string $name    The name.
+     * @param array  $options An array of options (optional).
+     *
+     * @throws \InvalidArgumentException If the name is empty.
+     */
     public function __construct($name, array $options = array())
     {
         if (empty($name)) {
@@ -26,36 +39,58 @@ class Field
         $this->options = $options;
     }
 
+    /**
+     * Returns the name.
+     *
+     * @return string The name.
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Sets an option.
+     *
+     * @param string $name  The name..
+     * @param mixed  $value The value.
+     */
     public function setOption($name, $value)
     {
         $this->options[$name] = $value;
     }
 
-    public function appendOptions(array $options)
+    /**
+     * Sets the options.
+     *
+     * @param array $options The options.
+     */
+    public function setOptions(array $options)
     {
-        $this->options = array_merge($options, $this->options);
+        $this->options = $options;
     }
 
-    public function mergeOptions(array $options)
-    {
-        $this->options = array_merge($this->options, $options);
-    }
-
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
+    /**
+     * Returns whether an option exists or not.
+     *
+     * @param string $name The name.
+     *
+     * @return Boolean Whether an option exists or not.
+     */
     public function hasOption($name)
     {
         return array_key_exists($name, $this->options);
     }
 
+    /**
+     * Returns an option.
+     *
+     * @param string $name The name.
+     *
+     * @return mixed The option.
+     *
+     * @throws \InvalidArgumentException If the option does not exist.
+     */
     public function getOption($name)
     {
         if (!$this->hasOption($name)) {
@@ -65,18 +100,25 @@ class Field
         return $this->options[$name];
     }
 
+    /**
+     * Returns the options.
+     *
+     * @return array The options.
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Returns the label.
+     *
+     * The label is the label option if it exists or the name passed by ucfirst otherwise.
+     *
+     * @return string The label.
+     */
     public function getLabel()
     {
         return $this->hasOption('label') ? $this->getOption('label') : ucfirst($this->name);
-    }
-
-    public function getType()
-    {
-        return $this->hasOption('type') ? $this->getOption('type') : null;
-    }
-
-    public function getTemplate()
-    {
-        return $this->hasOption('template') ? $this->getOption('template') : null;
     }
 }
