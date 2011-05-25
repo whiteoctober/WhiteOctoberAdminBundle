@@ -38,7 +38,6 @@ abstract class Action extends ContainerAware implements ActionInterface
     private $dependences;
     private $options;
 
-    private $defaultTemplate;
     private $fields;
 
     /**
