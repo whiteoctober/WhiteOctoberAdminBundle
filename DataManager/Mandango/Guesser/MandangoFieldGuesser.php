@@ -41,7 +41,7 @@ class MandangoFieldGuesser implements FieldGuesserInterface
                     break;
                 case 'bin_data':
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'file',
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
@@ -53,12 +53,12 @@ class MandangoFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'checkbox',
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_options',
+                        'formOptions',
                         array('required' => false),
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
@@ -70,7 +70,7 @@ class MandangoFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'datetime',
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );
@@ -82,7 +82,7 @@ class MandangoFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'number',
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );
@@ -94,7 +94,7 @@ class MandangoFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'number',
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );
@@ -106,7 +106,7 @@ class MandangoFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'text',
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );

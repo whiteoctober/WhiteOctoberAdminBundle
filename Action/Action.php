@@ -443,8 +443,8 @@ abstract class Action extends ContainerAware implements ActionInterface
             'data_class' => $this->getDataClass(),
         ));
         foreach ($fields as $field) {
-            $type = $field->hasOption('form_type') ? $field->getOption('form_type') : null;
-            $options = $field->hasOption('form_options') ? $field->getOption('form_options') : array();
+            $type = $field->hasOption('formType') ? $field->getOption('formType') : null;
+            $options = $field->hasOption('formOptions') ? $field->getOption('formOptions') : array();
             $options['label'] = $field->getLabel();
             $formBuilder->add($field->getName(), $type, $options);
         }

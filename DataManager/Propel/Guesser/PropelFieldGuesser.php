@@ -47,12 +47,12 @@ class PropelFieldGuesser implements FieldGuesserInterface
             $table = $multiple ? $relationMap->getLocalTable() : $relationMap->getForeignTable();
 
             $options[] = new FieldOptionGuess(
-                'form_type',
+                'formType',
                 'model',
                 FieldOptionGuess::HIGH_CONFIDENCE
             );
             $options[] = new FieldOptionGuess(
-                'form_options',
+                'formOptions',
                 array(
                     'relation_map'  => $relationMap,
                     'class'         => $table->getClassname(),
@@ -71,12 +71,12 @@ class PropelFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'checkbox',
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_options',
+                        'formOptions',
                         array('required' => false),
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
@@ -88,7 +88,7 @@ class PropelFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'datetime',
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );
@@ -100,7 +100,7 @@ class PropelFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'number',
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );
@@ -112,7 +112,7 @@ class PropelFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'number',
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );
@@ -124,7 +124,7 @@ class PropelFieldGuesser implements FieldGuesserInterface
                         FieldOptionGuess::HIGH_CONFIDENCE
                     );
                     $options[] = new FieldOptionGuess(
-                        'form_type',
+                        'formType',
                         'text',
                         FieldOptionGuess::MEDIUM_CONFIDENCE
                     );
