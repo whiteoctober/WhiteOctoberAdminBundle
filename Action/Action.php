@@ -35,8 +35,8 @@ abstract class Action extends ContainerAware implements ActionInterface
     private $routeDefaults;
     private $routeRequirements;
 
-    private $dependences;
     private $options;
+    private $actionDependences;
 
     private $fields;
 
@@ -49,8 +49,8 @@ abstract class Action extends ContainerAware implements ActionInterface
     {
         $this->routeDefaults = array();
         $this->routeRequirements = array();
-        $this->dependences = array();
         $this->options = array();
+        $this->actionDependences = array();
 
         $this->configure();
 
@@ -142,9 +142,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns the namespace.
-     *
-     * @return string The namespace.
+     * {@inheritdoc}
      */
     public function getNamespace()
     {
@@ -152,9 +150,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns the name.
-     *
-     * @return string The name.
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -162,9 +158,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns the full name (namespace + name).
-     *
-     * @return string The full name.
+     * {@inheritdoc}
      */
     public function getFullName()
     {
@@ -186,9 +180,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns the route name suffix.
-     *
-     * @return string The route name suffix.
+     * {@inheritdoc}
      */
     public function getRouteNameSuffix()
     {
@@ -210,9 +202,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns the route pattern suffix.
-     *
-     * @return string The route pattern suffix.
+     * {@inheritdoc}
      */
     public function getRoutePatternSuffix()
     {
@@ -234,9 +224,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns the route defaults.
-     *
-     * @return array The route defaults.
+     * {@inheritdoc}
      */
     public function getRouteDefaults()
     {
@@ -258,9 +246,7 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Returns the route requirements.
-     *
-     * @return array The route requirements.
+     * {@inheritdoc}
      */
     public function getRouteRequirements()
     {
@@ -287,48 +273,75 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this;
     }
 
-    public function mergeOptions(array $options = array())
+    /**
+     * Returns where an option exists or not.
+     *
+     * @param string $name The name.
+     *
+     * @return Boolean Where the option exists or not.
+     */
+    public function hasOption($name)
     {
-        foreach ($options as $name => $option) {
-            if (!isset($this->options[$name])) {
-                throw new \InvalidArgumentException(sprintf('The option "%s" does not exist.', $name));
-            }
-
-            if (is_array($this->options[$name])) {
-                $this->mergeOption($name, $option);
-            } else {
-                $this->setOption($name, $option);
-            }
-        }
+        return array_key_exists($name, $this->options);
     }
 
-    public function mergeOption($name, array $value)
+    /**
+     * Returns an option value.
+     *
+     * @param string $name The name.
+     *
+     * @return mixed The value.
+     *
+     * @throws \InvalidArgumentException If the option does not exist.
+     */
+    public function getOption($name)
     {
         if (!$this->hasOption($name)) {
             throw new \InvalidArgumentException(sprintf('The option "%s" does not exist.', $name));
         }
 
-        $currentValue = $this->options[$name];
-        if (!is_array($currentValue)) {
-            throw new \RuntimeException('The current value must to be an array to merge.');
+        return $this->options[$name];
+    }
+
+    /**
+     * Returns the options.
+     *
+     * @return array The options.
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Adds an option.
+     *
+     * @param string $name         The name.
+     * @param mixed  $defaultValue The default value.
+     *
+     * @return Action The action (fluent interface).
+     *
+     * @throws \LogicException If the option already exists.
+     */
+    public function addOption($name, $defaultValue)
+    {
+        if ($this->hasOption($name)) {
+            throw new \LogicException(sprintf('The option "%s" already exists.', $name));
         }
 
-        $this->options[$name] = array_merge_recursive($currentValue, $value);
-    }
-
-    protected function setOptions(array $options)
-    {
-        $this->options = $options;
-    }
-
-    protected function addOption($name, $defaultValue)
-    {
         $this->options[$name] = $defaultValue;
 
         return $this;
     }
 
-    protected function addOptions(array $options)
+    /**
+     * Adds options.
+     *
+     * @param array $options The options as an array (the name as the key and the default value as the value).
+     *
+     * @return Action The action (fluent interface).
+     */
+    public function addOptions(array $options)
     {
         foreach ($options as $name => $defaultValue) {
             $this->addOption($name, $defaultValue);
@@ -337,6 +350,16 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this;
     }
 
+    /**
+     * Sets an option.
+     *
+     * @param string $name  The name.
+     * @param mixed  $value The value.
+     *
+     * @return Action The action (fluent interface).
+     *
+     * @throws \InvalidArgumentException If the option does not exist.
+     */
     public function setOption($name, $value)
     {
         if (!$this->hasOption($name)) {
@@ -348,23 +371,9 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this;
     }
 
-    public function getOptions()
+    public function mergeOptions(array $options)
     {
-        return $this->options;
-    }
-
-    public function hasOption($name)
-    {
-        return array_key_exists($name, $this->options);
-    }
-
-    public function getOption($name)
-    {
-        if (!$this->hasOption($name)) {
-            throw new \InvalidArgumentException(sprintf('The option "%s" does not exist.', $name));
-        }
-
-        return $this->options[$name];
+        $this->options = array_merge($this->options, $options);
     }
 
     public function getFieldGuessers()
@@ -372,18 +381,38 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this->admin->getFieldGuessers();
     }
 
-    public function setDependences(array $dependences)
+    /**
+     * Sets the action dependences.
+     *
+     * The action dependences are defined as an array, with the action name as key
+     * and the options merged as value.
+     *
+     * @param array $actionDependences The action dependences.
+     *
+     * @return Action The action (fluent interface).
+     */
+    public function setActionDependences(array $actionDependences)
     {
-        $this->dependences = $dependences;
+        $this->actionDependences = $actionDependences;
 
         return $this;
     }
 
-    public function getDependences()
+    /**
+     * Returns the action dependences.
+     *
+     * @return array The action dependences.
+     */
+    public function getActionDependences()
     {
-        return $this->dependences;
+        return $this->actionDependences;
     }
 
+    /**
+     * Returns the fields of the action.
+     *
+     * @return FieldBag The fields of the action.
+     */
     public function getFields()
     {
         if (null === $this->fields) {
@@ -409,11 +438,16 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this->fields;
     }
 
-    public function getDataValue($data, $fieldName)
-    {
-        return $data->get($fieldName);
-    }
-
+    /**
+     * Renders a view.
+     *
+     * Adds the "_admin" and "_action" parameters with their view objects.
+     *
+     * @param string $template   The template.
+     * @param array  $parameters An array of parameters (optional).
+     *
+     * @return string The view rendered.
+     */
     public function renderView($template, array $parameters = array())
     {
         $parameters['_admin'] = $this->admin->createView();
@@ -422,6 +456,17 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this->container->get('templating')->render($template, $parameters);
     }
 
+    /**
+     * Renders a view a returns a response.
+     *
+     * Adds the "_admin" and "_action" parameters with their view objects.
+     *
+     * @param string   $template   The template.
+     * @param array    $parameters An array of parameters (optional).
+     * @param Response $response   The response (optional).
+     *
+     * @return Response The response.
+     */
     public function render($template, array $parameters = array(), $response = null)
     {
         $parameters['_admin'] = $this->admin->createView();
@@ -430,11 +475,27 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $this->container->get('templating')->renderResponse($template, $parameters, $response);
     }
 
-    public function generateUrl($routeNameSuffix, array $parameters = array(), $absolute = false)
+    /**
+     * Generates an admin URL.
+     *
+     * @param string  $routeNameSuffix The route name suffix.
+     * @param array   $parameters      An array of parameters (optional).
+     * @param Boolean $absolute        Whether to generate the URL absolute.
+     *
+     * @return string The URL.
+     */
+    public function generateAdminUrl($routeNameSuffix, array $parameters = array(), $absolute = false)
     {
         return $this->admin->generateUrl($routeNameSuffix, $parameters, $absolute);
     }
 
+    /**
+     * Creates a form from a field bag.
+     *
+     * @param FieldBag $fields A field bag.
+     *
+     * @return Form A form.
+     */
     protected function createFormFromFields(FieldBag $fields)
     {
         $formFactory = $this->container->get('form.factory');
@@ -452,18 +513,35 @@ abstract class Action extends ContainerAware implements ActionInterface
         return $form;
     }
 
-    public function createView()
-    {
-        return new ActionView($this);
-    }
-
+    /**
+     * Returns whether a container service exists.
+     *
+     * @return Boolean Whether a container service exists.
+     */
     public function has($id)
     {
         return $this->container->has($id);
     }
 
+    /**
+     * Returns a container service.
+     *
+     * @param string $id The service id.
+     *
+     * @return mixed The container service.
+     */
     public function get($id)
     {
         return $this->container->get($id);
+    }
+
+    /**
+     * Returns an action view instance with the action.
+     *
+     * @return ActionView An action view instance with the action.
+     */
+    public function createView()
+    {
+        return new ActionView($this);
     }
 }

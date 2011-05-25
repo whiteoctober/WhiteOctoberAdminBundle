@@ -21,11 +21,11 @@ abstract class UpdateAction extends Action
     {
         $this
             ->setRoute('update', '/{id}', array(), array('_method' => 'PUT'))
-            ->setDependences(array(
-                'edit' => array(),
-            ))
             ->addOptions(array(
                 'template' => 'WhiteOctoberAdminBundle::default/edit.html.twig',
+            ))
+            ->setActionDependences(array(
+                'edit' => array(),
             ))
         ;
     }
@@ -46,7 +46,7 @@ abstract class UpdateAction extends Action
             $saveDataClosure = $this->getActionsVars()->get('saveDataClosure');
             $saveDataClosure($data);
 
-            return new RedirectResponse($this->generateUrl('list'));
+            return new RedirectResponse($this->generateAdminUrl('list'));
         }
 
         return $this->render($this->getOption('template'), array('data' => $data, 'form' => $form->createView()));

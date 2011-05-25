@@ -3,6 +3,7 @@
 namespace WhiteOctober\AdminBundle\Tests\Action;
 
 use WhiteOctober\AdminBundle\Action\Action as BaseAction;
+use WhiteOctober\AdminBundle\Action\ActionView;
 
 class Action extends BaseAction
 {
@@ -161,5 +162,124 @@ class ActionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('/upgrade', $action->getRoutePatternSuffix());
         $this->assertSame($routeDefaults, $action->getRouteDefaults());
         $this->assertSame($routeRequirements, $action->getRouteRequirements());
+    }
+
+    public function testOptions()
+    {
+        $action = new Action();
+
+        $this->assertSame($action, $action->addOption('foo', 'bar'));
+        $this->assertSame($action, $action->addOption('bar', 'foo'));
+        $this->assertSame($action, $action->addOptions(array(
+            'man' => 'dango',
+            'mon' => 'dator',
+        )));
+
+        try {
+            $action->addOption('foo', 'bu');
+            $this->fail();
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('LogicException', $e);
+        }
+        try {
+            $action->addOptions(array(
+                'bar' => 'ba',
+            ));
+            $this->fail();
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('LogicException', $e);
+        }
+
+        $this->assertSame('bar', $action->getOption('foo'));
+        $this->assertSame('foo', $action->getOption('bar'));
+        $this->assertSame('dango', $action->getOption('man'));
+        $this->assertSame('dator', $action->getOption('mon'));
+
+        try {
+            $action->getOption('no');
+            $this->fail();
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('InvalidArgumentException', $e);
+        }
+
+        $this->assertSame(array(
+            'foo' => 'bar',
+            'bar' => 'foo',
+            'man' => 'dango',
+            'mon' => 'dator',
+        ), $action->getOptions());
+
+        $this->assertSame($action, $action->setOption('foo', 'ups'));
+        $this->assertSame('ups', $action->getOption('foo'));
+        $this->assertSame('foo', $action->getOption('bar'));
+        $this->assertSame('dango', $action->getOption('man'));
+        $this->assertSame('dator', $action->getOption('mon'));
+
+        $this->assertSame($action, $action->setOption('bar', 'min'));
+        $this->assertSame('ups', $action->getOption('foo'));
+        $this->assertSame('min', $action->getOption('bar'));
+        $this->assertSame('dango', $action->getOption('man'));
+        $this->assertSame('dator', $action->getOption('mon'));
+
+        try {
+            $action->setOption('no', 'bar');
+            $this->fail();
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('InvalidArgumentException', $e);
+        }
+    }
+
+    public function testActionDependences()
+    {
+        $action = new Action();
+
+        $actionDependences = array('foo' => 'bar', 'bar' => 'foo');
+        $action->setActionDependences($actionDependences);
+        $this->assertSame($actionDependences, $actionDependences);
+    }
+
+    public function testHas()
+    {
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+
+        $container
+            ->expects($this->once())
+            ->method('has')
+            ->with('foo')
+            ->will($this->returnValue(true))
+        ;
+
+        $action = new Action();
+        $action->setContainer($container);
+
+        $this->assertTrue($action->has('foo'));
+    }
+
+    public function testGet()
+    {
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+
+        $service = new \DateTime();
+
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with('bar')
+            ->will($this->returnValue($service))
+        ;
+
+        $action = new Action();
+        $action->setContainer($container);
+
+        $this->assertSame($service, $action->get('bar'));
+    }
+
+    public function testCreateView()
+    {
+        $action = new Action();
+
+        $view = $action->createView();
+        $this->assertEquals(new ActionView($action), $view);
+        $this->assertNotSame($view, $action->createView());
     }
 }

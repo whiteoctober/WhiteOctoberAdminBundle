@@ -20,15 +20,15 @@ abstract class NewAction extends Action
     {
         $this
             ->setRoute('new', '/new', array(), array('_method' => 'GET'))
-            ->setDependences(array(
+            ->addOptions(array(
+                'template' => 'WhiteOctoberAdminBundle::default/new.html.twig',
+            ))
+            ->setActionDependences(array(
                 'list' => array(
                     'actions' => array(
                         'new' => array('route' => 'new', 'label' => 'New'),
                     ),
                 ),
-            ))
-            ->addOptions(array(
-                'template' => 'WhiteOctoberAdminBundle::default/new.html.twig',
             ))
         ;
     }

@@ -21,15 +21,15 @@ abstract class EditAction extends Action
     {
         $this
             ->setRoute('edit', '/{id}', array(), array('_method' => 'GET'))
-            ->setDependences(array(
+            ->addOptions(array(
+                'template' => 'WhiteOctoberAdminBundle::default/edit.html.twig',
+            ))
+            ->setActionDependences(array(
                 'list' => array(
                     'dataActions' => array(
                         'edit'   => array('routeName' => '@edit', 'label' => 'Edit'),
                     ),
                 ),
-            ))
-            ->addOptions(array(
-                'template' => 'WhiteOctoberAdminBundle::default/edit.html.twig',
             ))
         ;
     }

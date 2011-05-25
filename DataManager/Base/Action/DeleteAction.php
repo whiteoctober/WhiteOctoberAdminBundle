@@ -21,7 +21,7 @@ abstract class DeleteAction extends Action
     {
         $this
             ->setRoute('delete', '/{id}', array(), array('_method' => 'DELETE'))
-            ->setDependences(array(
+            ->setActionDependences(array(
                 'list' => array(
                     'dataActions' => array(
                         'delete' => array('routeName' => '@delete', 'confirm' => 'Are you sure?', '_method' => 'DELETE', 'label' => 'Delete'),
@@ -42,6 +42,6 @@ abstract class DeleteAction extends Action
         $deleteDataClosure = $this->getActionsVars()->get('deleteDataClosure');
         $deleteDataClosure($data);
 
-        return new RedirectResponse($this->generateUrl('list'));
+        return new RedirectResponse($this->generateAdminUrl('list'));
     }
 }
