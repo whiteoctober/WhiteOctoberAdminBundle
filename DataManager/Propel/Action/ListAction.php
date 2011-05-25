@@ -29,69 +29,45 @@ class ListAction extends BaseListAction
 
         $this
             ->setName('propel.list')
-        ;
-    }
 
-    /*
-     * General Closures.
-     */
-    protected function getFilterQueryClosure()
-    {
-        $container = $this->container;
-
-        return function (\ModelCriteria $query, array $filterQueryCallbacks) use ($container) {
-            foreach ($filterQueryCallbacks as $callback) {
-                call_user_func($callback, $query, $container);
-            }
-        };
-    }
-
-    protected function getCreateDataClosure()
-    {
-        $dataClass = $this->getDataClass();
-        $container = $this->container;
-
-        return function (array $createDataCallbacks) use ($dataClass, $container) {
-            $data = new $dataClass;
-             foreach ($createDataCallbacks as $callback) {
-                call_user_func($callback, $data, $container);
-            }
-
-            return $data;
-        };
-    }
-
-    protected function getFindDataByIdClosure()
-    {
-        $dataClass = $this->getDataClass();
-        $queryClass = $dataClass.'Query';
-
-        $container = $this->container;
-
-        return function ($id, array $findDataByIdCallbacks) use ($queryClass, $container) {
-            $data = $queryClass::create()->findPk($id);
-            foreach ($findDataByIdCallbacks as $callback) {
-                if ($data) {
-                    $data = call_user_func($callback, $data, $container);
+            ->setOption('filterQueryClosure', function (\ModelCriteria $query, array $filterQueryCallbacks, $action, $container) {
+                foreach ($filterQueryCallbacks as $callback) {
+                    call_user_func($callback, $query, $container);
                 }
-            }
+            })
 
-            return $data;
-        };
-    }
+            ->setOption('createDataClosure', function (array $createDataCallbacks, $action, $container) {
+                $dataClass = $action->getDataClass();
 
-    protected function getSaveDataClosure()
-    {
-        return function ($data) {
-            $data->save();
-        };
-    }
+                $data = new $dataClass();
+                 foreach ($createDataCallbacks as $callback) {
+                    call_user_func($callback, $data, $container);
+                }
 
-    protected function getDeleteDataClosure()
-    {
-        return function ($data) {
-            $data->delete();
-        };
+                return $data;
+            })
+
+            ->setOption('findDataByIdClosure', function ($id, array $findDataByIdCallbacks, $action, $container) {
+                $queryClass = $action->getDataClass().'Query';
+
+                $data = $queryClass::create()->findPk($id);
+                foreach ($findDataByIdCallbacks as $callback) {
+                    if ($data) {
+                        $data = call_user_func($callback, $data, $container);
+                    }
+                }
+
+                return $data;
+            })
+
+            ->setOption('saveDataClosure', function ($data, $action, $container) {
+                $data->save();
+            })
+
+            ->setOption('deleteDataClosure', function ($data, $action, $container) {
+                $data->delete();
+            })
+        ;
     }
 
     /**
