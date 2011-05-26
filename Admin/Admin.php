@@ -334,6 +334,8 @@ abstract class Admin extends ContainerAware implements AdminInterface
     public function addActionOptionProcessor($actionName, $optionName, \Closure $processor)
     {
         $this->actionOptionsProcessors[$actionName][$optionName][] = $processor;
+
+        return $this;
     }
 
     public function addControllerPreExecute(\Closure $controllerPreExecute)
