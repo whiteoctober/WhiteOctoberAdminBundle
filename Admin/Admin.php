@@ -15,16 +15,22 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use WhiteOctober\AdminBundle\Action\Action;
+use WhiteOctober\AdminBundle\Action\ActionInterface;
 use WhiteOctober\AdminBundle\Action\ActionCollection;
 use WhiteOctober\AdminBundle\Field\Field;
 use WhiteOctober\AdminBundle\Field\FieldConfigurator;
 
+/**
+ * Action.
+ *
+ * @author Pablo Díez <pablodip@gmail.com>
+ */
 abstract class Admin extends ContainerAware implements AdminInterface
 {
-    private $name;
     private $dataClass;
-    private $routePatternPrefix;
+    private $name;
     private $routeNamePrefix;
+    private $routePatternPrefix;
     private $parametersToPropagate;
     private $baseTemplate;
 
@@ -43,6 +49,11 @@ abstract class Admin extends ContainerAware implements AdminInterface
 
     private $controllerPreExecutes;
 
+    /**
+     * Constructor.
+     *
+     * @throws \RuntimeException If the data class is empty.
+     */
     public function __construct()
     {
         $this->parametersToPropagate = array();
@@ -53,6 +64,8 @@ abstract class Admin extends ContainerAware implements AdminInterface
         $this->actionOptionsSets = array();
         $this->actionOptionsProcessors = array();
         $this->controllerPreExecutes = array();
+
+        $this->addFieldGuesser('validator');
 
         $this->preConfigure();
         $this->configure();
@@ -65,20 +78,42 @@ abstract class Admin extends ContainerAware implements AdminInterface
         if (!$this->name) {
             $this->name = $this->getDataClassName();
         }
+
+        if (null === $this->routePatternPrefix) {
+            $this->routePatternPrefix = '/'.$this->urlize(get_class($this));
+        }
+
+        if (null === $this->routeNamePrefix) {
+            $this->routeNamePrefix = $this->urlize(get_class($this), '_');
+        }
     }
 
+    /**
+     * Pre configures the admin.
+     */
     protected function preConfigure()
     {
-        $this->addFieldGuesser('validator');
     }
 
+    /**
+     * Configures the admin.
+     */
     abstract protected function configure();
 
+    /**
+     * Post configures the admin.
+     */
     protected function postConfigure()
     {
     }
 
-    public function configureFieldsByAction(Action $action, FieldConfigurator $fieldConfigurator)
+    /**
+     * Configures the fields for an action.
+     *
+     * @param ActionInterface   $action An action.
+     * @param FieldConfigurator $fieldConfigurator A FieldConfigurator instance.
+     */
+    public function configureFieldsByAction(ActionInterface $action, FieldConfigurator $fieldConfigurator)
     {
     }
 
@@ -94,6 +129,13 @@ abstract class Admin extends ContainerAware implements AdminInterface
         return $this->name;
     }
 
+    /**
+     * Sets the data class.
+     *
+     * @param string $dataClass The data class.
+     *
+     * @return AdminInterface The admin (fluent interface).
+     */
     public function setDataClass($dataClass)
     {
         $this->dataClass = $dataClass;
@@ -101,6 +143,9 @@ abstract class Admin extends ContainerAware implements AdminInterface
         return $this;
     }
 
+    /**
+     * Returns the data class.
+     */
     public function getDataClass()
     {
         return $this->dataClass;
@@ -111,22 +156,13 @@ abstract class Admin extends ContainerAware implements AdminInterface
         return substr($this->getDataClass(), strrpos($this->getDataClass(), '\\')+1);
     }
 
-    public function setRoutePatternPrefix($routePatternPrefix)
-    {
-        $this->routePatternPrefix = $routePatternPrefix;
-
-        return $this;
-    }
-
-    public function getRoutePatternPrefix()
-    {
-        if (null === $this->routePatternPrefix) {
-            $this->routePatternPrefix = '/'.$this->urlize(get_class($this));
-        }
-
-        return $this->routePatternPrefix;
-    }
-
+    /**
+     * Sets the route name prefix.
+     *
+     * @param string $routeNamePrefix The route name prefix.
+     *
+     * @return AdminInterface The admin (fluent interface).
+     */
     public function setRouteNamePrefix($routeNamePrefix)
     {
         $this->routeNamePrefix = $routeNamePrefix;
@@ -134,15 +170,47 @@ abstract class Admin extends ContainerAware implements AdminInterface
         return $this;
     }
 
+    /**
+     * Returns the route name prefix.
+     *
+     * @return string The route name prefix.
+     */
     public function getRouteNamePrefix()
     {
-        if (null === $this->routeNamePrefix) {
-            $this->routeNamePrefix = $this->urlize(get_class($this), '_');
-        }
-
         return $this->routeNamePrefix;
     }
 
+    /**
+     * Sets the route pattern prefix.
+     *
+     * @param string $routePatternPrefix The route pattern preffix.
+     *
+     * @return AdminInterface The admin (fluent interface).
+     */
+    public function setRoutePatternPrefix($routePatternPrefix)
+    {
+        $this->routePatternPrefix = $routePatternPrefix;
+
+        return $this;
+    }
+
+    /**
+     * Returns the route pattern prefix.
+     *
+     * @return string The route pattern prefix.
+     */
+    public function getRoutePatternPrefix()
+    {
+        return $this->routePatternPrefix;
+    }
+
+    /**
+     * Adds a parameter to propagate.
+     *
+     * @param string $parameter The parameter.
+     *
+     * @return AdminInterface The admin (fluent interface).
+     */
     public function addParameterToPropagate($parameter)
     {
         $this->parametersToPropagate[] = $parameter;
@@ -150,6 +218,13 @@ abstract class Admin extends ContainerAware implements AdminInterface
         return $this;
     }
 
+    /**
+     * Adds parameters to propagate.
+     *
+     * @param array $parameters The parameters.
+     *
+     * @return AdminInterface The admin (fluent interface).
+     */
     public function addParametersToPropagate(array $parameters)
     {
         foreach ($parameters as $parameter) {
@@ -159,6 +234,13 @@ abstract class Admin extends ContainerAware implements AdminInterface
         return $this;
     }
 
+    /**
+     * Sets the parameters to propagate.
+     *
+     * @param array $parameters The parameters.
+     *
+     * @return AdminInterface The admin (fluent interface).
+     */
     public function setParametersToPropagate(array $parameters)
     {
         $this->parametersToPropagate = array();
@@ -167,6 +249,11 @@ abstract class Admin extends ContainerAware implements AdminInterface
         return $this;
     }
 
+    /**
+     * Returns the parameters to propagate.
+     *
+     * @return array The parameters to propagate.
+     */
     public function getParametersToPropagate()
     {
         return $this->parametersToPropagate;
