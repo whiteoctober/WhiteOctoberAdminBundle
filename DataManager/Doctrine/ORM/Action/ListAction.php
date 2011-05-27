@@ -25,6 +25,8 @@ class ListAction extends BaseListAction
         $this
             ->setName('doctrine.orm.list')
 
+            ->addOption('entityManagerName', null)
+
             ->setOption('filterQueryClosure', function (QueryBuilder $query, array $filterQueryCallbacks, $action, $container) {
                 foreach ($filterQueryCallbacks as $callback) {
                     call_user_func($callback, $query, $container);
@@ -43,7 +45,8 @@ class ListAction extends BaseListAction
             })
 
             ->setOption('findDataByIdClosure', function ($id, array $findDataByIdCallbacks, $action, $container) {
-                $em = $container->get('doctrine.orm.entity_manager');
+                $em = $container->get('doctrine')->getEntityManager($action->getOption('entityManagerName'));
+
                 $data = $em->getRepository($action->getDataClass())->find($id);
                 foreach ($findDataByIdCallbacks as $callback) {
                     if ($data) {
@@ -55,14 +58,14 @@ class ListAction extends BaseListAction
             })
 
             ->setOption('saveDataClosure', function ($data, $action, $container) {
-                $em = $container->get('doctrine.orm.entity_manager');
+                $em = $container->get('doctrine')->getEntityManager($action->getOption('entityManagerName'));
 
                 $em->persist($data);
                 $em->flush();
             })
 
             ->setOption('deleteDataClosure', function ($data, $action, $container) {
-                $em = $container->get('doctrine.orm.entity_manager');
+                $em = $container->get('doctrine')->getEntityManager($action->getOption('entityManagerName'));
 
                 $em->remove($data);
                 $em->flush();
@@ -75,7 +78,9 @@ class ListAction extends BaseListAction
      */
     protected function createQuery()
     {
-        $queryBuilder = $this->get('doctrine.orm.entity_manager')->createQueryBuilder();
+        $em = $this->container->get('doctrine')->getEntityManager($this->getOption('entityManagerName'));
+
+        $queryBuilder = $em->createQueryBuilder();
         $queryBuilder
             ->select('u')
             ->from($this->getDataClass(), 'u')
