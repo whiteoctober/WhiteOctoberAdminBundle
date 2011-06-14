@@ -28,14 +28,14 @@ class Field
      *
      * @throws \InvalidArgumentException If the name is empty.
      */
-    public function __construct($name)
+    public function __construct($name, $options = array())
     {
         if (empty($name)) {
             throw new \InvalidArgumentException('The name cannot be empty.');
         }
 
         $this->name = $name;
-        $this->options = array();
+        $this->options = $options;
     }
 
     /**
