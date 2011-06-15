@@ -35,6 +35,8 @@ class PropelFieldGuesser implements FieldGuesserInterface
 
         $singularFieldName = preg_replace('#(.+)s$#', '$1', $fieldName);
 
+        $fieldName = ucfirst($fieldName);
+        
         if ($tableMap->hasRelation($fieldName) || $tableMap->hasRelation($singularFieldName)) {
             try {
                 $relationMap = $tableMap->getRelation($fieldName);
@@ -60,8 +62,8 @@ class PropelFieldGuesser implements FieldGuesserInterface
                 ),
                 FieldOptionGuess::HIGH_CONFIDENCE
             );
-        } else if ($tableMap->hasColumn($fieldName)) {
-            switch (strtolower($tableMap->getColumn($fieldName)->getType())) {
+        } else if ($tableMap->hasColumnByPhpName($fieldName)) {
+            switch (strtolower($tableMap->getColumnByPhpName($fieldName)->getType())) {
                 case 'array':
                     break;
                 case 'boolean':
