@@ -2,10 +2,10 @@
 
 {% block secondarynav %}
     {% if _action.getOption('actions') %}
-        {% for action in _action.getOption('actions') %}
+        {% for key, action in _action.getOption('actions') %}
             <a class="button_slidingdoors button_grey" href="{{ _admin.path(action.route) }}">
                 <span>
-                    {% if action.label|lower == 'new' %}
+                    {% if key|lower == 'new' %}
                         <img class="button_icon" src="{{ asset('bundles/whiteoctoberadmin/images/buttons/icons/add.png') }}" alt="add icon"/>
                     {% endif %}
                     {{ action.label }}
