@@ -11,7 +11,7 @@
 
 {% block content %}
     <div class="panel">
-        <div class="panel_header">Add New {{ _admin.getDataClassName }}</div>
+        <div class="panel_header">Edit {{ _admin.getDataClassName }}</div>
         <form action="{{ _admin.path('update', { 'id': data.id }) }}" method="POST" name="adminform">
             <input type="hidden" name="_method" value="PUT" />
             {% include 'WhiteOctoberAdminBundle:default:_form.html.twig' with { 'form': form } %}
