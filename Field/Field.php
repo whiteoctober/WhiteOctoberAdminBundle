@@ -25,17 +25,18 @@ class Field
      * Constructor.
      *
      * @param string $name The name.
+     * @param array $options An array of options (default empty)
      *
      * @throws \InvalidArgumentException If the name is empty.
      */
-    public function __construct($name)
+    public function __construct($name, $options = array())
     {
         if (empty($name)) {
             throw new \InvalidArgumentException('The name cannot be empty.');
         }
 
         $this->name = $name;
-        $this->options = array();
+        $this->options = $options;
     }
 
     /**

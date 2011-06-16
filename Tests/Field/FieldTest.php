@@ -46,4 +46,11 @@ class FieldTest extends \PHPUnit_Framework_TestCase
         $field->setOption('label', 'mandango');
         $this->assertSame('mandango', $field->getLabel());
     }
+
+    public function testConstructorOptions()
+    {
+        $field = new Field("bar", array("label" => "Bar Label", "otherOption" => "foo"));
+        $this->assertSame("Bar Label", $field->getLabel());
+        $this->assertSame("foo", $field->getOption("otherOption"));
+    }
 }
