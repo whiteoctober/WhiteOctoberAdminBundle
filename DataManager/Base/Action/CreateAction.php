@@ -21,7 +21,9 @@ abstract class CreateAction extends Action
         $this
             ->setRoute('create', '/', array(), array('_method' => 'POST'))
             ->addOptions(array(
-                'template' => 'WhiteOctoberAdminBundle::default/new.html.twig',
+                'template'          => 'WhiteOctoberAdminBundle::default/new.html.twig',
+                'postCreateClosure' => function () {
+                },
             ))
             ->setActionDependences(array(
                 'new' => array(),
@@ -41,6 +43,9 @@ abstract class CreateAction extends Action
         if ($form->isValid()) {
             $saveDataClosure = $this->getActionsVars()->get('saveDataClosure');
             $saveDataClosure($data);
+
+            $postCreateClosure = $this->getOption('postCreateClosure');
+            $postCreateClosure($data, $this->container);
 
             return new RedirectResponse($this->generateAdminUrl('list'));
         }
