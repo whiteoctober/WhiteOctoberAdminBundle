@@ -62,6 +62,24 @@
             <table>
                 <thead>
                     <tr>
+                        {% if _action.getOption('batch') %}
+                            <th>
+                                <input type="checkbox" id="white_october_admin_bundle_batch_selector_all"
+                                    {%- if batch_selector.isAllSelected() %} checked="checked"{% endif -%}
+                                />
+                                <script type="text/javascript">
+                                    jQuery(function() {
+                                        jQuery('#white_october_admin_bundle_batch_selector_all').change(function() {
+                                            if (jQuery(this).is(':checked')) {
+                                                jQuery.post('{{ _admin.path('batch_select_all') }}');
+                                            } else {
+                                                jQuery.post('{{ _admin.path('batch_unselect_all') }}');
+                                            }
+                                        })
+                                    });
+                                </script>
+                            </th>
+                        {% endif %}
                         {% for field in _action.fields %}
                             <th class="{% if loop.first %}first{% endif %}">
                                 {% if field.hasOption('sortable') and field.getOption('sortable') %}
@@ -83,6 +101,24 @@
                 <tbody class="list_content">
                     {% for data in pagerfanta.currentPageResults %}
                         <tr>
+                            {% if _action.getOption('batch') %}
+                                <td>
+                                    <input type="checkbox" id="white_october_admin_bundle_batch_selector_{{ data.id }}"
+                                        {%- if batch_selector.isSelected(data.id) %} checked="checked"{% endif -%}
+                                    />
+                                    <script type="text/javascript">
+                                        jQuery(function() {
+                                            jQuery('#white_october_admin_bundle_batch_selector_{{ data.id }}').change(function() {
+                                                if (jQuery(this).is(':checked')) {
+                                                    jQuery.post('{{ _admin.path('batch_select') }}', { 'id': '{{ data.id }}' });
+                                                } else {
+                                                    jQuery.post('{{ _admin.path('batch_unselect') }}', { 'id': '{{ data.id }}' });
+                                                }
+                                            })
+                                        });
+                                    </script>
+                                </td>
+                            {% endif %}
                             {% for field in _action.fields %}
                                 <td>{{ _admin.renderField(field, data) }}</td>
                             {% endfor %}
@@ -96,9 +132,9 @@
                                         <form action="{{ url }}" method="POST">
                                             <input type="hidden" name="_method" value="{{ action._method }}" />
                                             <input type="submit" value="{{ action.label }}"
-                                            {% if action.confirm %}
-                                        	onclick="return confirm('{{ action.confirm }}');"
-                                        	{% endif %}
+                                                {% if action.confirm %}
+                                        	    onclick="return confirm('{{ action.confirm }}');"
+                                        	    {% endif %}
                                             >
                                         </form>
                                     {% endif %}
@@ -113,6 +149,17 @@
             </table>
         </div>
         <div class="panel_footer">
+            {% if _action.getOption('batch') %}
+                <form action="{{ _admin.path('batch') }}" method="POST">
+                    <select name="action">
+                        <option value=""></option>
+                        {% for name, label in _action.getOption('batch_actions') %}
+                            <option value="{{ name }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" value="Go!" />
+                </form>
+            {% endif %}
             {% if _action.getOption('actions') %}
                 <ul>
                     {% for key, action in _action.getOption('actions') %}

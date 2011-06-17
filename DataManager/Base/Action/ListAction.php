@@ -49,6 +49,8 @@ abstract class ListAction extends Action
                 'pagerfantaView'          => 'white_october_admin',
                 'pagerfantaOptions'       => array(),
                 'template'                => 'WhiteOctoberAdminBundle::default/list.html.twig',
+                'batch'                   => true,
+                'batch_actions'           => array(),
             ))
         ;
     }
@@ -208,7 +210,7 @@ abstract class ListAction extends Action
             }
         }
 
-        return $this->render($this->getOption('template'), array(
+        $parameters = array(
             'simpleFilterEnabled' => $simpleFilterEnabled,
             'simpleFilter'        => $simpleFilter,
             'advancedFilterEnabled' => $advancedFilterEnabled,
@@ -218,7 +220,12 @@ abstract class ListAction extends Action
             'pagerfanta'        => $pagerfanta,
             'pagerfantaView'    => $this->getOption('pagerfantaView'),
             'pagerfantaOptions' => $this->getOption('pagerfantaOptions'),
-        ));
+        );
+        if ($this->getOption('batch')) {
+            $parameters['batch_selector'] = $this->getActionsVars()->get('batchSelector');
+        }
+
+        return $this->render($this->getOption('template'), $parameters);
     }
 
     protected function getSimpleFilterFields()
