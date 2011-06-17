@@ -102,7 +102,7 @@
                     {% for data in pagerfanta.currentPageResults %}
                         <tr>
                             {% if _action.getOption('batch') %}
-                                <td>
+                                <td class="td_checkbox">
                                     <input type="checkbox" id="white_october_admin_bundle_batch_selector_{{ data.id }}"
                                         {%- if batch_selector.isSelected(data.id) %} checked="checked"{% endif -%}
                                     />
