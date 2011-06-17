@@ -23,6 +23,7 @@ abstract class UpdateAction extends Action
             ->setRoute('update', '/{id}', array(), array('_method' => 'PUT'))
             ->addOptions(array(
                 'template' => 'WhiteOctoberAdminBundle::default/edit.html.twig',
+                'formType' => '',
             ))
             ->setActionDependences(array(
                 'edit' => array(),
@@ -38,7 +39,7 @@ abstract class UpdateAction extends Action
             throw new NotFoundHttpException();
         }
 
-        $form = $this->createFormFromFields($this->getFields());
+        $form = $this->getForm();
         $form->setData($data);
 
         $form->bindRequest($this->container->get('request'));

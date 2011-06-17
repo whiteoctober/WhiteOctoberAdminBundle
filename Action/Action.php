@@ -495,6 +495,24 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
+     * Gets the form used for the action.
+     * This can either be a form type supplied as an option
+     * or a form constructed from the fields supplied
+     * in the action configure() method.
+     *
+     * @return Form A form
+     */
+    protected function getForm()
+    {
+        if (strlen($formType = $this->getOption('formType')))
+        {
+            return $this->container->get('form.factory')->create(new $formType());
+        }
+
+        return $this->createFormFromFields($this->getFields());
+    }
+
+    /**
      * Returns whether a container service exists.
      *
      * @return Boolean Whether a container service exists.
