@@ -64,20 +64,6 @@
                     <tr>
                         {% if _action.getOption('batch') %}
                             <th>
-                                <input type="checkbox" id="white_october_admin_bundle_batch_selector_all"
-                                    {%- if batch_selector.isAllSelected() %} checked="checked"{% endif -%}
-                                />
-                                <script type="text/javascript">
-                                    jQuery(function() {
-                                        jQuery('#white_october_admin_bundle_batch_selector_all').change(function() {
-                                            if (jQuery(this).is(':checked')) {
-                                                jQuery.post('{{ _admin.path('batch_select_all') }}');
-                                            } else {
-                                                jQuery.post('{{ _admin.path('batch_unselect_all') }}');
-                                            }
-                                        })
-                                    });
-                                </script>
                             </th>
                         {% endif %}
                         {% for field in _action.fields %}
@@ -150,6 +136,20 @@
         </div>
         <div class="panel_footer">
             {% if _action.getOption('batch') %}
+                <input type="checkbox" id="white_october_admin_bundle_batch_selector_all"
+                    {%- if batch_selector.isAllSelected() %} checked="checked"{% endif -%}
+                />
+                <script type="text/javascript">
+                    jQuery(function() {
+                        jQuery('#white_october_admin_bundle_batch_selector_all').change(function() {
+                            if (jQuery(this).is(':checked')) {
+                                jQuery.post('{{ _admin.path('batch_select_all') }}');
+                            } else {
+                                jQuery.post('{{ _admin.path('batch_unselect_all') }}');
+                            }
+                        })
+                    });
+                </script>
                 <form action="{{ _admin.path('batch') }}" method="POST">
                     <select name="action">
                         <option value=""></option>
