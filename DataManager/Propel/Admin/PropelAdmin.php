@@ -13,6 +13,8 @@
 namespace WhiteOctober\AdminBundle\DataManager\Propel\Admin;
 
 use WhiteOctober\AdminBundle\Admin\Admin;
+use WhiteOctober\AdminBundle\Batch\Action\BatchActionCollection;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * PropelAdmin class
@@ -28,7 +30,22 @@ abstract class PropelAdmin extends Admin
         $this
             ->addParameterToPropagate('hash')
             ->addFieldGuesser('propel')
-            ->addAction('propel.crud');
-
+            ->addAction('propel.crud')
+            ->addAction(new BatchActionCollection())
+            ->addActionOptionProcessor('list', 'batch_actions', function (array $actions) {
+                $actions['delete'] = 'Delete';
+                return $actions;
+            })
+            ->addActionOptionProcessor('batch', 'actions', function (array $actions) {
+                $actions['delete'] = function ($datas, ContainerInterface $container, $action) {
+                    if (!is_array($datas)) $datas = array($datas);
+                    $objects = \PropelQuery::from($action->getDataClass())->findPks($datas);
+                    foreach ($objects as $object) {
+                        $object->delete();
+                    }
+                };
+                return $actions;
+            })
+        ;
     }
 }
