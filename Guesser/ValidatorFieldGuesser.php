@@ -131,12 +131,12 @@ class ValidatorFieldGuesser implements FieldGuesserInterface
             case 'Symfony\Component\Validator\Constraints\Choice':
                 $options[] = new FieldOptionGuess(
                     'formType',
-                    'choices',
+                    'choice',
                     FieldOptionGuess::HIGH_CONFIDENCE
                 );
                 $options[] = new FieldOptionGuess(
                     'formOptions',
-                    $constraint->choices,
+                    array('choices' => $constraint->choices),
                     FieldOptionGuess::HIGH_CONFIDENCE
                 );
                 break;
