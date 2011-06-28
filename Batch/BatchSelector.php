@@ -23,6 +23,7 @@ class BatchSelector
     public function __construct(AdminSession $session, $name = 'batchSelector')
     {
         $this->session = $session;
+        $this->name = $name;
     }
 
     public function select($id)
