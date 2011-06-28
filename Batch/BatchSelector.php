@@ -46,7 +46,6 @@ class BatchSelector
         if (false !== $key = array_search($id, $ids)) {
             unset($ids[$key]);
         }
-        var_dump($ids);
         $this->session->set($this->name, $ids);
     }
 
