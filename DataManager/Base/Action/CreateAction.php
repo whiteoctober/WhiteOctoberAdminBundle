@@ -24,6 +24,7 @@ abstract class CreateAction extends Action
                 'template'          => 'WhiteOctoberAdminBundle::default/new.html.twig',
                 'postCreateClosure' => function () {
                 },
+                'formType'          => '',
             ))
             ->setActionDependences(array(
                 'new' => array(),
@@ -36,7 +37,7 @@ abstract class CreateAction extends Action
         $createDataClosure = $this->getActionsVars()->get('createDataClosure');
         $data = $createDataClosure();
 
-        $form = $this->createFormFromFields($this->getFields());
+        $form = $this->getForm();
         $form->setData($data);
 
         $form->bindRequest($this->container->get('request'));

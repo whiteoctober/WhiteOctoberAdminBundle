@@ -23,6 +23,7 @@ abstract class EditAction extends Action
             ->setRoute('edit', '/{id}', array(), array('_method' => 'GET'))
             ->addOptions(array(
                 'template' => 'WhiteOctoberAdminBundle::default/edit.html.twig',
+                'formType' => '',
             ))
             ->setActionDependences(array(
                 'list' => array(
@@ -42,7 +43,7 @@ abstract class EditAction extends Action
             throw new NotFoundHttpException();
         }
 
-        $form = $this->createFormFromFields($this->getFields());
+        $form = $this->getForm();
         $form->setData($data);
 
         return $this->render($this->getOption('template'), array('data' => $data, 'form' => $form->createView()));

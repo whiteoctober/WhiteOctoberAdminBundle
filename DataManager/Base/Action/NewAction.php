@@ -22,6 +22,7 @@ abstract class NewAction extends Action
             ->setRoute('new', '/new', array(), array('_method' => 'GET'))
             ->addOptions(array(
                 'template' => 'WhiteOctoberAdminBundle::default/new.html.twig',
+                'formType' => '',
             ))
             ->setActionDependences(array(
                 'list' => array(
@@ -38,7 +39,7 @@ abstract class NewAction extends Action
         $createDataClosure = $this->getActionsVars()->get('createDataClosure');
         $data = $createDataClosure();
 
-        $form = $this->createFormFromFields($this->getFields());
+        $form = $this->getForm();
         $form->setData($data);
 
         return $this->render($this->getOption('template'), array('form' => $form->createView()));
