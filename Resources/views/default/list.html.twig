@@ -142,11 +142,15 @@
                 <script type="text/javascript">
                     jQuery(function() {
                         jQuery('#white_october_admin_bundle_batch_selector_all').change(function() {
-                            if (jQuery(this).is(':checked')) {
+                            var checked = this.checked;
+                            if (checked) {
                                 jQuery.post('{{ _admin.path('batch_select_all') }}');
                             } else {
                                 jQuery.post('{{ _admin.path('batch_unselect_all') }}');
                             }
+                            jQuery('.td_checkbox input[type=checkbox]').each(function() {
+                                this.checked = checked;
+                            });
                         })
                     });
                 </script>
