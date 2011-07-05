@@ -471,30 +471,6 @@ abstract class Action extends ContainerAware implements ActionInterface
     }
 
     /**
-     * Creates a form from a field bag.
-     *
-     * @param FieldBag $fields A field bag.
-     *
-     * @return Form A form.
-     */
-    protected function createFormFromFields(FieldBag $fields)
-    {
-        $formFactory = $this->container->get('form.factory');
-        $formBuilder = $formFactory->createBuilder('form', null, array(
-            'data_class' => $this->getDataClass(),
-        ));
-        foreach ($fields as $field) {
-            $type = $field->hasOption('formType') ? $field->getOption('formType') : null;
-            $options = $field->hasOption('formOptions') ? $field->getOption('formOptions') : array();
-            $options['label'] = $field->getLabel();
-            $formBuilder->add($field->getName(), $type, $options);
-        }
-        $form = $formBuilder->getForm();
-
-        return $form;
-    }
-
-    /**
      * Returns whether a container service exists.
      *
      * @return Boolean Whether a container service exists.

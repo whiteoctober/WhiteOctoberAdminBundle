@@ -38,8 +38,8 @@ abstract class UpdateAction extends Action
             throw new NotFoundHttpException();
         }
 
-        $form = $this->createFormFromFields($this->getFields());
-        $form->setData($data);
+        $getFormClosure = $this->getActionsVars()->get('getFormClosure');
+        $form = $getFormClosure($data);
 
         $form->bindRequest($this->container->get('request'));
         if ($form->isValid()) {

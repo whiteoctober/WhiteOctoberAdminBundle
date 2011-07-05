@@ -38,8 +38,8 @@ abstract class NewAction extends Action
         $createDataClosure = $this->getActionsVars()->get('createDataClosure');
         $data = $createDataClosure();
 
-        $form = $this->createFormFromFields($this->getFields());
-        $form->setData($data);
+        $getFormClosure = $this->getActionsVars()->get('getFormClosure');
+        $form = $getFormClosure($data);
 
         return $this->render($this->getOption('template'), array('form' => $form->createView()));
     }

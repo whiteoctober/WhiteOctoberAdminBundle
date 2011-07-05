@@ -35,6 +35,7 @@ abstract class ListAction extends Action
                 'createDataCallbacks'     => array(),
                 'saveDataClosure'         => null,
                 'deleteDataClosure'       => null,
+                'getFormClosure'          => null,
                 'simpleFilterParameter'   => 'q',
                 'simpleFilterDefault'     => null,
                 'advancedFilterParameter' => 'advancedFilter',
@@ -129,6 +130,28 @@ abstract class ListAction extends Action
             $args[] = $container;
 
             return call_user_func_array($deleteDataClosure, $args);
+        });
+
+        $getFormClosure = $this->getOption('getFormClosure');
+        if (!$getFormClosure) {
+            $getFormClosure = function ($data, $action, $container) {
+                $formFactory = $container->get('form.factory');
+                $formBuilder = $formFactory->createBuilder('form', $data);
+                foreach ($action->getFields() as $field) {
+                    $type = $field->hasOption('formType') ? $field->getOption('formType') : null;
+                    $options = $field->hasOption('formOptions') ? $field->getOption('formOptions') : array();
+                    $options['label'] = $field->getLabel();
+                    $formBuilder->add($field->getName(), $type, $options);
+                }
+                $form = $formBuilder->getForm();
+
+                return $form;
+            };
+        } elseif (!$getFormClosure instanceof \Closure) {
+            throw new \RuntimeException('The getFormClosure is not a closure.');
+        }
+        $actionsVars->set('getFormClosure', function ($data) use ($getFormClosure, $action, $container) {
+            return call_user_func($getFormClosure, $data, $action, $container);
         });
     }
 

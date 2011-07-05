@@ -42,8 +42,8 @@ abstract class EditAction extends Action
             throw new NotFoundHttpException();
         }
 
-        $form = $this->createFormFromFields($this->getFields());
-        $form->setData($data);
+        $getFormClosure = $this->getActionsVars()->get('getFormClosure');
+        $form = $getFormClosure($data);
 
         return $this->render($this->getOption('template'), array('data' => $data, 'form' => $form->createView()));
     }
