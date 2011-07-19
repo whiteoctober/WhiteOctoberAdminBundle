@@ -66,6 +66,12 @@ abstract class ListAction extends Action
         $action = $this;
         $container = $this->container;
 
+        if (count($this->getOption('batch_actions'))) {
+            $sessionParameter = $this->getOption('sessionParameter');
+            $action->getAdmin()->addParameterToPropagate($sessionParameter);
+            $actionsVars->set('sessionParameter', $sessionParameter);
+        }
+
         $filterQueryClosure = $this->getOption('filterQueryClosure');
         if (!$filterQueryClosure instanceof \Closure) {
             throw new \RuntimeException('The filterQueryClosure is not a closure.');
