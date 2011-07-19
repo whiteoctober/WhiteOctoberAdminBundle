@@ -150,7 +150,7 @@ abstract class ListAction extends Action
         } elseif (!$getFormClosure instanceof \Closure) {
             throw new \RuntimeException('The getFormClosure is not a closure.');
         }
-        $actionsVars->set('getFormClosure', function ($data) use ($getFormClosure, $action, $container) {
+        $actionsVars->set('getFormClosure', function ($data, $action) use ($getFormClosure, $container) {
             return call_user_func($getFormClosure, $data, $action, $container);
         });
     }

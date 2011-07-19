@@ -39,7 +39,7 @@ abstract class UpdateAction extends Action
         }
 
         $getFormClosure = $this->getActionsVars()->get('getFormClosure');
-        $form = $getFormClosure($data);
+        $form = $getFormClosure($data, $this);
 
         $form->bindRequest($this->container->get('request'));
         if ($form->isValid()) {

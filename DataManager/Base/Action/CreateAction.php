@@ -37,7 +37,7 @@ abstract class CreateAction extends Action
         $data = $createDataClosure();
 
         $getFormClosure = $this->getActionsVars()->get('getFormClosure');
-        $form = $getFormClosure($data);
+        $form = $getFormClosure($data, $this);
 
         $form->bindRequest($this->container->get('request'));
         if ($form->isValid()) {

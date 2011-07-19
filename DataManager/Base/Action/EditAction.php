@@ -43,7 +43,7 @@ abstract class EditAction extends Action
         }
 
         $getFormClosure = $this->getActionsVars()->get('getFormClosure');
-        $form = $getFormClosure($data);
+        $form = $getFormClosure($data, $this);
 
         return $this->render($this->getOption('template'), array('data' => $data, 'form' => $form->createView()));
     }
