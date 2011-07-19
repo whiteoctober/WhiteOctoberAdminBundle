@@ -64,6 +64,19 @@ class BatchAction extends Action
         $selected = $this->getActionsVars()->get('batchSelector')->getSelected();
         $action($selected, $this->container, $this);
 
+        $this->clearAdminPropagatedParametersAndSessionData($this->getActionsVars());
+
         return new RedirectResponse($this->generateAdminUrl('list'));
+    }
+
+    private function clearAdminPropagatedParametersAndSessionData(ParameterBag $actionsVars)
+    {
+        $parameters = array_diff(
+            $this->getAdmin()->getParametersToPropagate(),
+            array($actionsVars->get('sessionParameter', 'hash'))
+        );
+        $this->getAdmin()->setParametersToPropagate($parameters);
+
+        $actionsVars->get('admin_session')->clear();
     }
 }

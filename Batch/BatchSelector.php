@@ -23,6 +23,7 @@ class BatchSelector
     public function __construct(AdminSession $session, $name = 'batchSelector')
     {
         $this->session = $session;
+        $this->name = $name;
     }
 
     public function select($id)
@@ -46,7 +47,6 @@ class BatchSelector
         if (false !== $key = array_search($id, $ids)) {
             unset($ids[$key]);
         }
-        var_dump($ids);
         $this->session->set($this->name, $ids);
     }
 

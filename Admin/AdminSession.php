@@ -86,6 +86,11 @@ class AdminSession
         $this->saveData($data);
     }
 
+    public function clear()
+    {
+        $this->session->remove($this->getHash());
+    }
+
     private function getData()
     {
         return $this->session->get($this->getHash(), array());
