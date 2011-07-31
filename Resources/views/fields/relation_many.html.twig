@@ -1,0 +1,3 @@
+{% for related in _module.dataFieldValue(data, field.name) %}
+    {{ related }}{{ loop.last ? '' : ', ' }}
+{% endfor %}

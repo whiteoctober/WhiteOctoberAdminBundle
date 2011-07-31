@@ -42,33 +42,17 @@ class WhiteOctoberAdminExtension extends Extension
         $config = $processor->process($configuration->getConfigTree(), $configs);
 
         // data managers
-        if (!empty($config['data_managers']['mandango'])) {
-            $loader->load('data_manager_mandango.xml');
+        if (!empty($config['managers']['mandango'])) {
+            $loader->load('manager_mandango.xml');
         }
-        if (!empty($config['data_managers']['doctrine']['orm'])) {
-            $loader->load('data_manager_doctrine_orm.xml');
+        if (!empty($config['managers']['doctrine']['orm'])) {
+            $loader->load('manager_doctrine_orm.xml');
         }
-        if (!empty($config['data_managers']['doctrine']['odm'])) {
-            $loader->load('data_manager_doctrine_odm.xml');
+        if (!empty($config['managers']['doctrine']['odm'])) {
+            $loader->load('manager_doctrine_odm.xml');
         }
-        if (!empty($config['data_managers']['propel'])) {
-            $loader->load('data_manager_propel.xml');
+        if (!empty($config['managers']['propel'])) {
+            $loader->load('manager_propel.xml');
         }
-
-        // admins
-        $adminIds = array();
-        foreach ($config['admins'] as $admin) {
-            $definition = new Definition($admin['class']);
-            $definition->addMethodCall('setContainer', array(
-                new Reference('service_container'),
-            ));
-
-            $classId = str_replace('\\', '_', $admin['class']);
-            $adminId = 'white_october_admin.admin.'.$classId;
-            $container->setDefinition($adminId, $definition);
-
-            $adminIds[] = $adminId;
-        }
-        $container->getDefinition('white_october_admin.admin_factory')->replaceArgument(0, $adminIds);
     }
 }

@@ -1,0 +1,4 @@
+<form action="{{ _module.path('delete', { 'id': data.id }) }}" id="delete"  method="POST">
+    <input type="hidden" name="_method" value="DELETE" />
+    <input type="submit" value="{% trans with {  } from 'white_october_admin' %}delete{% endtrans %}" />
+</form>

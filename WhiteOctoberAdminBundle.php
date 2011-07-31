@@ -11,13 +11,12 @@
 
 namespace WhiteOctober\AdminBundle;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use WhiteOctober\AdminBundle\DependencyInjection\Compiler\AddActionsPass;
-use WhiteOctober\AdminBundle\DependencyInjection\Compiler\AddActionCollectionsPass;
-use WhiteOctober\AdminBundle\DependencyInjection\Compiler\AddFieldGuessersPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use WhiteOctober\AdminBundle\DependencyInjection\Compiler\AddAdminsPass;
+
 /**
- * WhiteOctoberAdminBundle.
+ * WhiteOctobAdminBundle.
  *
  * @author Pablo Díez <pablodip@gmail.com>
  */
@@ -30,8 +29,6 @@ class WhiteOctoberAdminBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new AddActionsPass());
-        $container->addCompilerPass(new AddActionCollectionsPass());
-        $container->addCompilerPass(new AddFieldGuessersPass());
+        $container->addCompilerPass(new AddAdminsPass());
     }
 }

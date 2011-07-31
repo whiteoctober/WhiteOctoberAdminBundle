@@ -1,1 +1,1 @@
-{{ value | date(_field.hasOption('dateFormat') ? _field.getOption('dateFormat') : 'F j, Y') }}
+{{ _module.dataFieldValue(data, field.name) | date(field.hasOption('date_format') ? field.getOption('date_format') : 'Y-m-d') }}

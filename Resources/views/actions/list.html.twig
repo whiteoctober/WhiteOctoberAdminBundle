@@ -1,0 +1,67 @@
+{% extends 'WhiteOctoberAdminBundle::layout.html.twig' %}
+
+{% block title %}
+{% spaceless %}
+    {{ _action.option('title') | trans({}, _action.option('title_domain')) }}
+{% endspaceless %}
+{% endblock %}
+
+{% block content %}
+
+    <h1 class="admin-title">{{ _action.option('heading') | trans({}, _action.option('heading_domain')) }}</h1>
+
+    {% include 'WhiteOctoberAdminBundle:actions:list_filter.html.twig' %}
+
+    <div class="admin-actions">
+        {% for action in _action.getOption('actions') %}
+            {% include action with { '_module': _module } %}
+        {% endfor %}
+    </div>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" /></th>
+                {% for field in _action.fields %}
+                    <th>
+                        {% if field.hasOption('sortable') and field.getOption('sortable') %}
+                            {% if sort == field.name %}
+                                <a href="{{ _module.path('list', { 'sort': field.name, 'order': 'asc' == order ? 'desc' : 'asc' }) }}" class="{{ 'asc' == order ? 'sorting_asc' : 'sorting_desc' }}">
+                                    {{ field.label }} {{ order }}
+                                </a>
+                            {% else %}
+                                <a href="{{ _module.path('list', { 'sort': field.name }) }}" class="sorting">{{ field.label }}</a>
+                            {% endif %}
+                        {% else %}
+                            <span>{{ field.label }}</span>
+                        {% endif %}
+                    </th>
+                {% endfor %}
+                {% if _action.getOption('dataActions') %}
+                    <th><span>Actions</span></th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in pagerfanta %}
+                <tr>
+                    <td><input type="checkbox"></td>
+                    {% for field in _action.fields %}
+                        <td>
+                            {{ _module.renderDataField(data, field) }}
+                        </td>
+                    {% endfor %}
+                    <td>
+                        {% for dataAction in _action.getOption('dataActions') %}
+                            {% include dataAction with { '_module': _module, 'data': data} %}
+                        {% endfor %}
+                    </td>
+                <tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {{ pagerfanta(pagerfanta, 'default') }}
+    </div>
+
+{% endblock %}

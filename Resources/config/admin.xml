@@ -6,27 +6,25 @@
 
     <parameters>
         <!-- Admin Factory -->
-        <parameter key="white_october_admin.admin_factory.class">WhiteOctober\AdminBundle\Admin\AdminFactory</parameter>
+        <parameter key="white_october_admin.admin_factory.class">Pablodip\ModuleBundle\Module\ModuleFactory</parameter>
 
         <!-- Action Factory -->
-        <parameter key="white_october_admin.action_factory.class">WhiteOctober\AdminBundle\Action\ActionFactory</parameter>
+        <parameter key="white_october_admin.action_factory.class">Pablodip\ModuleBundle\Action\ActionFactory</parameter>
 
         <!-- Action Collection Factory -->
-        <parameter key="white_october_admin.action_collection_factory.class">WhiteOctober\AdminBundle\Action\ActionCollectionFactory</parameter>
-
-        <!-- Field Guessers -->
-        <parameter key="white_october_admin.field_guesser.validator.class">WhiteOctober\AdminBundle\Guesser\ValidatorFieldGuesser</parameter>
+        <parameter key="white_october_admin.action_collection_factory.class">Pablodip\ModuleBundle\Action\ActionCollectionFactory</parameter>
 
         <!-- Routing Loader -->
         <parameter key="routing.loader.white_october_admin.class">WhiteOctober\AdminBundle\Routing\AdminFactoryLoader</parameter>
+
+        <!-- Field Guessers -->
+        <parameter key="white_october_admin.field_guesser.validator.class">WhiteOctober\AdminBundle\Field\Guesser\ValidatorFieldGuesser</parameter>
     </parameters>
 
     <services>
         <!-- Admin Factory -->
         <service id="white_october_admin.admin_factory" class="%white_october_admin.admin_factory.class%">
             <!-- adminIds -->
-            <argument type="collection" />
-            <!-- fieldGuesserIds -->
             <argument type="collection" />
             <!-- ContainerAware -->
             <call method="setContainer">
@@ -42,20 +40,16 @@
         <service id="white_october_admin.action_collection_factory" class="%white_october_admin.action_collection_factory.class%">
         </service>
 
-        <!-- Field Guessers -->
-        <service id="white_october_admin.field_gueser.validator" class="%white_october_admin.field_guesser.validator.class%">
-            <tag name="white_october_admin.field_guesser" alias="validator" />
-            <argument type="service" id="validator.mapping.class_metadata_factory" />
-        </service>
-
         <!-- Routing Loader -->
         <service id="routing.loader.white_october_admin" class="%routing.loader.white_october_admin.class%">
             <tag name="routing.loader" />
             <argument type="service" id="white_october_admin.admin_factory" />
         </service>
 
-        <service id="pagerfanta.view.white_october_admin" class="WhiteOctober\AdminBundle\Pagerfanta\AdminView" public="false">
-            <tag name="pagerfanta.view" alias="white_october_admin" />
+        <!-- Field Guessers -->
+        <service id="white_october_admin.field_gueser.validator" class="%white_october_admin.field_guesser.validator.class%">
+            <tag name="pablodip_module.field_guesser" alias="validator" />
+            <argument type="service" id="validator.mapping.class_metadata_factory" />
         </service>
     </services>
 

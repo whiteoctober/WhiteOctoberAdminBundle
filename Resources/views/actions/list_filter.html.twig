@@ -1,0 +1,35 @@
+<div class="filter">
+    <div>
+         <a href="{{ _module.path('list', { 'clear': true }) }}">Clear</a>
+    </div>
+
+    {% if simple_filter_enabled %}
+        <div>
+            <form action="{{ _module.path('list') }}" method="GET">
+                <input type="text" name="{{ _action.option('simpleFilterParameter') }}" value="{{ simple_filter }}" />
+                <input type="submit" value="Filter" />
+                {% for parameter in _module.parametersToPropagate %}
+                    {% if app.request.query.has(parameter) %}
+                        <input type="hidden" name="{{ parameter }}" value="{{ app.request.query.get(parameter) }}" />
+                    {% endif %}
+                {% endfor %}
+            </form>
+        </div>
+    {% endif %}
+
+    {% if advanced_filter_enabled %}
+        <div>
+            <form  action="{{ _module.path('list') }}" method="GET">
+                {{ form_errors(advanced_filter_form) }}
+                {{ form_widget(advanced_filter_form) }}
+                {{ form_rest(advanced_filter_form) }}
+                {% for parameter in _module.parametersToPropagate %}
+                    {% if app.request.query.has(parameter) %}
+                        <input type="hidden" name="{{ parameter }}" value="{{ app.request.query.get(parameter) }}" />
+                    {% endif %}
+                {% endfor %}
+                <input type="submit" value="Filter" />
+            </form>
+        </div>
+    {% endif %}
+</div>

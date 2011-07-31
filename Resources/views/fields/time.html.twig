@@ -1,1 +1,1 @@
-{{ value|date("m/d/Y") }}
+{{ _module.dataFieldValue(data, field.name) | date(field.hasOption('date_format') ? field.getOption('date_format') : 'H:i:sP') }}

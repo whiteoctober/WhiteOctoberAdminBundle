@@ -1,0 +1,18 @@
+{% extends 'WhiteOctoberAdminBundle::layout.html.twig' %}
+
+{% block title %}{% trans with {  } from 'white_october_admin' %}edit{% endtrans %}{% endblock %}
+
+{% block content %}
+    <h1 class="admin-title">
+        {% block heading %}{% trans with {  } from 'white_october_admin' %}edit{% endtrans %}{% endblock %}
+    </h1>
+
+    <form action="{{ _module.path('update', { 'id': data.id }) }}" method="POST" class="admin-form">
+        <input type="hidden" name="_method" value="PUT" />
+        {% include 'WhiteOctoberAdminBundle::form.html.twig' %}
+
+        <div class="submit">
+            <input type="submit" value="{% trans with {  } from 'white_october_admin' %}save{% endtrans %}" />
+        </div>
+    </form>
+{% endblock %}

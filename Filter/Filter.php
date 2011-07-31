@@ -13,6 +13,11 @@ namespace WhiteOctober\AdminBundle\Filter;
 
 use Symfony\Component\Form\FormBuilder;
 
+/**
+ * Filter.
+ *
+ * @author Pablo Díez <pablodip@gmail.com>
+ */
 abstract class Filter implements FilterInterface
 {
     private $buildFormClosure;
@@ -54,6 +59,11 @@ abstract class Filter implements FilterInterface
         return $this;
     }
 
+    public function getConstraints()
+    {
+        return $this->constraints;
+    }
+
     public function setFilterClosure(\Closure $filterClosure)
     {
         $this->filterClosure = $filterClosure;
@@ -69,11 +79,6 @@ abstract class Filter implements FilterInterface
     public function buildForm(FormBuilder $formBuilder)
     {
         return call_user_func($this->buildFormClosure, $formBuilder);
-    }
-
-    public function getConstraints()
-    {
-        return $this->constraints;
     }
 
     public function filter($fieldName, array $data)

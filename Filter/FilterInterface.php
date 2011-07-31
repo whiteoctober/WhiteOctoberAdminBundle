@@ -13,6 +13,11 @@ namespace WhiteOctober\AdminBundle\Filter;
 
 use Symfony\Component\Form\FormBuilder;
 
+/**
+ * FilterInterface.
+ *
+ * @author Pablo Díez <pablodip@gmail.com>
+ */
 interface FilterInterface
 {
     function buildForm(FormBuilder $formBuilder);

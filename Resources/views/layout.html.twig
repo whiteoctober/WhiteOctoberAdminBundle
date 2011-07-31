@@ -1,44 +1,24 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>{% block title %}Admin{% endblock %}</title>
-        <link rel="stylesheet" href="{{ asset('bundles/whiteoctoberadmin/css/admin.css') }}" type="text/css" media="all" />
-        
-        <script type="text/javascript" src="{{ asset('bundles/whiteoctoberadmin/javascript/jquery-1.4.2.min.js') }}"></script>
-		<script type="text/javascript" src="{{ asset('bundles/whiteoctoberadmin/javascript/jquery.common.js') }}"></script>
-		<!--[if IE 6]>
-			<script type="text/javascript" src="j{{ asset('bundles/whiteoctoberadmin/avascript/pngfix/DD_belatedPNG.js') }}"></script>
-			<script type="text/javascript" src="{{ asset('bundles/whiteoctoberadmin/javascript/pngfix/lc_pngfix.js') }}"></script>
-		<![endif]-->
+        <title>{% block title %}WhiteOctoberAdminBundle{% endblock %}</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{ asset('bundles/whiteoctoberadmin/css/html-min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('bundles/whiteoctoberadmin/css/base.css') }}" />
     </head>
     <body>
-        <div id="header">
-            <h1><a href="{{ url('wo_admin_index') }}" class="home">Admin</a></h1>
-        </div>
-        <div class="clear"></div>
-        <div id="primarynav">
-            {% block primarynav %}
-                <div id="tabs">
-                    {% if _admin is defined %}
-                        {% render "WhiteOctoberAdminBundle:Admin:admins" with {"_admin": _admin} %}
-                    {% else %}
-                        {% render "WhiteOctoberAdminBundle:Admin:admins" with {"_admin": '', "home_active": "active"} %}
-                    {% endif %}
-                </div>
-            {% endblock %}
-        </div>
-        <div class="clear"></div>
-        <div id="secondarynav">
-            {% block secondarynav %}{% endblock %}
-        </div>
-        <div id="content">
-            {% block content %}{% endblock %}
-        </div>
+        <div class="wrapper">
+            <div class="header">
+                {% block header_title %}{% endblock %}
+                {% block menu %}{% endblock %}
+                {% block login %}{% endblock %}
+            </div>
+            <div class="main-content clearfix">
+                {% block content %}{% endblock %}
 
-        <div class="clear"></div>
-        <div id="footer">
-            {% block footer %}{% endblock %}
+                {% block footer %}{% endblock %}
+            </div>
         </div>
+        <script src="{{ asset('bundles/whiteoctoberadmin/js/jquery-1.6.2.min.js') }}"></script>
     </body>
 </html>

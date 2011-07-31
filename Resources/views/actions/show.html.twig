@@ -1,0 +1,13 @@
+{% extends 'WhiteOctoberAdminBundle::layout.html.twig' %}
+
+{% block content %}
+    <h1 class="admin-title">List title....</h1>
+
+    <ul class="admin-list">
+        {% for field in _action.fields %}
+            <li>
+                <strong>{{ field.label }}</strong>: {{ _module.renderDataField(data, field) }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,239 @@
+/**** utility classes ******/
+.button, button, input[type=button], input[type=submit], input[type=reset], .pagination a, .pagination span:not(.dots) {
+    background-color: #EEE;
+    background-image: -o-linear-gradient(top, #FEFEFE, #EEE);
+    background-image: -ms-linear-gradient(top, #FEFEFE, #EEE);
+    background-image: -moz-linear-gradient(top, #FEFEFE, #EEE);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#FEFEFE), to(#EEE));
+    background-image: -webkit-linear-gradient(top, #FEFEFE, #EEE);
+    background-image: linear-gradient(top, #FEFEFE, #EEE);
+    border: 1px solid #AAA;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: inset 0 1px 0 #FFF, 0 1px 3px rgba(0,0,0,0.15);
+    -webkit-box-shadow: inset 0 1px 0 #FFF, 0 1px 3px rgba(0,0,0,0.15);
+    box-shadow: inset 0 1px 0 #FFF, 0 1px 3px rgba(0,0,0,0.15);
+    color: #111;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Arial, sans-serif;
+    font-size: 1.18em;
+    line-height: 1.45em;
+    padding: 4px 10px;
+    text-shadow: 0 1px 0 #FFF;
+}
+
+.button:hover, button:hover, input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, .pagination a:hover {
+    background-color: #F2F2F2;
+    background-image: -o-linear-gradient(top, #FFF, #F2F2F2);
+    background-image: -ms-linear-gradient(top, #FFF, #F2F2F2);
+    background-image: -moz-linear-gradient(top, #FFF, #F2F2F2);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#F2F2F2));
+    background-image: -webkit-linear-gradient(top, #FFF, #F2F2F2);
+    background-image: linear-gradient(top, #FFF, #F2F2F2);
+    border-color: #888;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.button:focus, button:focus, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus {
+    background-color: #EEE;
+    background-image: -o-linear-gradient(top, #FEFEFE, #EEE);
+    background-image: -ms-linear-gradient(top, #FEFEFE, #EEE);
+    background-image: -moz-linear-gradient(top, #FEFEFE, #EEE);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#FEFEFE), to(#EEE));
+    background-image: -webkit-linear-gradient(top, #FEFEFE, #EEE);
+    background-image: linear-gradient(top, #FEFEFE, #EEE);
+    border-color: #AAA;
+}
+
+.button:active, button:active, input[type=button]:active, input[type=submit]:active, input[type=reset]:active {
+    background-color: #EAEAEA;
+    background-image: -o-linear-gradient(top, #FAFAFA, #EAEAEA);
+    background-image: -ms-linear-gradient(top, #FAFAFA, #EAEAEA);
+    background-image: -moz-linear-gradient(top, #FAFAFA, #EAEAEA);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#EAEAEA));
+    background-image: -webkit-linear-gradient(top, #FAFAFA, #EAEAEA);
+    background-image: linear-gradient(top, #FAFAFA, #EAEAEA);
+    -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 1px 0px rgba(255,255,255,0.2);
+    -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 1px 0px rgba(255,255,255,0.2);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3), 0 1px 0px rgba(255,255,255,0.2);
+}
+
+.button.disabled,
+input[type=button]:disabled,
+input[type=button]:hover:disabled,
+input[type=button]:focus:disabled,
+input[type=button]:active:disabled,
+input[type=submit]:disabled,
+input[type=submit]:hover:disabled,
+input[type=submit]:focus:disabled,
+input[type=submit]:active:disabled,
+input[type=reset]:disabled,
+input[type=reset]:hover:disabled,
+input[type=reset]:focus:disabled,
+input[type=reset]:active:disabled,
+button:disabled,
+button:hover:disabled,
+button:focus:disabled,
+button:active:disabled, 
+.pagination a.disabled, 
+.pagination span.disabled,
+.pagination span.current
+{
+    border-color: #DDD;
+    background: #EAEAEA;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #777;
+    cursor: auto;
+}
+
+.clearfix:after {
+    clear: both;
+    content: " ";
+    display: block;
+    font-size: 0;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+    width: 0;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+
+/***** layout *****/
+body {
+    background: #EAEBFC url(../images/bg.jpg) repeat center top;
+}
+
+.wrapper {
+    min-width: 960px;
+    max-width: 1600px;
+}
+
+.main-content {
+    background: rgba(255,255,255,0.7);
+    border-top: 1px solid #C6C9CE;
+    border-right: 1px solid #C6C9CE;
+    margin: 20px 0 0 5%;
+    padding: 1.5% 3%;
+}
+
+.admin-title {
+    border-bottom: 1px solid #EEEEEE;
+    color: #567;
+    line-height: 30px;
+    margin: 0;
+    padding: 14px 1%;
+    text-shadow: #FFF 0 1px 2px;
+}
+
+
+/****** tables ******/
+.admin-table {
+    border: 1px solid #CCC;
+    margin: 0 auto;
+    clear: both;
+    width: 100%;
+}
+
+.admin-table thead tr {
+    background-color: #F4F4F4;
+    background-image: url(../../svg.php?from=%23FCFCFC&to=%23F4F4F4);
+    background-image: -o-linear-gradient(top, #FCFCFC, #F4F4F4);
+    background-image: -ms-linear-gradient(top, #FCFCFC, #F4F4F4);
+    background-image: -moz-linear-gradient(top, #FCFCFC, #F4F4F4);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#FCFCFC), to(#F4F4F4));
+    background-image: -webkit-linear-gradient(top, #FCFCFC, #F4F4F4);
+    background-image: linear-gradient(top, #FCFCFC, #F4F4F4);
+    text-shadow: 0 1px 0 #FFF;
+    zoom: 1;
+}
+
+.admin-table thead th {
+    border: none;
+    border-bottom: 1px solid #CCC;   
+}
+
+.admin-table thead th span, .admin-table thead th a {
+    cursor: pointer;
+    display: block;
+    font-weight: bold;
+    padding: 3px 18px 3px 10px;
+}
+
+.admin-table tfoot th {
+    border-top: 1px solid #CCC;
+}
+
+.admin-table tfoot th span, .admin-table tfoot th a {
+    display: block;
+    padding: 3px 18px 3px 10px;
+    font-weight: bold;
+}
+
+.admin-table thead th:not(:last-child),
+.admin-table tfoot th:not(:last-child) {
+    border-right: 1px solid #CCC;
+    -moz-box-shadow: inset 1px 1px #FFF;
+    -webkit-box-shadow: inset 1px 1px #FFF;
+    box-shadow: inset 1px 1px #FFF;
+}
+
+.admin-table td {
+    border: none;
+    padding: 3px 10px;
+}
+
+.admin-table tr:odd {
+    background-color: #E2E4FF;
+}
+
+.admin-table tr.even {
+    background-color: white;
+}
+
+/****** sorting *******/
+.sorting_asc {
+    background: url('../images/sort_asc.png') no-repeat center right;
+}
+
+.sorting_desc {
+    background: url('../images/sort_desc.png') no-repeat center right;
+}
+
+.sorting {
+    background: url('../images/sort_both.png') no-repeat center right;
+}
+
+.sorting_asc_disabled {
+    background: url('../images/sort_asc_disabled.png') no-repeat center right;
+}
+
+.sorting_desc_disabled {
+    background: url('../images/sort_desc_disabled.png') no-repeat center right;
+}
+
+
+/****** Pagination ******/
+.pagination {
+    padding: 0;
+    margin: 1em 0;
+}
+.pagination a, .pagination span{
+    display: block;
+    float: left;
+    margin-right: 3px;
+    padding: 4px 9px;
+}
+
+.pagination .current {
+    background: #FFF;
+}

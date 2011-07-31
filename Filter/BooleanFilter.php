@@ -13,6 +13,11 @@ namespace WhiteOctober\AdminBundle\Filter;
 
 use Symfony\Component\Form\FormBuilder;
 
+/**
+ * BooleanFilter.
+ *
+ * @author Pablo Díez <pablodip@gmail.com>
+ */
 abstract class BooleanFilter extends Filter
 {
     protected function configure()

@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
 /**
- * WhiteOctoberAdminExtension configuration structure.
+ * PablodipAdminExtension configuration structure.
  *
  * @author Pablo Díez <pablodip@gmail.com>
  */
@@ -29,7 +29,7 @@ class Configuration
     public function getConfigTree()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('white_october_simple_admin');
+        $rootNode = $treeBuilder->root('white_october_admin');
 
         $this->addDataManagersSection($rootNode);
         $this->addAdminsSection($rootNode);
@@ -41,7 +41,7 @@ class Configuration
     {
         $rootNode
             ->children()
-                ->arrayNode('data_managers')
+                ->arrayNode('managers')
                     ->children()
                         ->arrayNode('doctrine')
                             ->children()

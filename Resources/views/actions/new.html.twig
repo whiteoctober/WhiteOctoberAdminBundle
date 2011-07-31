@@ -1,0 +1,17 @@
+{% extends 'WhiteOctoberAdminBundle::layout.html.twig' %}
+
+{% block title %}{% trans with {  } from 'white_october_admin' %}new{% endtrans %}{% endblock %}
+
+{% block content %}
+    <h1 class="admin-title">
+        {% block heading %}{% trans with {  } from 'white_october_admin' %}new{% endtrans %}{% endblock %}
+    </h1>
+
+    <form action="{{ _module.path('new') }}" method="POST" class="admin-form">
+        {% include 'WhiteOctoberAdminBundle::form.html.twig' %}
+
+        <div class="submit">
+            <input type="submit" value="{% trans with {  } from 'white_october_admin' %}save{% endtrans %}" />
+        </div>
+    </form>
+{% endblock %}
