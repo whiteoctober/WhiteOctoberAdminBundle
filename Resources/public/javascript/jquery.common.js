@@ -80,4 +80,52 @@ $(document).ready(function() {
 	})
 */
 
-})
+  // Form submission buttons for main forms
+  $("input.jsreplace[type=submit]").each( function() {
+
+    // Replace these with nice buttons
+
+    // Which class(es) are we using?
+    var useClass = "button_slidingdoors button_yellow";
+    if ($(this).attr("class") != "jsreplace")
+    {
+      // Extra classes - probably size, colour
+      useClass = $(this).attr("class");
+      useClass = useClass.replace(/jsreplace/, "");
+    }
+    var but  = "<a href='#' rel='" + $(this).attr("name") + "' ";
+    but += "class='button_slidingdoors js-form-submit " + useClass + "'";
+    if ($(this).attr("id").length)
+    {
+      but += " id='" + $(this).attr("id") + "'";
+    }
+    but += ">";
+    but += "<span>" + $(this).attr("value") + "</span>";
+    but += "</a>";
+
+    // Anything for onclick?
+    var oc = $(this).attr("onclick");
+
+    $(this).replaceWith(but);
+    but = $("a[rel='" + $(this).attr("name") + "']").last();
+    if (oc)
+    {
+      but.bind("click", oc);
+    }
+  });
+  $("td a.js-form-submit").each( function() {
+
+    // Table cells with replaced buttons in need a width setting for IE
+    var width = $(this).closest("td").width();
+    $(this).closest("td").css("width", width + "px");
+  });
+  $(".js-form-submit").live('click', function() {
+
+    // Add in a hidden input to signify the action
+    // This is based on the rel
+    $(this).closest("form").append("<input type='hidden' name='" + $(this).attr("rel") + "' />");
+
+    $(this).closest("form").submit();
+    return false;
+  });
+});

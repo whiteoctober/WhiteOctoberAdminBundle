@@ -118,10 +118,13 @@
                                         <form action="{{ url }}" method="POST">
                                             <input type="hidden" name="_method" value="{{ action._method }}" />
                                             <input type="submit" value="{{ action.label }}"
-                                                {% if action.confirm %}
-                                        	    onclick="return confirm('{{ action.confirm }}');"
+                                              {% if action.confirm %}
+                                          	    onclick="return confirm('{{ action.confirm }}');"
                                         	    {% endif %}
-                                            >
+                                              {% if action._method == "DELETE" %}
+                                                class="jsreplace icon delete"
+                                              {% endif %}
+                                              >
                                         </form>
                                     {% endif %}
                                     </li>
