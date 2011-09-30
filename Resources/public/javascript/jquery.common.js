@@ -7,8 +7,11 @@ $(document).ready(function() {
 
 	//LIST: TR CLICKABLE
 	$('td').not('.td_checkbox').not('.td_data_action').click(function () { //All TDs clickable but the one which has the checkbox.
-		window.location = $(this).parent().find('a.edit').attr('href'); //Link goes to the same href as the "edit" button.
-	});  
+        var editLink = $(this).parent().find('a.edit').attr('href');
+        if (editLink) {
+            window.location = editLink; //Link goes to the same href as the "edit" button.
+        }
+	});
 	
 	//CHECK ALL function
 	$('.checkall').click(function () {
