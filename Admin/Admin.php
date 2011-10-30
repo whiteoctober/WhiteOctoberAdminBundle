@@ -511,12 +511,17 @@ abstract class Admin extends ContainerAware implements AdminInterface
             }
             $action->setAdmin($this);
             $action->setContainer($this->container);
+
+            $actions[$action->getFullName()] = $action;
+        }
+
+        // Check dependencies
+        foreach ($actions as $action)
+        {
             foreach ($action->getActionDependences() as $actionName => $options) {
                 $dependenceAction = $this->findAction($actions, $actionName);
                 $dependenceAction->mergeOptions($options);
             }
-
-            $actions[$action->getFullName()] = $action;
         }
 
         // action parsers
