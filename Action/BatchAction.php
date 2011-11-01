@@ -27,7 +27,7 @@ class BatchAction extends Action
     {
         $this
             ->setName('white_october_admin.batch')
-            ->setRoute('batch', '/{id}', array(), array('_method' => 'POST'))
+            ->setRoute('batch', '/{id}/batch', array(), array('_method' => 'POST'))
             ->addOptions(array(
                 'actions' => array(),
             ))
