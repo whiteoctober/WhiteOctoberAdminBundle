@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="admin.mandango.author" class="WhiteOctober\AdminMandangoTestBundle\Admin\AuthorAdmin">
+            <tag name="white_october_admin.admin" />
+            <argument type="service" id="service_container" />
+        </service>
+        <service id="admin.mandango.category" class="WhiteOctober\AdminMandangoTestBundle\Admin\CategoryAdmin">
+            <tag name="white_october_admin.admin" />
+            <argument type="service" id="service_container" />
+        </service>
+        <service id="admin.mandango.post" class="WhiteOctober\AdminMandangoTestBundle\Admin\PostAdmin">
+            <tag name="white_october_admin.admin" />
+            <argument type="service" id="service_container" />
+        </service>
+    </services>
+</container>

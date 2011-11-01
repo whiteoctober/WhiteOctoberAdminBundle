@@ -1,1 +1,10 @@
 phpunit.xml
+Tests/project/web/bundles/
+Tests/project/app/bootstrap*
+Tests/project/app/cache/*
+Tests/project/app/logs/*
+Tests/project/vendor/
+Tests/project/app/config/parameters.ini
+Tests/project/src/Model/Mapping/*
+Tests/project/src/Model/Base/*
+Tests/project/src/Model/*/Base/*

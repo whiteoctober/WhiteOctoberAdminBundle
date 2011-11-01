@@ -1,0 +1,9 @@
+_white_october_admin:
+    resource: .
+    type:     white_october_admin
+    prefix:   /admin
+
+# Internal routing configuration to handle ESI
+#_internal:
+#   resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#   prefix:   /_internal

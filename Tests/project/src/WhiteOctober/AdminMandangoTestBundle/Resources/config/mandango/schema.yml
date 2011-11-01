@@ -1,0 +1,27 @@
+Model\WhiteOctoberAdminMandangoTestBundle\Author:
+    fields:
+        name: { type: string }
+
+Model\WhiteOctoberAdminMandangoTestBundle\Category:
+    fields:
+        name: { type: string }
+
+Model\WhiteOctoberAdminMandangoTestBundle\Post:
+    fields:
+        title:   { type: string }
+        summary: { type: string }
+        content: { type: string }
+        date:      { type: date }
+        relevance: { type: integer }
+        isActive:  { type: boolean }
+    referencesOne:
+        author: { class: Model\WhiteOctoberAdminMandangoTestBundle\Author }
+    referencesMany:
+        categories: { class: Model\WhiteOctoberAdminMandangoTestBundle\Category }
+
+Model\WhiteOctoberAdminMandangoTestBundle\Comment:
+    fields:
+        name: { type: string }
+        text: { type: string }
+    referencesOne:
+        post: { class: Model\WhiteOctoberAdminMandangoTestBundle\Post }
