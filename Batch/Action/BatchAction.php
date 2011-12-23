@@ -62,7 +62,11 @@ class BatchAction extends Action
 
         $action = $actions[$actionName];
         $selected = $this->getActionsVars()->get('batchSelector')->getSelected();
-        $action($selected, $this->container, $this);
+        $retval = $action($selected, $this->container, $this);
+
+        if (null !== $retval) {
+            return $retval;
+        }
 
         $this->clearAdminPropagatedParametersAndSessionData($this->getActionsVars());
 
