@@ -12,7 +12,7 @@
 namespace WhiteOctober\AdminBundle\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class AdminSession
 {
