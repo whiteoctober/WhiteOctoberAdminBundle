@@ -12,7 +12,7 @@
 {% block content %}
     <div class="panel">
         <div class="panel_header">Add New {{ _admin.getDataClassName }}</div>
-        <form action="{{ _admin.path('create') }}" method="POST" name="adminform">
+        <form action="{{ _admin.path('create') }}" method="POST" name="adminform" {{ form_enctype(form) }}>
             {% include 'WhiteOctoberAdminBundle:default:_form.html.twig' with { 'form': form } %}
         </form>
         <div class="clear"></div>
