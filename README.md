@@ -1,6 +1,8 @@
 WhiteOctoberAdminBundle
 =======================
 
+**WARNING!**: This bundle is now deprecated and no further development will take place on it. Use at your own risk :-)
+
 Installation
 ------------
 
