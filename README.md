@@ -3,6 +3,11 @@ WhiteOctoberAdminBundle
 
 **WARNING!**: This bundle is now deprecated and no further development will take place on it. Use at your own risk :-)
 
+Alternatives you might like to investigate instead:
+
+* [Sonata Admin Bundle](https://sonata-project.org/bundles/admin)
+* [White October's fork of PablodipAdminModuleBundle](https://github.com/whiteoctober/PablodipModuleBundle)
+
 Installation
 ------------
 
